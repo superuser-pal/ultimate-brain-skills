@@ -1,0 +1,2 @@
+# <repo-relative path>:<regular expression a flagged line must match to be allowed>
+tools/lib/sync.mjs:user\.email=upstream-sync@users\.noreply\.github\.com
