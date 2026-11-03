@@ -7,14 +7,13 @@
  *   GH_TOKEN=… GITHUB_REPOSITORY=owner/repo node tools/release.mjs --tag brain-v1.0.0 [--dry-run]
  */
 import { execFileSync } from "node:child_process";
-import { mkdtemp, readdir, readFile, writeFile } from "node:fs/promises";
+import { mkdtemp, readFile, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 
 import { ROOT, loadSchema, parseArgs, repositoryUrl, run } from "./lib/cli.mjs";
 import { git, gitOk } from "./lib/git.mjs";
-import { releaseNotes, releaseRefusal, tagVersion, TAG_PREFIX } from "./lib/release.mjs";
-import { buildSnapshot, sha256, validateSnapshot, writeSnapshot } from "./lib/snapshot.mjs";
+import { prepareRelease, releaseRefusal, tagVersion, TAG_PREFIX } from "./lib/release.mjs";
 
 const gh = (args) => execFileSync("gh", args, { encoding: "utf8", maxBuffer: 64 * 1024 * 1024 });
 const repo = () => {
@@ -28,7 +27,7 @@ function releasedTags() {
 }
 
 function checkRuns(sha) {
-  const pages = JSON.parse(gh(["api", "--paginate", "--slurp", `repos/${repo()}/commits/${sha}/check-runs?per_page=100`]));
+  const pages = JSON.parse(gh(["api", "--paginate", "--slurp", `repos/${repo()}/commits/${sha}/check-runs?filter=latest&per_page=100`]));
   return pages.flatMap((page) => page.check_runs).filter((run) => run.app?.slug === "github-actions").map((run) => ({ name: run.name, conclusion: run.conclusion }));
 }
 
@@ -46,26 +45,21 @@ await run(async () => {
   });
   if (refusal !== null) throw new Error(`refused, nothing created: ${refusal}. Delete the tag (it was never released) and tag again.`);
 
-  const version = tagVersion(tag);
   const work = await mkdtemp(join(tmpdir(), "ubs-release-"));
-  const folder = join(work, "snapshot");
-  const built = buildSnapshot({ repo: ROOT, commit: sha, version, repository: repositoryUrl(args) });
-  await writeSnapshot(built, folder);
-  const reason = await validateSnapshot(folder, loadSchema());
-  if (reason !== null) throw new Error(`refused, nothing created: the built snapshot is invalid (${reason})`);
-
-  const tarball = join(work, `ultimate-brain-skills-${version}.tar.gz`);
-  execFileSync("tar", ["-czf", tarball, "-C", folder, ...(await readdir(folder)).sort()]);
-  const isAnnotated = git(ROOT, ["cat-file", "-t", `refs/tags/${tag}`]).trim() === "tag";
-  const message = isAnnotated ? git(ROOT, ["tag", "-l", "--format=%(contents)", tag]) : "";
+  let prepared;
+  try {
+    prepared = await prepareRelease({ repo: ROOT, tag, repository: repositoryUrl(args), work, schema: loadSchema() });
+  } catch (error) {
+    throw new Error(`refused, nothing created: ${error.message}`);
+  }
   const notesFile = join(work, "notes.md");
-  await writeFile(notesFile, releaseNotes({ message, integrity: built.manifest.integrity, tarballSha256: sha256(await readFile(tarball)), cli: built.manifest.cli }));
+  await writeFile(notesFile, prepared.notes);
   console.log(await readFile(notesFile, "utf8"));
   if (args["dry-run"]) {
-    console.log(`dry run: would release ${tag} with ${tarball}`);
+    console.log(`dry run: would release ${tag} with ${prepared.tarball}`);
     return;
   }
-  const prerelease = version.includes("-") ? ["--prerelease"] : [];
-  gh(["release", "create", tag, tarball, "--repo", repo(), "--verify-tag", "--title", tag, "--notes-file", notesFile, ...prerelease]);
-  console.log(`released ${tag}: ${built.manifest.integrity}`);
+  const prerelease = prepared.prerelease ? ["--prerelease"] : [];
+  gh(["release", "create", tag, prepared.tarball, "--repo", repo(), "--verify-tag", "--title", tag, "--notes-file", notesFile, ...prerelease]);
+  console.log(`released ${tag}: ${prepared.manifest.integrity}`);
 });

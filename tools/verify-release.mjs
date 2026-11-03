@@ -7,23 +7,14 @@
  *   node tools/verify-release.mjs --tag brain-v1.0.0 [--repo owner/ultimate-brain-skills]
  */
 import { execFileSync } from "node:child_process";
-import { mkdir, mkdtemp, readdir, readFile } from "node:fs/promises";
+import { mkdir, mkdtemp, readFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 
 import { ROOT, loadSchema, parseArgs, run } from "./lib/cli.mjs";
 import { git } from "./lib/git.mjs";
-import { tagVersion } from "./lib/release.mjs";
+import { listFiles, snapshotDifference, tagVersion } from "./lib/release.mjs";
 import { buildSnapshot, sha256, validateSnapshot, writeSnapshot } from "./lib/snapshot.mjs";
-
-async function files(root, dir = root, out = []) {
-  for (const entry of await readdir(dir, { withFileTypes: true })) {
-    const path = join(dir, entry.name);
-    if (entry.isDirectory()) await files(root, path, out);
-    else out.push(path.slice(root.length + 1));
-  }
-  return out.sort();
-}
 
 await run(async () => {
   const args = parseArgs(process.argv.slice(2));
@@ -49,14 +40,11 @@ await run(async () => {
     const reason = await validateSnapshot(folder, schema);
     if (reason !== null) throw new Error(`${label} snapshot is invalid: ${reason}`);
   }
-  const [a, b] = [await files(released), await files(rebuilt)];
-  if (a.join("\n") !== b.join("\n")) throw new Error(`file lists differ:\nreleased: ${a.join(", ")}\nrebuilt: ${b.join(", ")}`);
-  for (const path of a) {
-    if (!(await readFile(join(released, path))).equals(await readFile(join(rebuilt, path)))) throw new Error(`${path} differs between the release and the rebuild`);
-  }
+  const difference = await snapshotDifference(released, rebuilt);
+  if (difference !== null) throw new Error(`the release and the rebuild differ: ${difference}`);
   const notes = JSON.parse(execFileSync("gh", ["release", "view", args.tag, "--repo", repo, "--json", "body"], { encoding: "utf8" })).body;
   const integrity = built.manifest.integrity;
   if (!notes.includes(`Integrity: ${integrity}`)) throw new Error(`the notes' Integrity line doesn't say ${integrity}`);
   if (!notes.includes(`Tarball-SHA256: ${sha256(await readFile(tarball))}`)) throw new Error("the notes' Tarball-SHA256 line doesn't match the asset");
-  console.log(`reproduced ${args.tag}: ${a.length} files byte-identical, both valid, integrity ${integrity}`);
+  console.log(`reproduced ${args.tag}: ${(await listFiles(released)).length} files byte-identical, both valid, integrity ${integrity}`);
 });

@@ -1,8 +1,15 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
 
+import { execFileSync } from "node:child_process";
+import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { join } from "node:path";
+
+import { loadSchema } from "../lib/cli.mjs";
+import { MAIN_CHECKS, prepareRelease, releaseNotes, releaseRefusal, snapshotDifference, tagVersion } from "../lib/release.mjs";
 import { compareVersions, parseRange, parseVersion } from "../lib/semver.mjs";
-import { MAIN_CHECKS, releaseNotes, releaseRefusal, tagVersion } from "../lib/release.mjs";
+import { sha256, validateSnapshot } from "../lib/snapshot.mjs";
+import { commit, forkFiles, initRepo, run, skill, tempDir } from "./helpers.mjs";
 
 const green = MAIN_CHECKS.map((name) => ({ name, conclusion: "success" }));
 const refusal = (fields) => releaseRefusal({ tag: "brain-v1.1.0", onMain: true, checkRuns: green, released: ["brain-v1.0.0"], ...fields });
@@ -49,4 +56,34 @@ test("the notes end with the Integrity, Tarball-SHA256 and CLI lines", () => {
   const notes = releaseNotes({ message: `Product-skills: ${"b".repeat(40)}\n`, integrity: `sha256-${"c".repeat(64)}`, tarballSha256: "d".repeat(64), cli: ">=0.9.0 <0.10.0" });
   assert.equal(notes, `Product-skills: ${"b".repeat(40)}\n\nIntegrity: sha256-${"c".repeat(64)}\nTarball-SHA256: ${"d".repeat(64)}\nCLI: >=0.9.0 <0.10.0\n`);
   assert.ok(releaseNotes({ message: "", integrity: "i", tarballSha256: "t", cli: "c" }).startsWith("Integrity: i\n"));
+});
+
+test("prepareRelease packs the tag's snapshot with the tag message in the notes, and a rebuild matches it", async (t) => {
+  const repo = initRepo(join(tempDir(t), "fork"));
+  commit(repo, forkFiles(), "fork");
+  run(repo, ["tag", "-a", "brain-v1.0.0-rc.1", "-m", `Product-skills: ${"b".repeat(40)}`]);
+  commit(repo, { "brain/brain-apply/SKILL.md": skill("brain-apply", "Changed after the tag.\n") }, "later");
+  const schema = loadSchema();
+  const work = tempDir(t);
+  const prepared = await prepareRelease({ repo, tag: "brain-v1.0.0-rc.1", repository: "https://github.com/example/ultimate-brain-skills", work, schema });
+
+  assert.equal(prepared.prerelease, true);
+  assert.equal(prepared.manifest.source.commit, run(repo, ["rev-parse", "brain-v1.0.0-rc.1^{commit}"]).trim(), "the tagged commit, not the branch head");
+  assert.ok(prepared.notes.startsWith(`Product-skills: ${"b".repeat(40)}\n\nIntegrity: ${prepared.manifest.integrity}\nTarball-SHA256: ${sha256(readFileSync(prepared.tarball))}\nCLI: >=0.9.0 <0.10.0\n`));
+  const listing = execFileSync("tar", ["-tzf", prepared.tarball], { encoding: "utf8" }).split("\n").filter(Boolean);
+  assert.ok(listing.includes("snapshot.json") && listing.includes("brain-apply/SKILL.md") && listing.every((path) => !path.startsWith("./") && !path.startsWith("snapshot/")), "the tarball's root holds the snapshot's entries");
+
+  const extracted = join(work, "extracted");
+  mkdirSync(extracted);
+  execFileSync("tar", ["-xzf", prepared.tarball, "-C", extracted]);
+  assert.equal(await validateSnapshot(extracted, schema), null);
+  assert.equal(await snapshotDifference(extracted, prepared.folder), null);
+  writeFileSync(join(extracted, "brain-query/SKILL.md"), "tampered\n");
+  assert.equal(await snapshotDifference(extracted, prepared.folder), "brain-query/SKILL.md differs");
+
+  await assert.rejects(prepareRelease({ repo, tag: "brain-v1.0", repository: "https://github.com/example/x", work: tempDir(t), schema }), /not brain-v/);
+  run(repo, ["tag", "brain-v1.0.0"]);
+  const plain = await prepareRelease({ repo, tag: "brain-v1.0.0", repository: "https://github.com/example/x", work: tempDir(t), schema });
+  assert.equal(plain.prerelease, false);
+  assert.ok(plain.notes.startsWith("Integrity: "), "a lightweight tag adds no message");
 });

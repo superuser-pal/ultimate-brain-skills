@@ -3,26 +3,52 @@
 const DECLARATION = /^Brain impact: (none|compatible|coordinated)$/;
 const ANY_DECLARATION = /^Brain impact:/;
 const PRODUCT_LINK = /^Product: https:\/\/github\.com\/[^/]+\/ultimate-brain\/(issues|pull)\/[0-9]+$/;
-const FENCE = /^ {0,3}(`{3,}|~{3,})/;
+const FENCE = /^ {0,3}(`{3,}|~{3,})(.*)$/;
 
-/** The body's lines a reader sees: LF, trailing whitespace trimmed, fenced code and HTML comments removed. */
+/**
+ * The body's lines a reader sees: LF, trailing whitespace trimmed, fenced code and HTML comments removed. One pass, so
+ * `<!--` inside a fence is code, and a fence marker inside a comment is comment. A backtick fence's info string can't
+ * contain a backtick (CommonMark), so such a line opens nothing.
+ */
 export function visibleLines(body) {
-  const text = (body ?? "").replace(/\r\n?/g, "\n").replace(/<!--[\s\S]*?(?:-->|$)/g, (comment) => "\n".repeat(comment.split("\n").length - 1));
   const lines = [];
   let fence;
-  for (const raw of text.split("\n")) {
-    const line = raw.replace(/\s+$/, "");
+  let inComment = false;
+  for (const raw of (body ?? "").replace(/\r\n?/g, "\n").split("\n")) {
+    let line = raw.replace(/\s+$/, "");
     if (fence !== undefined) {
       const close = FENCE.exec(line);
-      if (close !== null && close[1][0] === fence[0] && close[1].length >= fence.length && line.trim() === close[1]) fence = undefined;
+      if (close !== null && close[1][0] === fence[0] && close[1].length >= fence.length && close[2].trim() === "") fence = undefined;
       continue;
     }
-    const open = FENCE.exec(line);
-    if (open !== null) {
+    let visible = "";
+    while (line !== "") {
+      if (inComment) {
+        const end = line.indexOf("-->");
+        if (end === -1) line = "";
+        else {
+          line = line.slice(end + 3);
+          inComment = false;
+        }
+      } else {
+        const start = line.indexOf("<!--");
+        if (start === -1) {
+          visible += line;
+          line = "";
+        } else {
+          visible += line.slice(0, start);
+          line = line.slice(start + 4);
+          inComment = true;
+        }
+      }
+    }
+    if (visible === "" && raw.trim() !== "") continue;
+    const open = FENCE.exec(visible);
+    if (open !== null && !(open[1][0] === "`" && open[2].includes("`"))) {
       fence = open[1];
       continue;
     }
-    lines.push(line);
+    lines.push(visible.replace(/\s+$/, ""));
   }
   return lines;
 }

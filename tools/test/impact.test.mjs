@@ -59,3 +59,12 @@ test("options inside an HTML comment or a fenced block are ignored", () => {
   assert.equal(check("    ```\nnot a fence (four spaces)\nBrain impact: none", []), null);
   assert.deepEqual(parseDeclaration(`Brain impact: coordinated\n\`\`\`\n${LINK}\n\`\`\``), { value: "coordinated", links: [] });
 });
+
+test("fences and comments are read in one pass, as CommonMark does", () => {
+  assert.equal(check("```\n<!-- inside a fence, not a comment\n```\nBrain impact: none", []), null);
+  assert.equal(check("~~~\n```\nBrain impact: compatible\n~~~\nBrain impact: none", []), null, "a backtick line doesn't close a tilde fence");
+  assert.equal(check("``` not `a` fence\nBrain impact: none", []), null, "a backtick info string with a backtick opens nothing");
+  assert.equal(check("<!--\n```\n-->\nBrain impact: none", []), null, "a fence marker inside a comment opens nothing");
+  assert.equal(check("text <!-- a --> more\nBrain impact: none <!-- note -->", []), null);
+  assert.equal(check("~~~ info\nBrain impact: compatible\n~~~ trailing\n~~~\nBrain impact: none", []), null, "a closing fence has no info string");
+});
