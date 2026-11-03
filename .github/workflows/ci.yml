@@ -1,0 +1,81 @@
+# The fork's checks (spec/skills-delivery.md §10.3). Required on main: skills, names, snapshot, impact, leak.
+name: CI
+
+on:
+  pull_request:
+    branches: [main]
+    types: [opened, edited, synchronize, reopened]
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.event.pull_request.number || github.sha }}
+  cancel-in-progress: true
+
+jobs:
+  skills:
+    name: skills
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22 }
+      - run: npm ci --prefix tools
+      - run: node tools/check-skills.mjs
+
+  names:
+    name: names
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22 }
+      - run: npm ci --prefix tools
+      - run: node tools/check-names.mjs
+
+  snapshot:
+    name: snapshot
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with: { fetch-depth: 0 }
+      - uses: actions/setup-node@v4
+        with: { node-version: 22 }
+      - run: npm ci --prefix tools
+      - name: Tooling tests
+        run: npm test --prefix tools
+      - name: Build and validate the snapshot twice, byte-identical
+        env:
+          VERSION: ${{ github.event_name == 'pull_request' && format('0.0.0-ci.{0}', github.event.pull_request.number) || '0.0.0-main' }}
+        run: |
+          node tools/build-snapshot.mjs --commit HEAD --version "$VERSION" --out "$RUNNER_TEMP/a"
+          node tools/build-snapshot.mjs --commit HEAD --version "$VERSION" --out "$RUNNER_TEMP/b"
+          diff -r "$RUNNER_TEMP/a" "$RUNNER_TEMP/b"
+          node tools/validate-snapshot.mjs "$RUNNER_TEMP/a"
+
+  impact:
+    name: impact
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with: { fetch-depth: 0 }
+      - uses: actions/setup-node@v4
+        with: { node-version: 22 }
+      - name: Check the PR's brain impact declaration
+        env:
+          PR_BODY: ${{ github.event.pull_request.body }}
+        # The checkout is the PR's merge commit: its first parent is the base tip, its second the PR head.
+        run: node tools/check-impact.mjs --base HEAD^1 --head HEAD^2
+
+  leak:
+    name: leak
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22 }
+      - run: node tools/leak-check.mjs

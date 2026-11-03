@@ -1,0 +1,49 @@
+{
+  "format": 1,
+  "name": "ultimate-brain-skills",
+  "version": "1.2.0",
+  "cli": ">=0.9.0 <0.10.0",
+  "source": {
+    "repository": "https://github.com/example/ultimate-brain-skills",
+    "commit": "4b1e000000000000000000000000000000000000"
+  },
+  "upstream": {
+    "repository": "https://github.com/mattpocock/skills",
+    "commit": "a496f5513d4a4cf889bc48e189e579f4b0bdf6aa"
+  },
+  "integrity": "sha256-77c83c8517d9fcd0740e043b0a00a0bb8bbd7a79ec1d317e3f2d06056f08a858",
+  "skills": [
+    {
+      "name": "brain-apply",
+      "targets": [
+        "brain"
+      ],
+      "files": [
+        {
+          "path": "SKILL.md",
+          "sha256": "d56f5578e5f4119d994d48e481a5617444255126ee9cfee15a94cd6ebdc8cc41",
+          "bytes": 82
+        }
+      ]
+    },
+    {
+      "name": "brain-query",
+      "targets": [
+        "brain",
+        "linked_repo"
+      ],
+      "files": [
+        {
+          "path": "SKILL.md",
+          "sha256": "2cca7bec19d747dbfa9787c2149ff0fa1c08fe6b223cc0f0c1940ae7a624df0a",
+          "bytes": 90
+        },
+        {
+          "path": "/etc/passwd",
+          "sha256": "60727256721645138dca90a99a4603d5dc1073e0e3669a69c5d27d543f1c7e2f",
+          "bytes": 31
+        }
+      ]
+    }
+  ]
+}
