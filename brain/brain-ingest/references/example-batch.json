@@ -1,0 +1,165 @@
+{
+  "notes": [
+    {
+      "type": "source",
+      "id": "src-vdcsmjex",
+      "title": "Acme launch review (minutes)",
+      "file_date": "2026-12-10",
+      "frontmatter": {
+        "source_key": "agent:claude-code/cc06-dryrun"
+      },
+      "body": "## Attendees\nMaria López (Acme, PM), Carlos Ruiz (Acme), Lucía Fernández (Acme, marketing lead)\n\n## Summary\nLaunch review for the Acme website.\n"
+    },
+    {
+      "type": "meeting",
+      "id": "mtg-pcpyn31n",
+      "title": "Acme launch review",
+      "frontmatter": {
+        "summary": "Launch fixed for 15 Feb 2027, Contentful chosen as blog CMS, budget raised to 95000 EUR.",
+        "date": "2026-12-10",
+        "attendees": [
+          "per-3h8w2n6c",
+          "per-9t2c6m4a",
+          "per-zzvs98vn"
+        ],
+        "source": "src-vdcsmjex",
+        "decisions": [
+          "dec-axker49q",
+          "dec-xe9x6apm"
+        ],
+        "questions": [
+          "que-wtnyy4r6",
+          "que-zv7ckbtk"
+        ],
+        "area": "area-2m7c4h8n",
+        "projects": [
+          "prj-9x4t1b7e"
+        ],
+        "sources": [
+          "src-vdcsmjex"
+        ]
+      },
+      "body": "## Summary\nLaunch review for the [Acme website](../../projects/acme-website/project.md) with [Maria López](../people/maria-lopez.md), [Carlos Ruiz](../people/carlos-ruiz.md) and [Lucía Fernández](../people/lucia-fernandez.md). The team fixed the launch for 15 February 2027 and chose Contentful as the blog CMS. The budget rises to 95000 EUR.\n\n## Decisions\n- [Launch the Acme website on 15 February 2027](../decisions/2026-12-10-launch-the-acme-website-on-15-february-2027.md)\n- [Use Contentful as the blog CMS](../decisions/2026-12-10-use-contentful-as-the-blog-cms.md)\n- Send the launch announcement draft on Fridays for review (tentative).\n\n## Facts\n- Budget raised to 95000 EUR to cover the CMS licence.\n- Carlos is now tech lead for the website.\n\n## Action items\n- Set up the Contentful space — Carlos Ruiz — 2026-12-17\n- Write the blog launch post — Lucía Fernández — no date\n\n## Open questions\n- [Who writes the Acme blog copy after launch?](../questions/who-writes-the-acme-blog-copy-after-launch.md)\n\n## Risks\n- [Migrating old blog posts to Contentful could delay the launch](../questions/migrating-old-blog-posts-to-contentful-could-delay-the.md)"
+    },
+    {
+      "type": "person",
+      "id": "per-zzvs98vn",
+      "title": "Lucía Fernández",
+      "frontmatter": {
+        "summary": "Marketing lead at Acme; writing the blog launch post for the website.",
+        "org": "org-6d1f9z3k",
+        "aliases": [
+          "Lucía",
+          "Lucia Fernandez"
+        ],
+        "projects": [
+          "prj-9x4t1b7e"
+        ],
+        "sources": [
+          "mtg-pcpyn31n"
+        ],
+        "facts": {
+          "role": "marketing lead"
+        },
+        "timeline": [
+          {
+            "field": "role",
+            "value": "marketing lead",
+            "from": "2026-12-10",
+            "learned": "2026-12-10",
+            "source": "mtg-pcpyn31n",
+            "assessment": "accepted"
+          }
+        ]
+      },
+      "body": "Marketing lead at [Acme](../orgs/acme.md), first seen at the [10 Dec launch review](../meetings/2026-12-10-acme-launch-review.md)."
+    },
+    {
+      "type": "decision",
+      "id": "dec-axker49q",
+      "title": "Launch the Acme website on 15 February 2027",
+      "frontmatter": {
+        "summary": "Acme website launches on 15 Feb 2027, after the CMS migration.",
+        "date": "2026-12-10",
+        "assessment": "accepted",
+        "decided_in": "mtg-pcpyn31n",
+        "deciders": [
+          "per-3h8w2n6c",
+          "per-9t2c6m4a"
+        ],
+        "area": "area-2m7c4h8n",
+        "projects": [
+          "prj-9x4t1b7e"
+        ],
+        "sources": [
+          "mtg-pcpyn31n"
+        ]
+      },
+      "body": "## Decision\nLaunch the website on 15 February 2027, after the CMS migration.\n\n## Context\nThe launch had been planned for February 2027 without a fixed day.\n\n## Consequences\nThe CMS migration must finish before the launch. ^[inferred]\n\n## Sources\n- [Acme launch review, 10 Dec](../meetings/2026-12-10-acme-launch-review.md)"
+    },
+    {
+      "type": "decision",
+      "id": "dec-xe9x6apm",
+      "title": "Use Contentful as the blog CMS",
+      "frontmatter": {
+        "summary": "Acme's blog runs on Contentful rather than a custom CMS; chosen over Strapi for its editor.",
+        "date": "2026-12-10",
+        "assessment": "accepted",
+        "decided_in": "mtg-pcpyn31n",
+        "deciders": [
+          "per-9t2c6m4a"
+        ],
+        "area": "area-2m7c4h8n",
+        "projects": [
+          "prj-9x4t1b7e"
+        ],
+        "sources": [
+          "mtg-pcpyn31n"
+        ]
+      },
+      "body": "## Decision\nUse Contentful as the CMS for the blog, instead of building one.\n\n## Context\nCarlos compared it with Strapi; the team chose Contentful for its editor.\n\n## Consequences\nThe budget rises to cover the CMS licence.\n\n## Sources\n- [Acme launch review, 10 Dec](../meetings/2026-12-10-acme-launch-review.md)"
+    },
+    {
+      "type": "question",
+      "id": "que-wtnyy4r6",
+      "title": "Who writes the Acme blog copy after launch?",
+      "frontmatter": {
+        "summary": "No owner yet for blog copy once the Acme website has launched.",
+        "kind": "question",
+        "raised_in": "mtg-pcpyn31n",
+        "area": "area-2m7c4h8n",
+        "projects": [
+          "prj-9x4t1b7e"
+        ],
+        "sources": [
+          "mtg-pcpyn31n"
+        ]
+      },
+      "body": "Raised at the [10 Dec launch review](../meetings/2026-12-10-acme-launch-review.md); no answer given."
+    },
+    {
+      "type": "question",
+      "id": "que-zv7ckbtk",
+      "title": "Migrating old blog posts to Contentful could delay the launch",
+      "frontmatter": {
+        "summary": "Risk raised by Carlos: moving old blog posts into Contentful may push back the 15 Feb launch.",
+        "kind": "risk",
+        "raised_in": "mtg-pcpyn31n",
+        "area": "area-2m7c4h8n",
+        "projects": [
+          "prj-9x4t1b7e"
+        ],
+        "sources": [
+          "mtg-pcpyn31n"
+        ],
+        "relations": [
+          {
+            "type": "about",
+            "target": "dec-axker49q"
+          }
+        ]
+      },
+      "body": "Raised by [Carlos Ruiz](../people/carlos-ruiz.md) at the [10 Dec launch review](../meetings/2026-12-10-acme-launch-review.md)."
+    }
+  ]
+}
