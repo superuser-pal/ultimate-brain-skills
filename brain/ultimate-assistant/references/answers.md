@@ -44,7 +44,7 @@ For each change, in this order, before the next one:
    Skipped `NO_CHANGE`: it is already so; say it is already done. Skipped `DUPLICATE_PENDING`: see "A yes to a change already proposed".
 2. **Decide it:** `brain apply --input` with `{ "decisions": [ { "proposal": "<prp id>", "action": "approve", "decided_at": "<now, ISO 8601 UTC>", "decided_by": "chat" } ] }`.
 3. **Carry it out:**
-   - **Notion-owned** (`notion_change`): the apply's item result is `awaiting_notion` and `data.notion_writes` holds its write. Carry it out and settle it as brain-apply's "Notion writes" says; commit.
+   - **Notion-owned** (`notion_change`): the apply's item result is `awaiting_notion` and `data.notion_writes` holds its write. Carry it out and settle it as brain-apply's "Notion writes" says; commit. Its confirmation lines start with the finding's number: `3: not changed: it changed in Notion since I read it. Say "review again" to see it as it is now.`, `3: not changed: the page or its Status is gone from Notion.`, or for a failed write `3: couldn't be written to Notion; it stays approved and I'll write it next session.`
    - **Brain-owned** (`set_field`, `merge`): `brain index`, `brain views`, `brain lint`, then commit the apply's `changed` paths with the index and views (`assistant: <proposal title>`). Then publish: `brain sync render --ids <every note the apply changed>`, write the payloads through the MCP as brain-sync's Push steps 10 and 11 say, `brain sync record`, commit (`publish: <proposal title>`). The yes covers this publish: `settings.publish: ask` isn't asked again.
 
 A proposal decided in chat before it had a Review row never gets one: it is the Git record of the yes.
