@@ -111,7 +111,7 @@ A Document is a `reference` note with an `origin` (references/extraction.md, "Do
   "body": "Acme moves auth from Firebase to Supabase.\n\n## Decision\nUse Supabase for auth.\n" }
 ```
 
-- **`origin` is required.** `whole`: `sources` is exactly that one `src-` id and the body is its body byte for byte, or the CLI refuses it; the CLI writes it as `reviewed`, and a second one of the same source comes back in `skipped` as `ALREADY_KEPT` (fine). `part`: a draft that goes in the input's `review_notes` like any new note. `promoted`: `promoted_from` names an existing decision or concept that has no promoted Document yet; it takes that note's lifecycle; `sources` may be left out.
+- **`origin` is required.** `whole`: `sources` is exactly that one `src-` id and the body is its body byte for byte, or the CLI refuses it; the CLI writes it as `reviewed`, and a second one of the same source comes back in `skipped` as `ALREADY_KEPT` (fine). `part`: a draft that goes in the input's `review_notes` like any new note. `learned`: what the brain learned (extraction.md "Learned Documents"), a draft in `review_notes`; `sources` may be left out, but give them. `promoted`: `promoted_from` names an existing decision that has no promoted Document yet; it takes that note's lifecycle; `sources` may be left out.
 - Leave `whole` and `promoted` Documents out of `review_notes`: they need no Review.
 
 ## 3. The proposals batch
@@ -177,7 +177,15 @@ From any other source, the owner's tasks only ([extraction.md](extraction.md), "
 ] }
 ```
 
-`brain sync tasks --source src-5t8n2v6q --input <file>`. A task with no `projects` gets no project. Its backlink is the source's Inbox row: until that row is published, the item lists it in `pending_relations`, so publish the source first ([notion.md](notion.md), "Publish").
+`brain sync tasks --source src-5t8n2v6q --input <file>`. A task with no `projects` gets no project.
+
+From a selected extract with a Scope (decision 0067; [selection.md](selection.md) §6): `extract-plan` returned `{ "item": "s1.i2", "done_when": "Venue confirmed in writing", "due": "2026-12-17", "project": "Acme website", "notes": null, "problems": [] }` and the project resolves to `prj-9x4t1b7e`, so the item is
+
+```json
+{ "items": [ { "title": "Book the venue for the launch event", "item": "s1.i2", "due": "2026-12-17", "projects": ["prj-9x4t1b7e"] } ] }
+```
+
+and the page is created with the body `Done when: Venue confirmed in writing`. A quick follow-up never appears here. Its backlink is the source's Inbox row: until that row is published, the item lists it in `pending_relations`, so publish the source first ([notion.md](notion.md), "Publish").
 
 ## 5. Log line
 

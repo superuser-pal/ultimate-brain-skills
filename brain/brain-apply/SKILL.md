@@ -92,7 +92,7 @@ In a catch-up these are decided in its read-only pass and confirmed in its one b
 2. **Rebuild:** run `brain index`, `brain views`, then `brain lint`. If lint reports an error in a file this run changed, stop and report; don't commit.
 3. **Commit:** `apply: <n> applied, <n> closed`, listing the proposal titles in the body. If this run does not publish (step 4), push now, per `settings.push` (the brain's AGENTS.md, "Write path").
 4. **Publish** *(Notion mode, attended runs only, per `settings.publish`)*. A chat run does not publish: its changes go out with the next Notion-mode run or `brain sync` (spec/cli.md §6, "Apply in chat"). In Notion mode:
-   1. Run `brain sync render --changed`, write the pages through the MCP, then `brain sync record`. The steps are the same as in the brain-ingest skill's references/notion.md "Publish": Review rows move to State Applied or Closed, and the changed notes are updated.
+   1. Run `brain sync render --changed`, write the pages through the MCP, then `brain sync record`. The steps are the same as in the brain-ingest skill's references/notion.md "Publish": Review rows move to State Applied or Closed, the changed notes are updated, and the notes just approved get their pages (only reviewed knowledge is in Notion, decision 0071; a rejected draft never gets one).
    2. Log it with `brain log publish - pages=<n>`; `sync record` itself does not log (§3.9, §5.14.6).
    3. Commit: `publish: apply results`, then push (same rule as step 3).
 5. **Report** in three lines (decision 0037):
