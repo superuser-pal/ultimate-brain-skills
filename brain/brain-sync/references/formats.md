@@ -22,7 +22,7 @@ A copy of the inputs in spec/cli.md §5.14, so the skill works from inside a bra
 }
 ```
 
-- `database`: the `brain.json` key: `areas`, `goals`, `key_results`, `projects`, `people`, `orgs`, `decisions`, `questions`, `concepts`, `documents`, `review` or `inbox` (`references` on a brain not yet upgraded is read as `documents`). Send only the databases of modules that are on (brain-sync step 2). Meetings are never a snapshot database.
+- `database`: the `brain.json` key: `domains`, `areas`, `goals`, `key_results`, `projects`, `people`, `orgs`, `decisions`, `questions`, `documents`, `review` or `inbox` (never `concepts`: retired in 0.9.1, `sync plan` refuses it) (`references` on a brain not yet upgraded is read as `documents`). Send only the databases of modules that are on (brain-sync step 2). Meetings are never a snapshot database.
 - **The rows the plan acts on,** each in exactly this shape (send the properties shown, with these names; a row of a space not yet migrated uses the old name given in brackets):
 
   ```json
@@ -38,16 +38,16 @@ A copy of the inputs in spec/cli.md §5.14, so the skill works from inside a bra
   *(Documents)* An Inbox row whose Document asked box is ticked and that has a Brain ID. `Only keep` is its text or `null`. It becomes a `document_requests` item `{ "page_id", "source", "files", "only_keep", "existing"? }`.
 
   ```json
-  { "database": "inbox", "page_id": "c3000000-0000-4000-8000-000000000002", "last_edited": "2026-12-05T08:25:00Z",
+  { "database": "documents", "page_id": "c3000000-0000-4000-8000-000000000002", "last_edited": "2026-12-05T08:25:00Z",
     "properties": { "Brain ID": "vw-4c7n2k9p", "Refresh asked": true, "What to fix": "Lucía left Acme in June" } }
   ```
-  *(Reports)* A Report row with Refresh asked ticked or What to fix set. [Before migration 0010: `Refresh`.] It becomes `refresh_requests` `{ "page_id", "report" }` and `report_fixes` `{ "page_id", "report", "text" }`.
+  *(Reports)* A Report row (a Documents page with Origin Report, decision 0071) with Refresh asked ticked or What to fix set. [Before migration 0019 it is an Inbox row: `"database": "inbox"`, read the same way. Before migration 0010: `Refresh`.] It becomes `refresh_requests` `{ "page_id", "report" }` and `report_fixes` `{ "page_id", "report", "text" }`.
 
   ```json
   { "database": "decisions", "page_id": "5f6a7b8c-9d0e-4f1a-8b2c-3d4e5f6a7b8c", "last_edited": "2026-12-05T08:30:00Z",
     "properties": { "Name": "Use Supabase for auth", "Summary": "…", "Lifecycle": "Draft", "Brain ID": "dec-7k2m9q4x", "Promote asked": true } }
   ```
-  *(Documents)* A decision or concept row also carries `Promote asked` (its other properties as usual). True becomes a `promote_requests` item `{ "page_id", "note", "existing"? }`.
+  *(Documents)* A decision row also carries `Promote asked` (its other properties as usual). True becomes a `promote_requests` item `{ "page_id", "note", "existing"? }`.
 
   ```json
   { "database": "documents", "page_id": "6a7b8c9d-0e1f-4a2b-8c3d-4e5f6a7b8c9d", "last_edited": "2026-12-10T10:00:00Z",

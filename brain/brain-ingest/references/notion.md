@@ -50,22 +50,23 @@ Do these in order, after the ingest commit: pages first, so every task's project
    1. Run `brain sync render --changed`.
    2. For each item:
       - **`action: create`:** create a page in `database_id` with `properties`.
+      - **`template` on a project `create`** (decision 0068): the page comes from the space's default Projects template, with its Brief and Decision log toggles, views and My notes. List the Projects data source's templates once (`GET /v1/data_sources/{id}/templates`). With a default template, create the page with `"template": { "type": "default" }` and `properties`, and no children. The template lands after the create returns: re-read the page's blocks a few times, over about 30 seconds, until the "Brief" and "Decision log" toggle headings are there, then write `sections` as below. Never append toggles to a page you just created from the template; if they don't appear, or a section write fails, record the page with `"@content": null` in its `published`, so the next render sends the sections. With **no default template**, create nothing for that project and record nothing for it: ask the user to create it with **New project** in Notion and put the note's id in its **Brain ID**, so the next sync links the two. Notes that relate to it stay in `pending_relations` and are written without that relation this run. The report names each new project: its Status is the user's to set.
+      - **A Review row's `body`** (a `create` with `published["@review"]`, decision 0068): create the row with `properties`, then write the whole `body` once with the Markdown page update (`PATCH /v1/pages/{id}/markdown`, `replace_content`), while the page is still empty: each `<details>` becomes a real toggle block. Don't convert it to blocks yourself. If the write fails, move the new page to the trash and leave it out of the record. Every later write to a Review row goes through the block API (the brain-sync skill, step 10).
       - **`action: update`:** update `page_id` with `properties`.
       - **`action: trash`** (a Review row decided more than 30 days ago, decision 0045): move `page_id` to Notion's trash (update the page with `in_trash: true`; `archived: true` on API versions before 2025-09). Nothing else. Record it like any other write; the proposal stays in the brain.
       - **Meeting and Inbox relations with `"mode": "add"`:** add the listed pages and keep the existing ones.
       - **`"mode": "if_empty"`:** write only if the property is empty in Notion.
-      - **`body` (decisions, questions, concepts, Documents):** replace the page body with it. A `promoted` Document has a `body` only on `create`; on `update` it is `null`, and its page body is the user's (decision 0049).
-      - **`body` and `sections` on an Inbox item** (a source, or a report): see "Inbox bodies" below. A capture's or an Ask row's page body is the user's: render never gives one a body.
+      - **`body` (decisions, questions, Documents):** replace the page body with it. A `promoted` Document has a `body` only on `create`; on `update` it is `null`, and its page body is the user's (decision 0049).
+      - **`body` and `sections` on an Inbox item** (a source): see "Inbox bodies" below; a report's `body`, on its Documents row: "Report bodies" below. A capture's or an Ask row's page body is the user's: render never gives one a body.
       - **`sections` (projects):** replace only the children of the toggle heading with that exact name ("Brief", "Decision log"). Read the page's blocks first (decision 0033):
         - **the page has no toggle headings at all** (created without the template): append a "Brief" and a "Decision log" toggle heading, in that order, at the end of the page, then fill them;
         - **the page has other toggle headings but not this one:** report `SECTION_NOT_FOUND` for that page and change nothing on it (a rename is likely, 0026).
       - **`sections` (areas, decision 0041):** the "Brief" toggle the same way, except that a page without a "Brief" toggle heading gets one appended at the **end** of the page, then filled, whatever other toggles it has. The page is the user's, so never insert above their content; they can drag it up once.
 
-      **Writing a section through the MCP: the block API only** (decision 0043). List the toggle's children, delete them, and append the new ones as blocks. Never write a section through the Markdown page update, even on a page that holds nothing else: it flattens the toggles and can delete the user's content.
+      **Writing a section through the MCP: the block API only** (decision 0043). List the toggle's children, delete them, and append the new ones as blocks. Never write a section through the Markdown page update, even on a page that holds nothing else: it flattens the toggles and can delete the user's content. The one use of the Markdown page update is a new Review row's whole body, above (decision 0068).
 
-      **`properties` with `"Refresh asked": { "type": "checkbox", "value": false }`** on a report row clears its box: send it as any other property. Document asked and Promote asked are never in `properties`: the skill unticks them through the MCP once it has acted (brain-catch-up, step 5).
-   **`PROJECT_NOT_IN_NOTION`** in `errors`: a project note with no Notion page (written before 0.2.2, or by hand). Never create the page through the API: it would miss the template. Report it, and ask the user to create the project with **New project** in Notion under the same name and put the note's id in its **Brain ID**, so the next sync links the two.
-   3. **Pending relations:** items that list `pending_relations` reference notes not yet published. Publish and record those first, then run `sync render --changed` again.
+      **`properties` with `"Refresh asked": { "type": "checkbox", "value": false }`** on a Report row (a Documents page) clears its box: send it as any other property. Document asked and Promote asked are never in `properties`: the skill unticks them through the MCP once it has acted (brain-catch-up, step 5).
+   3. **Pending relations:** items that list `pending_relations` reference notes not yet published. Publish and record those first, then run `sync render --changed` again. An item with empty `properties` is only waiting for them (a decision you just approved, its meeting's Decisions): write nothing for it and leave it out of the record; the next render sends the relation. A draft decision, question or Document is never pending: it gets its page once approved in Review (decision 0071), and its relations fill in then.
    4. Run `brain sync record` with one record per page written: `{ "id", "notion": <page id>, "synced_at": <now>, "published": <the item's published> }`.
 2. **Tasks,** now that the pages they link to exist (decision 0037). If `brain status` shows `tasks_database: true`:
    1. Run `brain sync tasks --meeting <mtg-id> --input <items.json>`, or `--source <src-id>` for the owner's tasks from any other source.
@@ -76,11 +77,16 @@ Do these in order, after the ingest commit: pages first, so every task's project
 ### Inbox bodies (decision 0043)
 
 The brain writes the body of the Inbox rows it creates, once:
-- **`body`** on a `create`: the row's page content, written as blocks after the row is created. For a source it is the digest: a line saying what the input is, the summary and the key points. For a report it is the report's six sections; a refreshed report comes back as an `update` with a `body` (decision 0045): replace the row's page content with it, then send its properties (Refresh asked cleared).
+- **`body`** on a `create`: the row's page content, written as blocks after the row is created: the digest, a line saying what the input is, the summary and the key points.
 - **No Full text** (decision 0049): render sends no `sections` on a source. A row that already shows a "Full text" toggle keeps it; leave it alone. The whole text of an input now lives in a Document ([extraction.md](extraction.md), "Documents").
-- The body is never rebuilt or read back (except a report's body on a refresh): an edit you make there stays in Notion.
+- The body is never rebuilt or read back: an edit you make there stays in Notion.
 
-A report row's **Ask** relation links it to the Ask row it answers. After writing the report row, set that Ask row's **Brain Status** to Done through the MCP; change nothing else on it.
+### Report bodies (decisions 0043, 0045, 0071)
+
+A report is a **Documents** page with Origin Report (its Report row; on the Inbox before 0.9.1). Its render item has `database: "documents"`.
+- **`body`** on a `create`: the report's six sections, written as blocks after the page is created. A refreshed report comes back as an `update` with a `body`: replace the page content with it, then send its properties (Refresh asked cleared). Otherwise an `update` has no body.
+- A report published before 0.9.1 and moved to Documents by migration 0019 keeps its page id: its first `update` sends every property once (Notion drops some in a move), with no body unless a refresh is due.
+- Its **Asked in** relation links the Ask rows it answers on the Inbox; Notion fills their Report relation. After writing the Report row, set each new Ask row's **Brain Status** to Done through the MCP; change nothing else on it.
 
 ## If Notion fails partway
 

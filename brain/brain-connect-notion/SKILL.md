@@ -15,11 +15,11 @@ Run CLI commands as `brain <command> --brain <brain> --json`. If `brain` is not 
 
    ```
    Core (always on): Inbox, Meetings, Projects, Areas, People, Review
-   [x] Knowledge: Decisions, Questions, Concepts
+   [x] Knowledge: Decisions, Questions
    [ ] Domains: group Areas by work or life context (its database is in every space)
    [x] Orgs: client and partner organizations
    [ ] Documents: keep a document, or part of one, as a page
-   [ ] Reports: ask the brain in the Inbox, get a report you can refresh
+   [ ] Reports: ask the brain in the Inbox, get a report in Documents you can refresh (turns Documents on too)
    [ ] Tasks: action items as Notion tasks
    [ ] Planning: Goals and Key Results
    ```
@@ -45,14 +45,14 @@ Run CLI commands as `brain <command> --brain <brain> --json`. If `brain` is not 
    | Questions | `questions` |
    | Review | `review` |
    | Inbox (called Capture Inbox before 0.3.0) | `inbox` |
-   | Concepts | `concepts` |
    | Documents (called References before migration 0010) | `documents` |
    | Tasks | `notion.tasks.database` (below) |
 
-   A missing database is reported, not invented. **Domains** is expected in every space, with the module on or off (decision 0065): when it is missing, the space predates 0.8.1, so name `notion/migrations/0014-domains-database-in-every-space.md` (run with `brain-notion-change`). A missing database of a module that is on is the module's Notion steps still to do ("Turning a module on" below); the brain works without it, and the skills that need it say so.
+   A missing database is reported, not invented. A **Concepts** database in the space predates 0.9.1 (decision 0071): never write it in `brain.json`; name `notion/migrations/0018-concepts-become-documents.md` (run with `brain-notion-change`), which moves what it held to Documents and retires it. **Domains** is expected in every space, with the module on or off (decision 0065): when it is missing, the space predates 0.8.1, so name `notion/migrations/0014-domains-database-in-every-space.md` (run with `brain-notion-change`). A missing database of a module that is on is the module's Notion steps still to do ("Turning a module on" below); the brain works without it, and the skills that need it say so.
 3. **Check each database** (read-only). Retrieve the database, then its data source (current Notion API: a database has `data_sources`, and its properties live on the data source). Check that every property in docs/notion-space-design.md §3 for that database exists with the right type: relations point to the right database, and selects have the listed options.
    - Report each difference as `Database · Property: expected …, found …`.
    - Report two select options that share an id (it has happened after adding an option through Notion AI), and suggest deleting and re-adding the option by hand.
+   - **Workflow settings** (decision 0059, docs/notion-space-design.md §3.19): Projects and Areas each have **Workflow** (select: Standard, Connected), **Work type** (select: Software, General), **Logging level** (select: Tasks only, Tasks + final outputs, Full durable record, Custom) and **Log artifacts** (multi-select: Briefs, Plans, Specifications, Decisions, Final deliverables), in every space. Compare names and types exactly and option labels case-insensitively. When they are missing, the space predates 0.9.0: name `notion/migrations/0015-workflow-settings-on-projects-and-areas.md` (run with `brain-notion-change`). The brain works without them; only connecting work to Notion needs them. They are read by name, so nothing goes in `brain.json`, and this skill never reads or sets their values.
    - **Don't fix anything in Notion.** Structure changes go through the `brain-notion-change` skill (decision 0022).
 4. **Store the ids.** For each database found, run `brain config set notion.databases.<key> '"<database id>"'`. Store the **database** id, not the data source id; skills resolve the data source when they query.
 5. **Tasks** (decision 0018):
