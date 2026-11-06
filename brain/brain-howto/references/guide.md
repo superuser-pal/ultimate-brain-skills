@@ -301,7 +301,7 @@ Your work often lives outside the brain: a software repo, or a folder of documen
 - how work is done there, in a sentence or two;
 - its Area, and its Project when it serves one.
 
-You see the whole file before it is written, and the agent writes it only after your yes, again for every later change. The kit is the only file the brain ever writes in a linked repo; you commit it there yourself. The agent then asks once whether the repo should also read the brain (it adds `.brain`, a block in AGENTS.md and the brain-query skill there).
+You see the whole file before it is written, and the agent writes it only after your yes, again for every later change. The kit is the only file the brain ever writes in a linked repo; you commit it there yourself. The agent then asks once whether the repo should also read the brain (it adds `.brain`, a block in AGENTS.md, and the brain-query, brain-workflow and brain-workflow-adopt skills there).
 
 When the tasks stay in the repo, the Project or Area page gets a toggle **Repo tasks · acme-api**: a read-only count of done, open and waiting tasks, with the open ones listed. It changes nothing in the repo. "check my linked repos" finds a repo that moved, a kit that changed, a pattern that matches nothing or a rollup that is out of date, with the fix for each. "unlink acme-api" stops reading it; what the brain already learnt from it stays. "start a new repo for <project>" creates one from a simple starter (README, AGENTS.md, decisions/, docs/, `TASKS.md`), with its kit, after your yes.
 

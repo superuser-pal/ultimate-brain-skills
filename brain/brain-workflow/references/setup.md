@@ -4,7 +4,7 @@ spec/connected-workflows.md §2–§4. Ask only for what you can't find, and ask
 
 ## 1. Find what you can
 
-1. **The working folder:** the current folder unless the user names another. Note whether it is a Git repo, and whether it is a linked repo: `brain status` lists `repos`; a folder whose path is a `repos` entry's `path` is that repo, and its name goes in `folder.repo`.
+1. **The working folder:** the current folder unless the user names another. Note whether it is a Git repo, and whether it is a linked repo: `brain status` lists `repos`; a folder whose path is a `repos` entry's `path` is that repo, and its name goes in `folder.repo`. When the folder is not the brain and has no `.brain` file, or its `.brain` (JSON, a plain file read) has a `skills.names` list without `brain-workflow`, the summary in section 3 also offers to install the brain skills there.
 2. **The brain:** `brain status`. Exit 3 means no brain resolves: stop and say so (set `BRAIN_DIR` or run from the brain). Note `modules` and `notion.tasks_database`.
 3. **The destination:** one existing Project **or** Area, never both. Search `brain index --json` (titles and aliases) for close matches to the folder's name, the repo's kit `placement` (a kit-linked repo's `project`, else its `area`) and what the user said; list the best few. Create a new Project or Area only when the user asks: `brain note new` through the normal path, then publish it (brain-sync) so it has a Notion page.
 4. **Relations** (optional): a Goal (with a Project destination), People, Orgs. Only ids the brain has.
@@ -50,6 +50,8 @@ Connect this work to Notion?
 - From now on Notion owns these tasks' status; the brain keeps the scope, criteria and progress.
 ```
 
+When step 1 found the folder without the brain skills, the same message asks a second question: "Install the brain skills in this folder too, so a session started here finds them? `brain link` adds `.brain`, a block in AGENTS.md, and the brain-query, brain-workflow and brain-workflow-adopt skills." It is asked only here, in setup.
+
 On yes, in this order:
 1. **Notion:** set on the destination page `Workflow` = Connected, and the Work type, Logging level and Log artifacts chosen. Read the page back.
 2. **The record:** `brain workflow new --input <file>` with:
@@ -69,6 +71,8 @@ On yes, in this order:
    ```
 
    `folder` only for a linked repo; `relations` only when there are some; `destination` is `{ "area": "area-…" }` for an Area. `opted_in.statement` is the user's yes in a short sentence. The command writes the record, commits it in the brain, and writes `.brain-workflow.json` in the folder. Tell the user to commit that pointer with the project, like any project file.
+
+3. **The brain skills,** only when the user also said yes to installing them: `brain link <folder> --project <id>` (or `--area <id>`, the destination). Pass on its warnings in a few words, name the skills it installed (`data.skills.names`, which may differ from the three named in the question), and, when the folder is a Git repo, tell the user to commit what it wrote. On no, write nothing. If it fails, say why, and that the workflow itself is connected.
 
 If step 2 fails after step 1, the destination says Connected but no record exists: the next setup finds the Connected setting, fills only the gaps, and runs `workflow new` again.
 
