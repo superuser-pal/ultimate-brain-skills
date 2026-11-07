@@ -36,6 +36,12 @@ A copy of the inputs in spec/cli.md §5.14, so the skill works from inside a bra
     "properties": { "Brain ID": "src-4m9q2x7c", "Document asked": true, "Only keep": null } }
   ```
   *(Documents)* An Inbox row whose Document asked box is ticked and that has a Brain ID. `Only keep` is its text or `null`. It becomes a `document_requests` item `{ "page_id", "source", "files", "only_keep", "existing"? }`.
+  Every other Inbox row with a Brain ID is passed with that property only:
+  ```json
+  { "database": "inbox", "page_id": "c3000000-0000-4000-8000-000000000002", "last_edited": "2026-12-05T08:25:00Z",
+    "properties": { "Brain ID": "src-2b7m9k4e" } }
+  ```
+  `sync plan` links the source to the page when the source has no `notion` yet (a publish that stopped before `sync record`), and compares nothing else (spec/cli.md §5.14.2, CC-153).
 
   ```json
   { "database": "documents", "page_id": "c3000000-0000-4000-8000-000000000002", "last_edited": "2026-12-05T08:25:00Z",
