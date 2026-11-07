@@ -14,7 +14,7 @@ How step 7 carries out an answer to a numbered finding. Each finding from `brain
 - **"propose N"** (or "propose it", "later" on a finding) writes recommendation `a` as a Review row instead; **"propose Nb"** its `b`. A `null` value is asked first, as for a yes. An `add_task` can't be a Review row: say so and offer an Inbox capture instead (ramble.md).
 - **Order.** The changes of one answer are made in the order of their numbers, each finished before the next. Each proposal carries the value read in the snapshot, so a change an earlier one made stale (a merge, then a yes on one of the duplicate's tasks) settles `stale`, and you say so.
 
-After each change, confirm it in one line, quoting values as written: `1: due date moved to 13 Nov`, `2: Status set to On Hold`, `5: proposed; it's in Review now.` Add the subjects it touched to the session record.
+After each change, confirm it in one line, quoting values as written: `1: due date moved to 13 Nov`, `2: Status set to On Hold`, `8: moved to Marketing, with its 1 open task`, `9: merged into Quayside Books catalogue, with its 1 open task`, `5: proposed; it's in Review now.` Add the subjects it touched to the session record.
 
 ## The actions
 
@@ -35,11 +35,11 @@ After each change, confirm it in one line, quoting values as written: `1: due da
 
 For each change, in this order, before the next one:
 
-1. **Write the proposal:** `brain proposal new --input` with one item:
+1. **Write the proposal:** `brain proposal new --input` with `{ "proposals": [ { "kind": "<kind>", … } ] }`, one item:
    - every kind: `finding` = the finding's `key`, `source` = `agent:ultimate-assistant/<session id>`, `why` = the finding's evidence text as the report printed it;
    - `notion_change`: `database`, `page` (the task's `subject.page_id`, or the note's page for a project or an Area, snapshot.md), `page_title` (the snapshot's title), `property`, `value_before` (the snapshot's value), `value_after`, `area` = the finding's `area` (left out when `null`), and `target` = the project or Area id on `projects` and `areas` (none on `tasks`);
    - `set_field`: `target`, `field`, `after`, `area` = the finding's `area` (left out when `null`);
-   - `merge`: `target`, `merge_into`; no `area`.
+   - `merge`: `target`, `merge_into`, `title` = the recommendation's label with a capital (`Merge Quayside catalog into Quayside catalogue`); no `area`.
 
    Skipped `NO_CHANGE`: it is already so; say it is already done. Skipped `DUPLICATE_PENDING`: see "A yes to a change already proposed".
 2. **Decide it:** `brain apply --input` with `{ "decisions": [ { "proposal": "<prp id>", "action": "approve", "decided_at": "<now, ISO 8601 UTC>", "decided_by": "chat" } ] }`.
@@ -49,9 +49,9 @@ For each change, in this order, before the next one:
 
 A proposal decided in chat before it had a Review row never gets one: it is the Git record of the yes.
 
-**A move takes the project's tasks with it.** After a `move_project` is applied and published, the project's open tasks whose `areas` holds the old Area's page are moved too, under the same yes (the label said so): one `notion_change` per task (`tasks`, `area`, `value_after` = its `areas` with the old Area's page replaced by the new one, deduplicated and sorted), written in one `proposal new`, approved in one `apply`, then written and settled. These task proposals have no `finding` and take the `area` of the finding they come with. A task that names no Area follows the project and needs nothing.
+**A move takes the project's tasks with it.** After a `move_project` is applied and published, the project's open tasks whose `areas` holds the old Area's page are moved too, under the same yes (the label said so): one `notion_change` per task (`tasks`, `area`, `value_after` = its `areas` with the old Area's page replaced by the new one, deduplicated and sorted), written in one `proposal new`, approved in one `apply`, then written and settled. These task proposals have no `finding`, take the `area` of the finding they come with, and have `why` = the move's label (`move it to Marketing (and its 1 open task that name Clients)`). A task that names no Area follows the project and needs nothing.
 
-**A merge takes the duplicate's tasks with it.** After a `merge_projects` is applied and published, each open task of the duplicate gets one `notion_change` (`tasks`, `project`, `value_after` = its `projects` with the duplicate's page replaced by the survivor's, deduplicated and sorted), written, approved, carried out and settled the same way, with no `finding` and the finding's `area`.
+**A merge takes the duplicate's tasks with it.** After a `merge_projects` is applied and published, each open task of the duplicate gets one `notion_change` (`tasks`, `project`, `value_after` = its `projects` with the duplicate's page replaced by the survivor's, deduplicated and sorted), written, approved, carried out and settled the same way, with no `finding`, the finding's `area`, and `why` = the merge's label.
 
 A task move whose new page doesn't exist yet (a survivor or an Area never published) is left out; say so in the confirmation. A task whose write fails or settles `stale` is named in the confirmation line; the move or merge itself stands.
 

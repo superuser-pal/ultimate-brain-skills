@@ -3,7 +3,7 @@
 "skip N", with or without a reason (decision 0072 §6).
 
 1. **A status that says why.** When the finding has `status_offers` (a task Waiting On or Someday, a project On Hold), offer them in one question: "Set it to Waiting On or Someday, so it stops being flagged?" A yes naming one applies it as that `set_task_status` or `set_project_status`, exactly as a yes does (answers.md, "A yes: apply it now"); the signal then no longer fires for it, so nothing is remembered. It counts as changed, not skipped.
-2. **Otherwise it is remembered.** No offer, or the user declines them: ask for the reason once when none was given ("why, in a few words? or 'no reason'"), then run `brain assistant dismiss --input` with `{ "dismissals": [ { "key": "<the finding's key>", "reason": "<the user's words, or empty>" } ] }`. For 30 days the finding is left out of every report and counted in "skipped for now". Confirm `4: skipped for 30 days`. The store isn't committed now: the close commits it.
+2. **Otherwise it is remembered.** No offer, or the user declines them: ask for the reason once when none was given ("why, in a few words? or 'no reason'"), then run `brain assistant dismiss --input` with `{ "dismissals": [ { "key": "<the finding's key>", "reason": "<the user's words, or empty>" } ] }`. For 30 days the finding is left out of every report and counted in "skipped for now". Confirm `4: skipped for 30 days`. The store and the log line `dismiss` writes aren't committed now: the close commits them.
 3. **Seeing the skips.** "show the skipped ones": read `_assistant/dismissals.json` (a missing file means none) and list every active entry (its `until` after `as_of`), of any session, sorted by `until`:
 
    ```text
