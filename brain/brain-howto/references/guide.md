@@ -102,6 +102,8 @@ The brain never changes what it already knows without your yes. Each row in **Re
 3. Tell your agent "apply my reviews" (or "catch up"). The agent reads What to fix, applies it, and repeats every correction back to you in its report ("a: launch set to March, not February"), so you can check it read you right. It never applies something you didn't clearly say; when unsure, it asks.
 4. **30 days after you decide,** the next catch-up moves the row to Notion's trash, so Review holds only what's recent. The brain keeps every decision, and Notion keeps the trash for 30 more days.
 
+**Suggestion rows** come from Ultimate Assistant when you say "propose" (see Review your work): one change each, such as a task's Status or a project's Area, with Now and Proposed. Approve, Reject or Fix them like any row; an approved one is made in Notion by your agent's next run.
+
 **One row per meeting, email or document.** Everything one input brings is one row, "From Acme launch review: 2 changes, 6 new notes and 2 links", with its items lettered in **Proposed**:
 
 ```
@@ -276,6 +278,43 @@ Brain Assistant reads; your agent in Claude Code or Codex writes. To get somethi
 
 ---
 
+## Review your work
+
+**Ultimate Assistant** looks at the shape of your work (Areas, Domains, Projects and Tasks) and tells you what needs you. Say "review my projects" to your agent, or narrow it: "what's stalled in Clients?". In Claude Code you can also start a session with it directly: `claude --agent ultimate-assistant` in your brain folder.
+
+It reads your Tasks, Projects and Areas live from Notion, and the brain's meetings and notes, and shows a report first:
+
+```text
+Ultimate Assistant · whole brain · 6 Nov 2026
+Notion read live: 42 tasks, 9 projects, 6 areas.
+
+1. Overdue · "Send the revised quote" (task in Acme website) · due 29 Oct, 8 days late
+   a) give it a new due date  b) mark it Done  c) mark it Won't Do
+2. Stalled · Acme website (project) · nothing done or mentioned for 23 days (last: meeting Acme sync, 14 Oct)
+   a) set Status to On Hold  b) add a next step  c) set Status to Done
+…
+10. Structure · Health (area) · no Domain
+   a) put it in a Domain
+
+14 more. Say "more", or name an Area, Domain or Project.
+3 skipped for now.
+Answer with "yes 1, 2b", a change ("1: due Friday"), "skip 4 because …", or "propose 5" for a Review row; "done" to finish.
+```
+
+**What it checks,** with the same thresholds for everyone: a task 3 or more days past its due date (overdue) or not edited for 14 days (stalled); an Active project with nothing done or mentioned in the brain for 21 days, with no next step, or with every task done but still open; a project whose notes mostly sit in another Area; two projects that look like the same one; an Area with nothing active, or with no Domain. Tasks set to Waiting On or Someday aren't nagged about. It shows the 10 most important findings, worst first, and "more" shows the next ones.
+
+**It changes nothing without your yes.** You answer in the chat:
+- **"yes 1, 2b"** makes those changes now: "yes 1" is the first suggestion (a), "2b" the second. "yes to all" takes every a). When a change needs something from you (a new due date, which Domain), it asks first. You can also say the change yourself: "1: due Friday", "3: mark it Waiting On".
+- **"propose 5"** writes the change as a **Suggestion** row in Review instead, so you can decide it later in Notion like any other row. Once you approve it, the next "apply my reviews", "catch up" or review session makes the change.
+- **"skip 4 because it's a personal area"** stops it being flagged. When a status says why (a task Waiting On or Someday, a project On Hold), it offers to set it; otherwise it remembers the skip for 30 days, with your reason. "show the skipped ones" lists them, and "unskip s2" brings one back. Rejecting a Suggestion row counts as a skip for 30 days too.
+- **"done"** ends the session: it tidies up, commits and pushes, and says what changed.
+
+**Tell it what's on your mind.** Say several things at once ("the Acme quote is done, I should call Lucía about the contract by the 13th, and maybe a blog series on onboarding") and it lists where each goes: a change to an existing task or project, a new task in Tasks (with its project and due date), a new project from your template, or an Inbox capture for the next catch-up. Nothing lands until you say "yes to all", or yes to the ones you want; "later 17" keeps that one as a New capture.
+
+If Notion can't be reached, it reviews the brain alone, says so on the report's second line, and offers no change to a Notion field until next time.
+
+---
+
 ## Run catch-up on a schedule
 
 Say "run catch-up every morning" (or "twice a day", "on weekdays") and the agent sets it up with you: the times, the Claude model to pin, and what a scheduled run may use. On a Mac it installs a background job; on other systems it gives you a line to add with `crontab -e`. The job runs `claude -p "catch up unattended"` in your brain folder, so your computer has to be on and Claude Code signed in at that time.
@@ -341,6 +380,8 @@ Run these in Claude Code or Codex, from your brain's folder.
 | Start a new repo for a project | "start a new repo for <project> at <path>" |
 | Track a folder's work in Notion | "connect this work to Notion" (new work), "adopt this project" (a project with a plan or issues already), from the folder of the work |
 | Work on it | "let's work on the next task", "publish the plan", "keep this one local", "end the workflow" |
+| See what's overdue, stalled, missing a next step or misplaced, and decide what to do | "review my projects", "what's stalled in Clients?", then "yes 1, 2b", "propose 5", "skip 4 because …", "done" (or `claude --agent ultimate-assistant`) |
+| Get what's on your mind into tasks, projects and captures | tell Ultimate Assistant in a few sentences, then "yes to all" |
 | Ask how the system works | "how do I …?", "why didn't … ?" (or ask Brain Assistant in Notion) |
 | Change the Notion structure (a property, an option, a view) | "add a property to Projects …". Structure is changed in the product first, then in Notion |
 | Check your Notion space | "check my Notion space" |

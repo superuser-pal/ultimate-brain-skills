@@ -6,3 +6,6 @@ brain/brain-sync/references/formats.md:9b8a7c6d-5e4f-4a3b-9c2d-1e0f9a8b7c6d
 brain/brain-sync/references/formats.md:1e2f3a4b-5c6d-4e7f-8a9b-0c1d2e3f4a5b
 brain/brain-sync/references/formats.md:5f6a7b8c-9d0e-4f1a-8b2c-3d4e5f6a7b8c
 brain/brain-sync/references/formats.md:c3000000-0000-4000-8000-00000000000[12]
+brain/ultimate-assistant/references/snapshot.md:2b8c4d6e-1f3a-4b5c-8d7e-9f0a1b2c3d4e
+brain/ultimate-assistant/references/snapshot.md:7c6b5a49-3827-4615-a4b3-c2d1e0f9a8b7
+brain/ultimate-assistant/references/snapshot.md:5d4c3b2a-1908-4f7e-8d6c-5b4a39281706

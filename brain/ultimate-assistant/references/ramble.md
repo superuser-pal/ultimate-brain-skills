@@ -1,0 +1,33 @@
+# A ramble lands in its place
+
+When the user says several things at once ("the Acme quote is done, I should call Lucía about the contract by the 13th, and maybe a blog series on onboarding"), split it into items, show them as a numbered list with where each goes, and place what the user says yes to. **The yes is the review:** what the user says yes to lands directly; what they don't name is dropped. A ramble item never becomes a Review row.
+
+## The list
+
+The items continue the session's numbers (after the last number shown), one line each:
+
+```text
+15. The Acme quote is done: "Send the revised quote" (task) → Status Done
+16. Call Lucía about the contract → Tasks, Due 13 Nov, Project Acme website
+17. A blog series on onboarding → Inbox capture
+Answer with "yes 15, 16", a change ("16: due Friday"), "later 17", or "yes to all".
+```
+
+The list becomes the last report: "yes N" places that item, "N: <change>" corrects it and shows it again, "later N" makes it an Inbox capture with Brain Status New, "yes to all" places every item that can be said yes to, "all but N" all of them except N.
+
+- **Values.** Resolve dates and names as answers.md says, and show the resolved values ("Due 13 Nov", "Project Acme website") before the yes. A vague date ("next week", "soon", "later this month") shows as `Due: ?`: ask for a day or "no date" before that item can be said yes to ("no date" leaves Due empty). "yes to all" over `Due: ?` items asks each value first, in number order, then places everything.
+- **Which existing thing.** Match the user's words against the snapshot's open tasks and the live projects and Areas (titles, and the brain's aliases). Exactly one match shows as `"<title>" (task)`, `<title> (project)` or `<title> (area)` with the change. None or several: ask, naming up to 5 candidates, and place nothing for that item until the user picks.
+- **No second copy.** Before showing a task item, look for an open task with the same title (trimmed, case-insensitive) in the snapshot and among the tasks this session created; show `already in Tasks` for it instead, with nothing to say yes to.
+- **Brain only:** tasks, Waiting On tasks, captures and Notion-owned changes can't be placed. Mark them `(Notion unreachable)`, offer no yes, and keep them for the closing summary's `Not placed` line. A new project and a brain-owned change are still written in Git; their pages are published by the next brain-sync or catch-up.
+
+## Where each item goes
+
+| The item | Lands as | How, after the yes |
+|---|---|---|
+| A change to something that exists ("the quote is done", "Acme is on hold") | the matching action of answers.md's table | answers.md, "A yes: apply it now", with no `finding`: `why` = the user's words for that item, `page_title` and `value_before` from the snapshot, `area` = the subject's placement as `brain assistant findings` places a finding (spec/cli.md §5.31, the `project` and `area` of a finding): for a task, the `area` of its first live project in the brain, else of its first project in the brain, else the first brain Area its `areas` names; for a project, its `area`; for an Area, itself; left out when there is none. "First" is by title, then id. For a relation, "put it in Y" or "move it to Y" sets it to `[Y]`, "also in Y" adds Y to the snapshot's list |
+| A task the user will do ("call Lucía by the 13th") | a Task in Notion, with Project and Due when given, and Area when the user named an Area and no project | `brain sync tasks --direct --input` with `{ "items": [ { "title", "due"?, "projects"?, "area"? } ] }`, then create each returned page through the MCP in its `database_id` with its `properties`. Nothing is recorded: no `sync record`. With the Tasks module off, offer it as a capture instead |
+| Someone else's commitment the user wants to track ("Ana owes me the logo files") | a Waiting On task with that person as owner | as a task, the item carrying `"status": "waiting_on"` and `"owner": "<their name as the user said it>"` |
+| A new project ("start a project for the onboarding guide") | a project note and its page from the Projects template | `brain note new` with `{ "notes": [ { "type": "project", "title": "<its title>", "frontmatter": { "area": "<area id>", "summary": "<one line in the user's words>" }, "body": "" } ] }` (the CLI writes a project as `reviewed` itself; `area` is required: ask when the user didn't say), `brain index`, `brain views`, `brain lint`, commit; `brain sync render --ids <prj id>` (a `create` from the default template), the MCP as brain-sync Push step 10 says for a project `create`, `brain sync record`, commit. A Status the user gave is then a `set_project_status` under the same yes, whose `value_before` is the Status the new page has, read through the MCP once the template is applied |
+| An idea, a note or anything to keep ("a blog series on onboarding") | an Inbox capture for the normal ingest | create a row through the MCP in the Inbox database (`notion.databases.inbox`): Name = a short title, Kind Capture, Brain Status Ready (New after "later"), Project and Area when named and the note has a page (otherwise the relation stays empty and the name stays in the text), body = the user's words for that item, as they said them. Nothing is written in Git: the next catch-up takes it in |
+
+**Order.** After the yes, create the new projects first, so an item that names one ("call Lucía about it") can relate to its page; then the other items in the list's order. A page whose creation fails is named in the confirmation and not retried; the ones created before it stay. Count each task, project and capture created for the closing summary, and add each changed subject to the session record.

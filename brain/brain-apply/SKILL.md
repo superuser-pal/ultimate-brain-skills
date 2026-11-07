@@ -31,6 +31,8 @@ Run every CLI command as `brain <command> --brain <brain> --json`. Exit 1 means 
    - `new_item`: the note that would be created.
    - `review_notes` (decisions 0041, 0043, 0045): everything one input proposes, lettered as the Review row's Proposed letters them: the **changes** first (every fact change marked ⚠, a new fact as `(new) → <value>`; then new text for a reference; then text added to a note), then the new **notes**, then the **links**. "From Acme launch review: a) ⚠ Launch date on Acme website: 2027-02 → 2027-03, b) Add to Row-level security: Carlos will use RLS…, c) Decision: Use Contentful as the blog CMS, …, h) People on Acme website: Lucía Fernández". End the line with the source and date ("(Acme sync, 3 Dec)"), with no quote: each item has its own `why`, shown when the user asks. Approving applies the changes, makes the notes `reviewed` and applies the links; rejecting archives the notes still `draft` and applies nothing.
    - `answer`: the question and its answer, and the note that answers it: "Who owns the mobile app? → Carlos Ruiz owns it (decision: Carlos owns the mobile app)". Approving closes the question; it shows as Answered in Notion.
+   - `notion_change` (a Suggestion from Ultimate Assistant): the row and the Notion field, old → new: "Send the revised quote (task): Status To Do → Done". Approving makes the change in Notion ("Notion writes" below).
+   - `set_field` (a Suggestion): the project's Area or the Area's Domain, old → new: "Studio newsletter: Area Clients → Marketing".
 
    Look up titles with `brain index --json` instead of showing ids. Mention the ones already decided but not applied.
 3. **Ask** which to approve, reject or fix. Accept replies like "approve 1 and 3, reject 2, fix 4: 90000 EUR", "approve 5 except b" or "fix 5: a is March, c belongs to Acme app". Fix works on every kind: read the user's words into `fixes` as "Reading What to fix" below says. On a grouped `add_link` or a `review_notes`, "except b" leaves those items out: on a `review_notes` they move to a new pending row (deferred, not rejected). When a reply names a row by its source and two rows share it, the letter or title only one of them has settles it; otherwise ask. **If a reply is unclear, ask again.** Don't guess.
@@ -84,6 +86,7 @@ In a catch-up these are decided in its read-only pass and confirmed in its one b
 
 1. **Read the results** of each item:
    - **`applied`:** done.
+   - **`awaiting_notion`:** an approved or fixed `notion_change`. Its write is in `data.notion_writes`: carry it out now, as "Notion writes" below says. Without Notion configured or reachable, leave it: the proposal stays `approved`, and the next run that reaches Notion carries it out.
    - **`closed`:** a rejection, or `STALE_PROPOSAL`. Stale means the note changed after the proposal was written (for example your own Notion edit), so the brain did not apply it. Tell the user the current value; the next ingest may propose again.
    - **`recorded`:** decided but not applied (`--record-only`).
    - **`skipped` with `ALREADY_TERMINAL`:** it was already done.
@@ -111,6 +114,18 @@ In a catch-up these are decided in its read-only pass and confirmed in its one b
    - **Check:** each item or proposal closed as stale, with the note's current value; each deferred row, with what it holds; each failure with its reason in a few words; each What to fix the user should look at again; each change proposed from What to fix. Only things the user can act on: a note the render skipped because it has nothing to publish (its type has no database, or nothing changed) is not a finding.
 
    A run with nothing applied stops at three lines. Never ids, file paths, commands or commit names: the user reads the report to act in Notion or chat, where those mean nothing.
+
+## Notion writes
+
+A `notion_change` is a change to a Notion-owned field (a task's Status, Due, Project or Area, a project's Status, an Area's Archived), proposed by Ultimate Assistant. The CLI can't write Notion, so `brain apply` and `brain sync apply` record the decision and hand back the write in `data.notion_writes`; the skill that ran them carries out every item, after the apply, and settles it. This is the user's explicit decision, so an unattended catch-up does it too. Until a skill carries out a write the proposal stays `approved` (or `edited`), its row shows Pending, and the next Ultimate Assistant session does it first.
+
+For each item `{ proposal, database, page_id, property, payload, expect, value }`:
+1. **Read** the page's `property` through the MCP and normalize it: a status or select its option name (`null` when empty), a date its first 10 characters (`null` when empty), a relation its page ids sorted, a checkbox its boolean. Compare a status trimmed and case-insensitive, a date by its `YYYY-MM-DD`, a relation as a sorted list, a checkbox exactly. A page Notion reports as not found, in the trash or archived, or without the property, can never be written: its result is `stale`, and the confirmation says `<title>: not changed: the page or its <property> is gone from Notion.` Any other failed read is a failed write (step 3).
+2. **Equal to `value`:** nothing to write; the result is `applied`. **Equal to `expect`:** update `page_id` with `{ <property>: payload }` (a `status` or `select` payload sets that option by name, a `date` its start, a `relation` the page list, a `checkbox` the box); on success the result is `applied`. **Anything else:** write nothing; the result is `stale` (the user changed it in Notion since), and the confirmation says `<title>: not changed: it changed in Notion since it was proposed.` (Ultimate Assistant adds `Say "review again" to see it as it is now.`)
+3. **A failed write** (the MCP returns an error, or the write can't be confirmed) settles nothing and isn't retried in this run, whatever the error: the proposal stays `approved`, the next run that applies decisions (or the next Ultimate Assistant session) carries it out, and you name it in the report's Needs you line (Ultimate Assistant: in its confirmation line). Read each write's own result, unfiltered, before you settle anything.
+4. **Settle:** `brain proposal settle --input` with `{ "settled": [ { "proposal": "<prp id>", "result": "applied" | "stale" } ] }`, one entry per item of steps 1 and 2, then commit the `changed` paths (`apply: <n> Notion changes`). The next `brain sync` pulls the new values into the brain.
+
+In the report, a settled `applied` counts as applied, a `stale` one as closed (stale) with the value Notion holds now, under Check.
 
 ## Don'ts
 
