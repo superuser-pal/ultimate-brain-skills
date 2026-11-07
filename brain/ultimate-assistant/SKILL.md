@@ -12,7 +12,7 @@ Run every CLI command as `brain <command> --brain <brain> --json`. Exit 1 means 
 ## Which run this is
 
 - **Report only:** the request you were given says `report only` (a session that delegates to the sub-agent always writes it; a user may say it too). That phrase is the one signal: never infer it. Run steps 1, 2, 4, 5 and 6, return the report as your whole answer, and stop. Write nothing: no proposal, no Notion write, no dismissal, no log line, no commit.
-- **Interactive:** every other run (`claude --agent ultimate-assistant`, an ordinary chat, `claude -p`). Run steps 1 to 6, then wait for the user's answers (step 7) until the session closes (step 8). When no answer comes (a `claude -p` run, a sub-agent delegated without `report only`), only step 3's writes are made, committed as they are made, and nothing after them, not even the log line.
+- **Interactive:** every other run (`claude --agent ultimate-assistant`, an ordinary chat, `claude -p`). Run steps 1 to 6, then wait for the user's answers (step 7) until the session closes (step 8). A sub-agent delegated without the words `report only` is interactive too: it still carries out step 3, even when its task reads like a report. When no answer comes (a `claude -p` run, such a sub-agent), only step 3's writes are made, committed as they are made, and nothing after them, not even the log line.
 
 ## The session
 
@@ -37,7 +37,7 @@ Keep these for the whole session; the answers, the next pages, the close and the
 - **Numbers.** Every number shown (finding numbers from each report, ramble item numbers after them) names the same thing until the session ends, so a number the user says is never ambiguous. An earlier page's number stays answerable. A number already answered is answered again only by a new explicit answer ("yes 3" after "skip 3" applies 3 and removes its skip).
 - **The last report:** the last findings page or ramble list shown. "yes to all" and "all but N" cover only it.
 - **Shown keys** (every finding key shown), **answered keys** (applied, proposed or skipped) and **touched subjects** (every task, project and Area a change of this session touched: a yes, a ramble change, the tasks a merge or a move moved), as subject keys: `notion:<page id>` for a task, the `prj-` or `area-` id otherwise.
-- **Counts** for the closing summary and the log (Close, below), and the paths each command wrote (`data.changed`, plus the month's log file `log/<YYYY-MM>.md`, which every writing command appends to without listing it), for the commits.
+- **Counts,** kept here as they happen and read by both the closing summary and the log line, so the two always agree: `total` (the first report's total, or 0 with no report), `shown` (distinct findings shown), `changed`, `proposals`, `dismissed`, and the `tasks`, `projects` and `captures` a ramble created (Close, below, says what each counts). Also the paths each command wrote (`data.changed`, plus the month's log file `log/<YYYY-MM>.md`, which every writing command appends to without listing it), for the commits.
 
 ## More and a scope
 
@@ -49,10 +49,10 @@ Show its `data.report` exactly. A finding the user changed is never shown again 
 
 ## Close
 
-Close when the user ends the session in words ("done", "that's all", "stop", "thanks, that's it") or turns to something else (a request that isn't an answer to the report, a list or a question of this session: close first, then attend to it). After the close, a new answer starts a new session ("review again"). A conversation that just stops never closes: every change is already committed, and the skips wait uncommitted for the next close.
+Close only when the user ends the session in words ("done", "that's all", "stop", "thanks, that's it") or turns to something else (a request that isn't an answer to the report, a list or a question of this session: close first, then attend to it). After the close, a new answer starts a new session ("review again"). A conversation that just stops never closes: every change is already committed, and the skips wait uncommitted for the next close.
 
 1. `brain index`, `brain views`, `brain lint`.
-2. **The log line:** `brain log assistant - mode=<live|brain_only> scope=<id|all> findings=<total> shown=<n> applied=<n> proposals=<n> dismissed=<n> tasks=<n> projects=<n> captures=<n>`. `scope` and `findings` are those of the first report shown (`all` and its `total`), or `all` and `0` when the session showed none; `shown` counts the distinct findings shown; the next three are the summary's changed, Review rows and skipped; the last three what a ramble created.
+2. **The log line:** `brain log assistant - mode=<live|brain_only> scope=<id|all> findings=<total> shown=<n> applied=<n> proposals=<n> dismissed=<n> tasks=<n> projects=<n> captures=<n>`. Every number comes from the session record's counts: `findings` is `total`, `applied` is `changed`, `proposals` and `dismissed` are the summary's Review rows and skipped, the last three what a ramble created. `scope` is the first report's (`all` when it had none, or when the session showed no report).
 3. **Commit** what isn't committed yet, naming the paths: `_assistant/dismissals.json` when a skip changed it, the regenerated index and views, the log. Every commit of the session names the paths the skill's commands wrote; never `git add -A`, so the user's own uncommitted edits stay as they are. Message: `assistant: close session <session id>`.
 4. **Push** per `settings.push` (the brain's AGENTS.md, "Write path"). When `brain lint` reported errors: still commit your own paths (each was written by a CLI command that validates it), push nothing, and add to the summary `brain lint found <n> errors (first: <path>); nothing was pushed. Run brain lint to see them.`
 5. **The closing summary,** one line, then the push line of AGENTS.md:
