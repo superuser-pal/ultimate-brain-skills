@@ -14,6 +14,7 @@ If `brain` is not found (`command not found`), install it with `npm install -g u
 - **In the brain repo:** run `brain <command> --brain . --json`.
 - **In a linked repo** (it has a `.brain` file and an "Ultimate Brain" block in AGENTS.md): run `brain <command> --json` without `--brain`. The CLI finds the brain through `BRAIN_DIR` or `~/.config/ultimate-brain/config.json`, and reads `.brain` in the current folder to favour that repo's project.
 - **If the CLI exits 3** (`BRAIN_NOT_CONFIGURED`, `BRAIN_NOT_FOUND`), tell the user the brain isn't configured on this machine and stop. Don't search the disk for it.
+- **If the CLI exits 2** (`USAGE`) on a query, the command or the folder's `.brain` is wrong, not the brain: show the user the message as printed (it names the folder and the allowed keys when `.brain` is the cause) and stop. Never edit `.brain` by hand and never work around it with `--brain`: `brain link <path>`, run from the brain, rewrites it.
 
 ## Procedure
 
