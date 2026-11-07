@@ -37,7 +37,7 @@ Keep these for the whole session; the answers, the next pages, the close and the
 - **Numbers.** Every number shown (finding numbers from each report, ramble item numbers after them) names the same thing until the session ends, so a number the user says is never ambiguous. An earlier page's number stays answerable. A number already answered is answered again only by a new explicit answer ("yes 3" after "skip 3" applies 3 and removes its skip).
 - **The last report:** the last findings page or ramble list shown. "yes to all" and "all but N" cover only it.
 - **Shown keys** (every finding key shown), **answered keys** (applied, proposed or skipped) and **touched subjects** (every task, project and Area a change of this session touched: a yes, a ramble change, the tasks a merge or a move moved), as subject keys: `notion:<page id>` for a task, the `prj-` or `area-` id otherwise.
-- **Counts** for the closing summary and the log (Close, below), and the paths each command wrote (`data.changed`), for the commits.
+- **Counts** for the closing summary and the log (Close, below), and the paths each command wrote (`data.changed`, plus the month's log file `log/<YYYY-MM>.md`, which every writing command appends to without listing it), for the commits.
 
 ## More and a scope
 

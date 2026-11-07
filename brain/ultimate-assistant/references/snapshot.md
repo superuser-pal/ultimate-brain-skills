@@ -4,7 +4,7 @@ What step 2 and step 4 of a session read, written as one JSON file that `brain a
 
 ## Notion, live
 
-Read through the Notion MCP, querying each database through its data source (retrieve the database, then use its `data_sources[0].id`). Read **every row**: follow `next_cursor` until it is null. Database ids: `brain config get notion.databases` (Projects, Areas) and `brain config get notion.tasks` (the Tasks database, its property mapping, `wont_do_status`, `waiting_on_status`).
+Read through the Notion MCP, querying each database through its data source (retrieve the database, then use its `data_sources[0].id`). Read **every row**: follow `next_cursor` until it is null. Database ids: `brain config get notion.databases` (Projects, Areas) and `brain config get notion.tasks` (the Tasks database and its property mapping; the CLI reads the done, dropped and waiting status names itself).
 
 ```json
 {
