@@ -21,7 +21,7 @@ Run every CLI command as `brain <command> --brain <brain> --json`. Exit 1 means 
 ## The session
 
 1. **Preconditions.** `brain status` resolves the brain. Note `modules`, `notion.configured` and `settings` (`publish`, `push`). Commit only what this session writes, never `git add -A`: the user's own uncommitted edits stay as they are.
-2. **Candidates.** `brain reflect --candidates`. Keep its `data`: `as_of` is the session's time from then on, and the session id is `as_of` in compact form (`20261108T100000Z`), used in a duplicate's `source`: `agent:brain-reflect/<session id>`. Keep `total` for the log line.
+2. **Candidates.** `brain reflect --candidates`. Keep its `data`: `as_of` is the session's time from then on, and the session id is `as_of` in compact form (`20261108T100000Z`), used in a duplicate's `source`: `agent:brain-reflect/<session id>`. Keep `total` for the log line, and the start time for its `seconds` (`date +%s` now, kept in the session record).
 3. **Judging.** Read each cluster of the page, in rank order, and write zero or more findings for it, each of one kind, with the proposal a yes writes: [references/judging.md](references/judging.md). A cluster that shows nothing wrong gives no finding. Judge the whole page (up to 30 clusters) before the report, so the report can say how many more there are.
 4. **The report.** Rank the findings and show the first 10 ("The report", below). Write nothing before the user answers.
 5. **The user's answers,** one by one, until the session ends: yes, a value, later, skip, more: [references/answers.md](references/answers.md).
@@ -59,6 +59,7 @@ Answer "yes 2, 3", "1a" for the value that holds, "later 4", "skip 5 because …
   - The evidence is your words, one line, at most 160 characters. A fact key is written in words (`launch date` for `launch_date`); a quote is the input's own words.
   - Recommendations: a contradiction starts with `which holds?` and gives the values, newest claim first, then `another value`; a stale fact gives the new value; a duplicate names the survivor; a promotion shows the whole text it adds; a theme `draft a Document on <term>`.
 - **After the blocks,** a blank line, then `<n> more. Say "more".` when there are more: the findings judged and not shown, with `, and more to check` added when the candidates' `total` is beyond the page you judged (`3 more, and more to check. Say "more".`). Then always the answer line.
+- Nothing else: no line before the report, none after the answer line ("nothing has been written yet", "that is all").
 - **Nothing found:** after line 2, a blank line and `Nothing to tidy.` The session ends there and writes nothing: no proposal, no log line, no commit.
 
 **"more"** shows the next 10 judged findings, numbered on. When they run out and `total` is beyond the page, run `brain reflect --candidates --offset <offset + limit>`, judge its clusters first (step 3), and continue the numbers. A finding the user already answered isn't shown again in the session.
@@ -67,7 +68,7 @@ Answer "yes 2, 3", "1a" for the value that holds, "later 4", "skip 5 because …
 
 Keep these for the whole session; the answers, the pages, the summary and the log line read them:
 - **Findings,** by number: kind, the cluster's `key`, its `fingerprint`, `evidence` and the proposal a yes writes, its recommendations by letter, and whether it was shown and answered.
-- **Counts,** kept as they happen so the summary and the log line agree: `total` (the first `reflect --candidates` call's), `findings` (judged), `shown` (distinct findings shown), `applied`, `proposals` (the "later" rows), `skipped`, `drafted` (the theme Documents written), and `notes_read` (the member and input files you opened).
+- **Counts,** kept as they happen so the summary and the log line agree: `total` (the first `reflect --candidates` call's), `findings` (judged), `shown` (distinct findings shown), `applied`, `proposals` (the "later" rows), `skipped`, `drafted` (the theme Documents written), and `notes_read` (the member and input files you opened, each counted once, however you read it).
 - **Paths** each command wrote (`data.changed`, the proposal and note paths it returns, the month's log file `log/<YYYY-MM>.md`), for the commits.
 
 ## Done
@@ -75,7 +76,7 @@ Keep these for the whole session; the answers, the pages, the summary and the lo
 The session ends when the user says so ("done", "that's all", "stop") or turns to something else: end it first, then attend to that. A conversation that just stops never ends the session: every answer is already committed, and nothing is published.
 
 1. **Publish,** when anything changed or a "later" row waits, with `settings.publish` as an attended catch-up uses it (`auto` publishes; `ask` asks once, "Publish to Notion now?"), and only when `notion.configured` is true: `brain sync render --changed`, write the payloads through the MCP as brain-sync's Push steps say, then `brain sync record`, and commit (`publish: tidy the brain`). The proposals decided in chat aren't rendered; the changed notes, the drafted Documents and the "later" rows are.
-2. **The log line,** when the session showed a report with at least one finding: `brain log reflect - clusters=<total> findings=<n> shown=<n> applied=<n> proposals=<n> skipped=<n> drafted=<n> notes_read=<n> seconds=<s>`, from the session record's counts; `seconds` from step 2 to now. Commit the log file (`reflect: session <session id>`).
+2. **The log line,** when the session showed a report with at least one finding: `brain log reflect - clusters=<total> findings=<n> shown=<n> applied=<n> proposals=<n> skipped=<n> drafted=<n> notes_read=<n> seconds=<s>`, each `key=value` its own argument, from the session record's counts; `seconds` is `date +%s` now minus the start time step 2 kept, waiting for the user included. Commit the log file (`reflect: session <session id>`).
 3. **Push** per `settings.push` (the brain's AGENTS.md, "Write path").
 4. **The closing summary,** one line: `Done: <n> changed, <n> Review rows, <n> skipped, <n> drafted.` Parts at 0 are left out; `Nothing changed.` when all are 0. **changed** counts the proposals applied after a yes, **Review rows** the "later" proposals, **skipped** the skips written, **drafted** the theme Documents written (after a yes or a "later").
 
