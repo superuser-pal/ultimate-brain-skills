@@ -349,7 +349,7 @@ Answer "yes 2, 3", "1a" for the value that holds, "later 4", "skip 5 because …
 - **"skip 5 because …"** hides it. A skipped merge stays skipped: two notes you said are different stay different. A skipped contradiction, stale fact or rule comes back only when a newer meeting or source mentions that note, and a skipped theme only when more meetings discuss it. Rejecting its row in Review counts as a skip too.
 - **"done"** ends the session: it publishes what changed and the "later" rows, and says what changed: "Done: 3 changed, 1 Review row, 1 skipped, 1 drafted."
 
-It runs only when you ask; there is no schedule for it yet. When nothing needs tidying it says "Nothing to tidy." and writes nothing. Ultimate Assistant's sub-agent runs it too: `claude --agent ultimate-assistant`, then "tidy the brain".
+It runs only when you ask. When nothing needs tidying it says "Nothing to tidy." and writes nothing. Ultimate Assistant's sub-agent runs it too: `claude --agent ultimate-assistant`, then "tidy the brain".
 
 ---
 

@@ -15,7 +15,7 @@ Run every CLI command as `brain <command> --brain <brain> --json`. Exit 1 means 
 
 - **Report only:** the request says `report only` (the Ultimate Assistant sub-agent is called that way; a user may say it too). That phrase is the one signal: never infer it. Run steps 1 to 4, return the report as your whole answer, and stop. Write nothing: no proposal, no note, no log line, no commit.
 - **Interactive:** every other run. Run steps 1 to 4, then wait for the user's answers (step 5) until the session ends (step 6).
-- **Unattended:** reflection runs only when the user asks, in a chat (0076 §5). A request to run it unattended or on a schedule ("tidy the brain unattended", "tidy the brain every week") writes nothing: say `Tidying the brain runs only when you ask in a chat; the weekly brief will include it later.` and stop. Never set up a schedule for it.
+- **Only when asked:** reflection runs when the user asks, in a chat (0076 §5). A request to run it with nobody there ("tidy the brain unattended") writes nothing: say `Tidying the brain runs only when you ask in a chat.` and stop.
 - **Answering a report another session showed.** When the user answers a report the Ultimate Assistant sub-agent returned ("yes 2" after its report), the numbers refer to that report: take its findings as yours, in its numbers, instead of judging again. Run step 1, then `brain reflect --candidates` to check each answered finding's cluster is still there and its fingerprint isn't held, and carry out the answer.
 
 ## The session
