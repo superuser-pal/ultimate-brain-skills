@@ -68,7 +68,7 @@ Answer "yes 2, 3", "1a" for the value that holds, "later 4", "skip 5 because …
 
 Keep these for the whole session; the answers, the pages, the summary and the log line read them:
 - **Findings,** by number: kind, the cluster's `key`, its `fingerprint`, `evidence` and the proposal a yes writes, its recommendations by letter, and whether it was shown and answered.
-- **Counts,** kept as they happen so the summary and the log line agree: `total` (the first `reflect --candidates` call's), `findings` (judged), `shown` (distinct findings shown), `applied`, `proposals` (the "later" rows), `skipped`, `drafted` (the theme Documents written), and `notes_read` (the member and input files you opened, each counted once, however you read it).
+- **Counts,** kept as they happen so the summary and the log line agree: `total` (the first `reflect --candidates` call's), `findings` (judged), `shown` (distinct findings shown), `applied`, `proposals` (the "later" rows still pending), `skipped`, `drafted` (the theme Documents written), and `notes_read` (the member and input files you opened, each counted once, however you read it).
 - **Paths** each command wrote (`data.changed`, the proposal and note paths it returns, the month's log file `log/<YYYY-MM>.md`), for the commits.
 
 ## Done
@@ -78,7 +78,7 @@ The session ends when the user says so ("done", "that's all", "stop") or turns t
 1. **Publish,** when anything changed or a "later" row waits, with `settings.publish` as an attended catch-up uses it (`auto` publishes; `ask` asks once, "Publish to Notion now?"), and only when `notion.configured` is true: `brain sync render --changed`, write the payloads through the MCP as brain-sync's Push steps say, then `brain sync record`, and commit (`publish: tidy the brain`). The proposals decided in chat aren't rendered; the changed notes, the drafted Documents and the "later" rows are.
 2. **The log line,** when the session showed a report with at least one finding: `brain log reflect - clusters=<total> findings=<n> shown=<n> applied=<n> proposals=<n> skipped=<n> drafted=<n> notes_read=<n> seconds=<s>`, each `key=value` its own argument, from the session record's counts; `seconds` is `date +%s` now minus the start time step 2 kept, waiting for the user included. Commit the log file (`reflect: session <session id>`).
 3. **Push** per `settings.push` (the brain's AGENTS.md, "Write path").
-4. **The closing summary,** one line: `Done: <n> changed, <n> Review rows, <n> skipped, <n> drafted.` Parts at 0 are left out; `Nothing changed.` when all are 0. **changed** counts the proposals applied after a yes, **Review rows** the "later" proposals, **skipped** the skips written, **drafted** the theme Documents written (after a yes or a "later").
+4. **The closing summary,** one line: `Done: <n> changed, <n> Review rows, <n> skipped, <n> drafted.` Parts at 0 are left out; `Nothing changed.` when all are 0. **changed** counts the proposals applied after a yes, **Review rows** the "later" proposals still pending, **skipped** the skips written, **drafted** the theme Documents written (after a yes or a "later").
 
 ## Rules
 

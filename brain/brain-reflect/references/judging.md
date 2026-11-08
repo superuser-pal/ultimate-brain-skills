@@ -18,7 +18,7 @@ A disagreement no fact holds (two bodies that say different things, with no `fac
 
 ## By signal
 
-**`shared_ground`** (two reviewed notes with references in common; no inputs). Compare the members' `facts` with each other, and each member's facts with what the other's title, summary and body say. A contradiction when they give two values for one fact (`launch_date` 2027-01 on the project; the decision "Launch Acme website in February"). The proposal is on the member that holds the fact (when both hold it, the one whose `updated` is older), `after` = the other member's value, `source` = the other member's id, `evidence: []`.
+**`shared_ground`** (two reviewed notes with references in common; no inputs). Compare the members' `facts` with each other, and each member's facts with what the other's title, summary and body say. A contradiction when they give two values for one fact (`launch_date` 2027-01 on the project; the decision "Launch Acme website in February"). The proposal is on the member that holds the fact (when both hold it, the one whose `updated` is older, then the lower id), `after` = the other member's value, `source` = the other member's id, `evidence: []`.
 
 **`overtaken`** (one note named by inputs newer than it). Read what each input says about the note:
 - **Stale fact:** the input says a fact has changed ("María left Acme in June", "the launch moved to March"). `update_fact` with `field` (an existing `facts` key of the note), `after` = the new value, `source` = the input. The new value says what holds now in the input's words: a new role (`Head of sales at Northwind`), or, when the input only says the old one ended, the old one marked as past (`former PM at Acme (left in June 2026)`).

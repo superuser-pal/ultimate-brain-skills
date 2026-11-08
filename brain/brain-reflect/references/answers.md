@@ -60,6 +60,6 @@ For a theme the existing proposal is its `review_notes`: a yes or a "later" writ
 ## Counts
 
 - **applied:** each proposal applied after a yes (a fix included).
-- **proposals:** each "later" written (a theme's "later" counts as drafted instead).
+- **proposals:** each "later" still pending at "done" (a theme's "later" counts as drafted instead). A "later" the user then says yes or skip to in the session leaves this count and counts in `applied` or `skipped`.
 - **skipped:** each skip written, a rejected existing proposal included.
 - **drafted:** each theme Document written.
