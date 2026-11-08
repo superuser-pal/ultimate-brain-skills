@@ -9,7 +9,7 @@ Answer how-to questions about the system from [references/guide.md](references/g
 
 ## Procedure
 
-1. **Read the guide section** that matches the question. Its headings: The Spaces · The meeting flow · Deciding in Review · Correcting what came in (a meeting, a capture, a report; refreshing a report) · What you can edit · Adding things · Review your work (Ultimate Assistant) · Run catch-up on a schedule · Projects in other folders (linked repos, connected work, adoption) · What to say to your agent · When something looks wrong.
+1. **Read the guide section** that matches the question. Its headings: The Spaces · The meeting flow · Deciding in Review · Correcting what came in (a meeting, a capture, a report; refreshing a report) · What you can edit · Adding things · Review your work (Ultimate Assistant) · Tidy the brain · Run catch-up on a schedule · Projects in other folders (linked repos, connected work, adoption) · What to say to your agent · When something looks wrong.
 
 2. **If the question is about something that happened** ("why didn't…", "where did … go", "is my … set up"), check the live state before answering:
    - `brain status --brain . --json` (or without `--brain` in a linked repo). It reports pending proposals, Notion databases configured or missing, stale views, and the last log line.
@@ -26,6 +26,10 @@ Answer how-to questions about the system from [references/guide.md](references/g
 ## Ultimate Assistant
 
 When the question is about the shape of the user's work (what's stalled, overdue, misplaced, what to do next), answer from the guide's "Review your work" and offer to run the `ultimate-assistant` skill. In short: "review my projects" (or "what's stalled in Clients?") shows a report of up to 10 findings, worst first (overdue and stalled tasks, stalled projects, projects with no next step or finished but still open, misplaced or duplicate projects, Areas with nothing active or no Domain), each with a recommended change. It changes nothing without the user's yes in the chat: "yes 1, 2b" applies, "propose 5" writes a Review row to decide in Notion instead, "skip 4 because …" sets a status that says why or hides the finding for 30 days. Telling it a mix of things ("the quote is done, call Lucía by the 13th") places them as tasks, projects and Inbox captures after a yes. In Claude Code, `claude --agent ultimate-assistant` in the brain folder starts a session with it.
+
+## Tidy the brain
+
+When the question is about the notes themselves (two notes that disagree, a fact that's out of date, two notes for one person, something the meetings keep discussing), answer from the guide's "Tidy the brain" and offer to run the `brain-reflect` skill. In short: "tidy the brain" shows up to 10 findings, most serious first (contradictions, stale facts, duplicates, rules worth adding to a project or Area, recurring themes with no note), each with a recommendation. It changes nothing without the user's yes in the chat: "yes 2" applies it, a contradiction first asks which value holds ("1a", or "1: 2027-03"), "later 4" writes a Review row, "skip 5 because …" hides it until new evidence comes in (a skipped merge stays skipped). It runs only when asked. Ultimate Assistant's sub-agent runs it too, so "tidy the brain" works in the same chat as "review my projects".
 
 ## Teaching mode
 

@@ -317,6 +317,42 @@ If Notion can't be reached, it reviews the brain alone, says so on the report's 
 
 ---
 
+## Tidy the brain
+
+Ultimate Assistant looks at the shape of your work; **tidying the brain** looks at the notes themselves. Say "tidy the brain" to your agent (or "what's inconsistent?", "any duplicates?"). It reads your notes and the meetings and sources of the last 30 days, and shows a report first:
+
+```text
+Tidy the brain · 8 Nov 2026
+Read 412 notes, and 37 meetings and sources from the last 30 days.
+
+1. Contradiction · Acme website (project) · launch date 2027-01 here; "Launch Acme website in February" says 2027-02
+   which holds? a) 2027-02  b) 2027-01  c) another value
+2. Stale fact · María López (person) · role "PM at Acme"; Acme sync, 3 Nov: "María left Acme in June"
+   a) set role to "former PM at Acme (left in June 2026)"
+3. Duplicate · M. Lopez and María López (people) · the same name once initials are ignored
+   a) merge M. Lopez into María López
+4. Promotion · Acme website (project) · Acme sync, 3 Nov: every release needs legal's sign-off
+   a) add to the project: "Every release needs legal's sign-off (Acme sync, 3 Nov 2026)."
+5. Theme · pricing tiers · in 4 meetings and sources, and no note has it
+   a) draft a Document on pricing tiers
+
+12 more. Say "more".
+Answer "yes 2, 3", "1a" for the value that holds, "later 4", "skip 5 because …", or "done".
+```
+
+**What it looks for:** two notes that give a fact two values (a **contradiction**); a fact a newer meeting says has changed (a **stale fact**); two notes that are one person, org or decision (a **duplicate**); a lasting rule said in a meeting that belongs on its project or Area (a **promotion**); and a subject that comes up in three or more recent meetings and sources with no note of its own (a **theme**). It shows the 10 most serious, contradictions first, and "more" shows the next ones. Content you excluded from the brain is never used as evidence.
+
+**It changes nothing without your yes.** You answer in the chat:
+- **"yes 2, 3"** makes those changes now: a fact updated, a duplicate merged into the note named (its links and aliases moved, the duplicate archived), a rule added to the project with the meeting it came from. A **contradiction** always asks which value holds first: "1a", or your own value, "1: 2027-03". You can give your own value for any finding: "2: Head of Ops at Quayside", "3: keep M. Lopez".
+- **A theme** becomes a draft Document, citing the meetings and sources behind it, that you review in Review like any new note.
+- **"later 4"** writes it as a row in Review instead, to decide in Notion.
+- **"skip 5 because …"** hides it. A skipped merge stays skipped: two notes you said are different stay different. A skipped contradiction, stale fact or rule comes back only when a newer meeting or source mentions that note, and a skipped theme only when more meetings discuss it. Rejecting its row in Review counts as a skip too.
+- **"done"** ends the session: it publishes what changed and the "later" rows, and says what changed: "Done: 3 changed, 1 Review row, 1 skipped, 1 drafted."
+
+It runs only when you ask. When nothing needs tidying it says "Nothing to tidy." and writes nothing. Ultimate Assistant's sub-agent runs it too: `claude --agent ultimate-assistant`, then "tidy the brain".
+
+---
+
 ## Run catch-up on a schedule
 
 Say "run catch-up every morning" (or "twice a day", "on weekdays") and the agent sets it up with you: the times, the Claude model to pin, and what a scheduled run may use. On a Mac it installs a background job; on other systems it gives you a line to add with `crontab -e`. The job runs `claude -p "catch up unattended"` in your brain folder, so your computer has to be on and Claude Code signed in at that time.
@@ -384,6 +420,7 @@ Run these in Claude Code or Codex, from your brain's folder.
 | Work on it | "let's work on the next task", "publish the plan", "keep this one local", "end the workflow" |
 | See what's overdue, stalled, missing a next step or misplaced, and decide what to do | "review my projects", "what's stalled in Clients?", then "yes 1, 2b", "propose 5", "skip 4 because …", "done" (or `claude --agent ultimate-assistant`) |
 | Get what's on your mind into tasks, projects and captures | tell Ultimate Assistant in a few sentences, then "yes to all" |
+| Find contradictions, out-of-date facts, duplicate notes and recurring themes, and decide what to do | "tidy the brain", "any duplicates?", then "yes 2", "1a", "later 4", "skip 5 because …", "done" |
 | Ask how the system works | "how do I …?", "why didn't … ?" (or ask Brain Assistant in Notion) |
 | Change the Notion structure (a property, an option, a view) | "add a property to Projects …". Structure is changed in the product first, then in Notion |
 | Check your Notion space | "check my Notion space" |
