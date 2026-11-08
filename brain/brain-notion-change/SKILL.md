@@ -8,9 +8,11 @@ description: Change the structure of the user's Notion space (a database, proper
 The Notion space's structure is designed in the product repo, in docs/notion-space-design.md, and built from the prompts in notion/ (decisions 0019, 0022). Structure is never edited in Notion first: the design changes, a prompt is generated for just that change, the user runs it, and this skill checks the result. Content (notes, facts, decisions) is not structure; it goes through ingest, proposals and sync.
 
 Pick the mode from the request:
-- **Change:** the user wants the structure to be different. Run it in the product repo (`ultimate-brain`).
-- **Migrate:** a release shipped a migration (notion/migrations/) and the user's space predates it ("run migration 0006", or after `brain upgrade` says one is due). Run it in the brain, with the product's migration file.
-- **Check:** the user wants to know whether the live space matches. Run it anywhere the Notion connection and the design doc are available.
+- **Change:** the user wants the structure to be different. Run it in the product repo (`ultimate-brain`), where these files are edited.
+- **Migrate:** a release shipped a migration (notion/migrations/) and the user's space predates it ("run migration 0006", or after `brain upgrade` says one is due). Run it in the brain, with the migration file the installed CLI ships.
+- **Check:** the user wants to know whether the live space matches. Run it anywhere the Notion connection and `brain status` are available.
+
+**Where the files are.** In Migrate and Check, every `notion/…` and `docs/notion-space-design.md` path below is under the installed package's folder, which `brain status --json` reports as `product.path` (for example `<product.path>/notion/migrations/0019-reports-move-to-documents.md`); read them there and name the full path to the user. They are the files of the CLI the brain runs, so a migration a newer release ships isn't there until the user installs that release. In Change, the paths are the product repo's.
 
 ## Change
 
