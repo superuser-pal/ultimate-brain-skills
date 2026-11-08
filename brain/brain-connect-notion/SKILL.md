@@ -9,6 +9,8 @@ Find the user's Notion databases and record their ids in `brain.json` (decision 
 
 Run CLI commands as `brain <command> --brain <brain> --json`. If `brain` is not found (`command not found`), install it with `npm install -g ultimate-brain`, then retry.
 
+**Where the Notion files are.** The checklist, the build prompts, each module's steps, the migrations and the space design install with the CLI. `brain status` reports their folder as `product.path`: every `notion/…` and `docs/notion-space-design.md` path in this skill is under it. Read them there, and give the user the full path (`<product.path>/notion/modules/documents.md`), never a bare `notion/…` they can't find.
+
 ## Procedure
 
 0. **Modules** (decision 0048), at the first connection, when the user hasn't chosen yet. Run `brain modules` and show the checklist, with what each module adds and its default:
@@ -27,7 +29,7 @@ Run CLI commands as `brain <command> --brain <brain> --json`. If `brain` is not 
    Ask once: "Keep these, or change some? (e.g. "add documents")". Write each change with `brain modules on|off <module>`. The steps below look only for the databases of modules that are on; a database that exists for a module that is off is reported ("Goals found; Planning is off: say "turn on planning" to use it"), and its id is still stored.
 1. **Check access.** The Notion connection (MCP) must reach the user's workspace. Search for the page **"Brain Data"**:
    - **No Notion tools in this session:** the agent isn't connected to Notion. Give the user the steps in "Connect your agent to Notion" below for the agent they are using, and stop.
-   - **Not found:** the connection can't see the page. With the hosted Notion MCP, the user's own Notion account must have access to Brain Data; with an integration token, open Brain Data in Notion → `•••` → **Connections** → add the integration. Then stop.
+   - **Not found:** the connection can't see the page. With the hosted Notion MCP, the user's own Notion account must have access to Brain Data; with an integration token, open Brain Data in Notion → `•••` → **Connections** → add the integration. When the user hasn't built the space yet, name `<product.path>/notion/CHECKLIST.md`, which builds it. Then stop.
    - **More than one:** ask which one.
 2. **Find the databases.** List the Brain Data page's child blocks; each `child_database` has a title. Match the titles exactly:
 
@@ -82,7 +84,7 @@ When the user asks ("turn on documents", "turn planning off", "which modules do 
 2. **Off:** `brain modules off <module>`, commit `modules: <module> off`. Say what stops: "Planning off: catch-up no longer reads Goals or Key Results. Nothing is deleted; turn it on again any time." Nothing changes in Notion; the user may hide the databases themselves.
 3. **On:** `brain modules on <module>`. Then check what Notion still needs. `missing` lists only the module's empty database ids, so it can't tell whether the module's properties, relations and buttons exist (and Reports has no database at all): read the databases `notion/modules/<module>.md` touches (step 3 above) and compare them with the file's steps, through each step's Verify item.
    - **Everything there:** commit `modules: <module> on`, and say what the next catch-up does with it.
-   - **Something missing** (a database, a property, a relation, a button): walk the user through `notion/modules/<module>.md` in the product repo, from its first step that isn't done, step by step: the Notion AI prompts they paste, the buttons and layouts they set by hand, then find the new database under Brain Data (step 2 above), check it (step 3) and store its id with `brain config set notion.databases.<key> '"<id>"'` (Tasks: step 5). This skill doesn't build anything in Notion itself (decision 0022). Run `brain modules` again (`missing` is empty) and the file's Verify list. Commit `modules: <module> on`.
+   - **Something missing** (a database, a property, a relation, a button): walk the user through `<product.path>/notion/modules/<module>.md`, from its first step that isn't done, step by step: the Notion AI prompts they paste, the buttons and layouts they set by hand, then find the new database under Brain Data (step 2 above), check it (step 3) and store its id with `brain config set notion.databases.<key> '"<id>"'` (Tasks: step 5). This skill doesn't build anything in Notion itself (decision 0022). Run `brain modules` again (`missing` is empty) and the file's Verify list. Commit `modules: <module> on`.
    - **The user stops halfway:** the module stays on with a part missing; with a database id missing, its notes are skipped with `DATABASE_NOT_CONFIGURED` until the id is set, and a missing property or button means the requests it carries never arrive. Say so, and that "turn on <module>" picks up where they left off.
 4. **Report** in three lines: what changed, what still needs them in Notion, and the next step.
 

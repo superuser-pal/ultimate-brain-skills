@@ -21,6 +21,8 @@ You never edit the Markdown by hand. You work in Notion and talk to your agent.
 
 Change them any time by asking your agent: "turn on documents", "I don't use goals, turn planning off", "which modules do I have?". Turning one on walks you through its Notion steps; turning one off deletes nothing, and the brain simply stops reading and writing its databases. This guide describes every module; skip what you haven't turned on.
 
+**Where the Notion build files are.** The checklist that builds your space (`notion/CHECKLIST.md`), its Notion AI prompts, each module's steps and the migrations for a space an earlier release built are installed with the CLI. `brain status --json` names their folder as `product.path`; with a global install it is `$(npm root -g)/ultimate-brain`, so the checklist is `$(npm root -g)/ultimate-brain/notion/CHECKLIST.md`. Your agent names the full path whenever it sends you to one.
+
 ---
 
 ## The Spaces

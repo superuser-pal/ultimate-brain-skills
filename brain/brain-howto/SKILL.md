@@ -21,7 +21,7 @@ Answer how-to questions about the system from [references/guide.md](references/g
    - When the answer involves the agent, quote the phrase from "What to say to your agent", and offer to run that skill now.
    - When you checked the live state, say what you found ("your meeting 'Acme weekly' is still Not Reviewed").
 
-4. **If the guide doesn't cover it,** say so, and answer from the product docs only if you can cite them (docs/notion-space-design.md, the decisions). Flag the gap so the guide can be extended.
+4. **If the guide doesn't cover it,** say so, and answer from the product docs only if you can cite them: the space design and the Notion files install with the CLI, under the folder `brain status` reports as `product.path` (`<product.path>/docs/notion-space-design.md`, `<product.path>/notion/`); the decisions are in the product repo. Name the full path. Flag the gap so the guide can be extended.
 
 ## Ultimate Assistant
 
