@@ -8,7 +8,8 @@ When the repo's "Ultimate Brain" block has the recall paragraph, run `brain reca
 
 - **Read it silently.** Don't recite it, and don't list what you loaded.
 - **Mention a memory only when it shapes your approach,** in one line with its origin: "Using your rule for this repo: ask before running migrations." Say `(inferred)` when the pack says so: the user approved it, but it is still the brain's inference.
-- **`work` is where the last session stopped:** each active task, with its `**Stopped:**` line. Start from there. Check the open pull requests and branches yourself (`gh pr list`, `git branch`); the pack doesn't list them. Never invent progress that no record shows.
+- **`work` is where the last session stopped:** each active task, with its `**Stopped:**` line. Start from there, and say in one line where you pick up. Check the branches (`git branch`) and, when the repo has a remote, the open pull requests (`gh pr list`); the pack doesn't list them. Never invent progress that no record shows.
+- **`caller` is this folder's place in the brain:** its `project`, `area` and `stacks`. Keep it: the closing review's reach comes from it (§3.2).
 - **`omitted` is not zero:** more memories exist than fit. When a decision needs them, search (§4). Never treat the pack as complete.
 - **`work_unread` is set:** say which file couldn't be read, in one line, and go on.
 - **An empty `text`:** nothing to load. Say nothing about it.
@@ -25,7 +26,7 @@ The user says "wrap up", "let's close", "end of session" or similar. In Claude C
 
 ### 3.1 Record where the work stopped
 
-If work is unfinished, write **one** line under its task row, in the repo's task file: `**Stopped:** <YYYY-MM-DD>: <what is done>; <what was tried and failed>; <open questions>; next: <the next action>`. A later `**Stopped:**` line replaces the earlier one. For a task in GitHub or GitLab issues, write one comment instead. In a repo whose rules forbid the edit (a task file you don't own), write nothing and say so in the summary. A one-off event belongs here, not in a memory.
+If work is unfinished, write **one** line under its task row, in the repo's task file: `**Stopped:** <YYYY-MM-DD>: <what is done>; <what was tried and failed>; <open questions>; next: <the next action>`, under 300 characters (the pack cuts it there). A later `**Stopped:**` line replaces the earlier one. Commit it as the repo's rules say; the pack reads the working tree, so an uncommitted line still counts. For a task in GitHub or GitLab issues, write one comment instead. In a repo whose rules forbid the edit (a task file you don't own), write nothing and say so in the summary. A one-off event belongs here, not in a memory.
 
 ### 3.2 Show at most five candidates
 
@@ -42,7 +43,8 @@ For each:
 ```
 
 - **Text:** one to three sentences, in the user's terms.
-- **Reach:** the narrowest the user's words support. A rule said about this repo or project is `project`; about a whole area, `area`; about a technology, `stack`. Use `general` only for explicit global wording ("always", "in every repo").
+- **Reach:** the narrowest the user's words support, from the pack's `caller` (or the folder's `.brain`). A rule said about this repo or project is `project` with the caller's project; about a whole area, `area` with its area; about a technology, `stack` with that stack. Use `general` only for explicit global wording ("always", "in every repo").
+  - **When the narrow reach has no id** (the repo is linked without a project, or without that stack), don't widen it silently. Show `Reach: none yet: this repo isn't placed under a project`, and offer two answers: save it as `general`, or place the repo first (`brain link <repo> --project <prj-id>`, run from the brain), then save it as `project`. Decide the reach before you show the candidate, so the user approves what is saved.
 - **`inferred`** when the user didn't say it in those words, with one to three examples from the session.
 - **Replaces** when an eligible memory says something different. Find it with `brain recall --search "<the subject>" --json`.
 
@@ -52,7 +54,7 @@ Then: "Say yes, an edit, or no for each (1 yes, 2 no)."
 
 | Answer | Do |
 |---|---|
-| yes | `brain proposal new --input <file> --json`, then `brain apply --input <file> --json` with `decided_by: "chat"` and `action: "approve"` |
+| yes | `brain proposal new --input <file> --json`, then `brain apply --input <file> --json` with the decision below |
 | an edit ("2 yes, but only for acme-api") | the same, with the user's text or reach |
 | no, later, or nothing | nothing. Don't keep it anywhere |
 
@@ -71,13 +73,19 @@ The proposal, one per approved candidate:
     "body": "Ask before running migrations in acme-api: the production database is shared.\n" } } ] }
 ```
 
+The decision, for each proposal id that `proposal new` returned, with the current time:
+
+```json
+{ "decisions": [ { "proposal": "prp-…", "action": "approve", "decided_at": "2026-11-08T14:31:05Z", "decided_by": "chat" } ] }
+```
+
 - `source` and `sources` hold the session key `agent:brain-query/<the session's start, YYYYMMDDTHHMMSSZ>`. Add the ids of brain notes the lesson comes from, when there are any.
 - `scope` with exactly its list: `projects`, `areas` or `stacks`, never two. `general` has none.
 - `confidence`: `verified` when the user said it, `inferred` when you drew it from the session, `unverified` when the user doubts it. Approval never changes it.
 - `origin`: the `repo` of the folder's `.brain`, or `brain`.
 - **A candidate that replaces a memory:** after its `new_item` is applied, a second proposal `{ "kind": "supersede", "title": "…", "why": "…", "source": "<the session key>", "target": "<the new mem- id>", "supersedes": "<the old mem- id>" }`, approved the same way. The old memory stays, archived.
 
-Then commit in the brain: `git -C <brain path> add -A memories _proposals` and `git -C <brain path> commit -m "memory: <title>"` (or `memory: <n> lessons`). The brain path is `brain status --json`'s. Push per `settings.push`. From a linked repo, this is the one write the brain gets; everything else stays read-only.
+Then commit in the brain: `git -C <brain path> add -A memories _proposals log` and `git -C <brain path> commit -m "memory: <title>"` (or `memory: <n> lessons`). The brain path is `brain status --json`'s. Push per `settings.push`; when the brain has no remote, say "not pushed: the brain has no remote". From a linked repo, this is the one write the brain gets; everything else stays read-only.
 
 End with one line: `Saved <n> lessons; <n> declined. Stopped line on <task>.` (or `No work left open.`).
 
