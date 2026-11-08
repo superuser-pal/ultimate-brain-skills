@@ -1,11 +1,11 @@
 ---
 name: brain-query
-description: Answer a question from the user's second brain with citations, such as what was decided and why, who someone is, a date, budget, owner or other key fact, what changed and when. Works from the brain repo or any repo linked to it with `brain link`. Read-only, except its report mode, which writes a report, refreshes it in place and publishes it to the Inbox. Use when the user asks "what did we decide about…", "why did we…", "who is…", "when is the launch…", "what do we know about…", "report on…", "where do we stand with…", "refresh the Acme report", when an Ask row is waiting in the Inbox, a Report row has Refresh asked ticked or a What to fix, or when the repo's "Ultimate Brain" block says to consult the brain before a decision.
+description: Answer a question from the user's second brain with citations, such as what was decided and why, who someone is, a date, budget, owner or other key fact, what changed and when. Works from the brain repo or any repo linked to it with `brain link`. Read-only, except its report mode, which writes a report, refreshes it in place and publishes it to the Inbox. Use when the user asks "what did we decide about…", "why did we…", "who is…", "when is the launch…", "what do we know about…", "report on…", "where do we stand with…", "refresh the Acme report", when an Ask row is waiting in the Inbox, a Report row has Refresh asked ticked or a What to fix, or when the repo's "Ultimate Brain" block says to consult the brain before a decision. Also the user's memory, loading the opening recall pack at the start of work, "remember this", and the closing review when the user says "wrap up", "let's close" or "end of session".
 ---
 
 # Answer from the brain
 
-Find the notes that answer the question, read them, and answer briefly, citing the notes. **Read-only:** never write to the brain from this skill, except a report in report mode and the log line each answer or report adds (below). If the user wants an answer saved as knowledge, that is a separate step (an ingest or a proposal), done only when they ask.
+Find the notes that answer the question, read them, and answer briefly, citing the notes. **Read-only:** never write to the brain from this skill, except a report in report mode, the log line each answer or report adds (below), and the memories the user approves in the closing review ([references/memory.md](references/memory.md)). If the user wants an answer saved as knowledge, that is a separate step (an ingest or a proposal), done only when they ask.
 
 ## Where the brain is
 
@@ -51,6 +51,10 @@ Content the user excluded from the brain (a subject or item marked Meeting only,
    - **Separate what the brain knows from your own reasoning.** If you add advice, mark it as yours.
 
 5. **Log it,** from the brain repo only: `brain log query - notes_read=<n> seconds=<s>`, where `n` is the number of notes whose full text you read and `s` the seconds from the question to the answer (decision 0045). The log is the brain's own record; it needs no commit of its own and goes in with the next one. In a linked repo, skip this step.
+
+## Memory: recall, "remember this" and "wrap up" (decision 0074)
+
+When the repo's "Ultimate Brain" block has the recall paragraph, load `brain recall --pack --json` at the start of work and read it silently. When the user says "remember this", or "wrap up" at the end, run the closing review: record where unfinished work stopped, show at most five lessons with their reach, and save only the ones the user says yes to. Follow [references/memory.md](references/memory.md) for every step.
 
 ## Report mode (decision 0043)
 
