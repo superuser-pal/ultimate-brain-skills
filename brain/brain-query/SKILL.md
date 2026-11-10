@@ -5,7 +5,7 @@ description: Answer a question from the user's second brain with citations, such
 
 # Answer from the brain
 
-Find the notes that answer the question, read them, and answer briefly, citing the notes. **Read-only:** never write to the brain from this skill, except a report in report mode, the log line each answer or report adds (below), and the memories the user approves in the closing review ([references/memory.md](references/memory.md)). If the user wants an answer saved as knowledge, that is a separate step (an ingest or a proposal), done only when they ask.
+Find the notes that answer the question, read them through the CLI, and answer briefly, citing the notes. **Read-only:** never write to the brain from this skill, except a report in report mode, the log line each answer or report adds (below), and the memories the user approves in the closing review ([references/memory.md](references/memory.md)). If the user wants an answer saved as knowledge, that is a separate step (an ingest or a proposal), done only when they ask.
 
 ## Where the brain is
 
@@ -20,7 +20,9 @@ If `brain` is not found (`command not found`), install it with `npm install -g u
 
 Tasks with the mapped `notion.tasks.wont_do_status` (default "Won't Do") are dropped, not open work. Mention them only when asked about dropped or closed work; distinguish them from completed tasks.
 
-Content the user excluded from the brain (a subject or item marked Meeting only, a paragraph removed in a later version of its input) is not returned: `brain query` leaves the restricted claims out, and so do the derived views. Answer from what is returned, never from memory of an excluded statement, and never quote a note body statement that carries only restricted references. Say "restricted: awaiting cleanup" only if the user asks why something is missing. Reflection and reports do not treat restricted claims as a signal or as evidence.
+Content the user excluded from the brain (a subject or item marked Meeting only, a paragraph removed in a later version of its input) is not returned: `brain query` leaves the restricted claims out, and so do the derived views. Answer from what is returned, never from memory of an excluded statement, and never quote a note body statement that carries only restricted references.
+
+**Only the CLI knows what you may use.** The brain's files also hold statements the user excluded, memories nobody approved and memories meant for another project or stack. `brain query` and `brain recall` leave those out; a file you open or grep does not. So for an answer, a note counts only when `brain query` returned it and a memory only when `brain recall` or `brain query --read` returned it. Do not search or open the brain's files yourself (no grep, find, cat or file read under the brain's folders), and never quote, cite or summarise something found that way, not even with a caveat such as "unconfirmed" or "this belongs to another project". Say "restricted: awaiting cleanup" only if the user asks why something is missing. Reflection and reports do not treat restricted claims as a signal or as evidence.
 
 1. **Search.** Run `brain query --candidates "<the question, in the user's words>" --json`.
    - **Search a name as the user wrote it** (a person, client, project) before answering from memory, even when you think you know who they mean: the brain may hold that spelling with other facts, or a person you've never heard of with the same first name.
@@ -28,14 +30,14 @@ Content the user excluded from the brain (a subject or item marked Meeting only,
    - Read each candidate's `title`, `summary`, `assessment`, `lifecycle` and `snippets`. **Usually this is enough to choose what to open.**
    - **Search matches whole words from their start.** If the top candidates miss, search again with abbreviations expanded or reversed ("PM" ↔ "product manager", "CMS" ↔ "content management"), with a person's other names, or with the client's name.
 
-2. **Read** the full text of the few notes that answer it, usually 1–5. Follow the links the question needs:
-   - **A decision:** read its `## Decision` and `## Context`. For "why", also open the meeting in `decided_in`, and if the reason isn't there, the meeting's source snapshot (`sources/notion/…`), which holds the minutes verbatim.
+2. **Read** the full text of the few notes that answer it, usually 1–5, with `brain query --read <id>,<id> --json` (up to 20 ids; add `--brain .` in the brain repo). Each note comes back as retrieval may use it: `body` and `frontmatter`, with an excluded line returned as blank spaces. `restricted: true` means something was left out: answer from what is there and don't guess the rest. A note with `status: "withheld"` is not evidence: never open its file, and don't tell the user what it might say. Follow the links the question needs, reading each linked note by its id the same way:
+   - **A decision:** read its `## Decision` and `## Context`. For "why", also open the meeting in `decided_in`, and if the reason isn't there, the meeting's source snapshot (the `src-` id in its `sources`), which holds the minutes verbatim.
    - **A `superseded` decision, or a note with a `superseded_by` relation:** follow it to the current note. Answer with the current one, and mention the old one as history.
    - **A fact** (date, budget, role, owner): read the note's `facts` for the current value, and its `timeline` for when it changed and from which meeting.
    - **A person:** their note's `facts.role` (current) and `org`, and the meetings that list them in `attendees`.
    - **Status, priority or progress:** these live in Notion. Use `notion_fields` and say "as of <`notion_fields.as_of` date>".
 
-3. **If nothing fits:** before saying the brain has nothing, retry with other words (a person's alias, the client's name, a synonym), and grep the brain's note folders for the key term (AGENTS.md rule 2: search before claiming absence). If there is still nothing, say so, and say what you searched.
+3. **If nothing fits:** before saying the brain has nothing, retry through the CLI with other words (a person's alias, the client's name, a synonym): `brain query --candidates` again, and `brain recall --search "<words>" --json` for lessons (AGENTS.md rule 2: search before claiming absence). If there is still nothing, say the brain does not hold it, and say what you searched. That is a complete answer: do not go looking in the files.
 
 4. **Answer.** Lead with the answer in one to three sentences, then the evidence.
    - **Cite every claim** with the note path, and with the meeting and date for decisions and facts: "Decided at the Acme sync on 2026-12-03 ([knowledge/decisions/2026-12-03-use-supabase-for-auth.md](…))". Use links relative to where you are, or plain paths.
@@ -50,7 +52,7 @@ Content the user excluded from the brain (a subject or item marked Meeting only,
      - `^[ambiguous]`: the sources were unclear.
    - **Separate what the brain knows from your own reasoning.** If you add advice, mark it as yours.
 
-5. **Log it,** from the brain repo only: `brain log query - notes_read=<n> seconds=<s>`, where `n` is the number of notes whose full text you read and `s` the seconds from the question to the answer (decision 0045). The log is the brain's own record; it needs no commit of its own and goes in with the next one. In a linked repo, skip this step.
+5. **Log it,** from the brain repo only: `brain log query - notes_read=<n> seconds=<s>`, where `n` is the number of notes you read with `--read` and `s` the seconds from the question to the answer (decision 0045). The log is the brain's own record; it needs no commit of its own and goes in with the next one. In a linked repo, skip this step.
 
 ## Memory: recall, "remember this" and "wrap up" (decision 0074)
 
@@ -63,7 +65,7 @@ When the repo's "Ultimate Brain" block has the recall paragraph, load `brain rec
 A report gathers everything the brain knows about one subject, as of today: "report on the Acme launch", "where do we stand with Acme?", or an **Ask** row in the Inbox (the catch-up hands you its page id, its question and its Project or Area). It runs only in the brain repo. In Notion a report is a page of **Documents** with Origin Report, its **Report row**, linked to the Ask rows on the Inbox through Asked in (decision 0071; an Inbox row of Kind Report before 0.9.1). Ask rows and Report rows are the **Reports** module (decision 0048, off by default; it needs Documents on): with it off, a report asked in chat is still written and answered in chat, but it gets no Report row, and render leaves it out (`MODULE_OFF`); say "turn on reports" to have it in Notion.
 
 0. **New or refresh?** A report is kept up to date in place, one per subject (decision 0045). Refresh an existing report when the request names it: its Report row has **Refresh asked** ticked by hand (the Refresh report button no longer ticks it, 0054) (the catch-up hands you `refresh_requests`), or the user says "refresh the Acme report". Otherwise write a new one: an Ask row is always a new report (decision 0048). Never guess that two questions are the same subject.
-1. **Gather.** `brain query --candidates "<the subject>" --limit 50`, then again with the project's and client's names and the people's names. Read the project or area note, its Brief, and every decision, question, meeting and source that is about the subject. Unlike an answer, a report reads widely: everything that bears on the subject, `draft` notes included.
+1. **Gather.** `brain query --candidates "<the subject>" --limit 50`, then again with the project's and client's names and the people's names. Read the project or area note, its Brief, and every decision, question, meeting and source that is about the subject, with `brain query --read` (up to 20 ids a call). Unlike an answer, a report reads widely: everything that bears on the subject, `draft` notes included.
 2. **Write the body:** exactly these six sections, in this order, with nothing before the first (spec/schema.md §16.4):
    1. `## Where it stands`: 3 to 5 lines, as of today.
    2. `## Timeline`: one bullet per dated event, oldest first: `- 2026-12-03 · Supabase chosen for auth ([Use Supabase for auth](../knowledge/decisions/2026-12-03-use-supabase-for-auth.md))`.
@@ -100,5 +102,6 @@ A report gathers everything the brain knows about one subject, as of today: "rep
 
 - **Don't answer from `index.md` or the project views alone.** They're for navigation; cite the canonical note they point to (AGENTS.md rule 8).
 - **Don't present a superseded or contested value as current.** The user acts on what you call current. Give the current value, and name the old one as history or both disputed values as contested.
+- **Don't grep or open the brain's note files for an answer.** Search with `brain query --candidates` and `brain recall --search`, read with `brain query --read`. What those commands leave out, the user excluded, hasn't approved or meant for another project.
 - **Don't read the whole brain.** It fills your context and buries the notes that answer. Search, then open a few notes; open more only when the ones you read point to them.
 - **Don't edit anything,** including a "fix" you notice: answering is read-only (AGENTS.md rule 9), so a question never changes what the brain holds. Report it instead; the user can change it through a proposal or in Notion.
