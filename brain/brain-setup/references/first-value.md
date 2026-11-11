@@ -27,7 +27,7 @@ Say in one line which checks are kept and which run: "Kept from last time: tasks
 
 ### Before the checks: the seeded documents' Review rows
 
-The seeded documents left one Review row per file (seeding.md, "Key documents"). The `answer` check needs one item from them accepted, so ask now, when a check that needs them is to run: "Your documents left <n> rows in Review. Open Review in Notion, approve or reject what's there (accept at least one item you'd want the brain to know), then say "done"." Then carry out what the user decided with the brain-apply skill (or brain-catch-up). With no seeded document, offer to take one now (seeding.md, "Key documents"); without one, `tasks` and `answer` are `unsuitable` (no document).
+The seeded documents left one Review row per file (seeding.md, "Key documents"). The `answer` check needs one item from them accepted, so ask now, when a check that needs them is to run: "Your documents left <n> rows in Review. Open Review in Notion, approve or reject what's there (accept at least one item you'd want the brain to know), then say "done"." Then carry out what the user decided with the brain-apply skill (or brain-catch-up). With no seeded document, offer to take one now (seeding.md, "Key documents"); without one, `tasks` and `answer` are `unsuitable` (no document). A document taken in this step goes through the ingest as usual, with its own publish question (`settings.publish`); it writes no new `seeding` line, so the checks already passed are kept.
 
 ### The four checks
 
