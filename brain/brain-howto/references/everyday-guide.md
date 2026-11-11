@@ -79,7 +79,7 @@ For a prompt about one page, open or reference that page so the assistant knows 
 | **Plan check** | Brain Assistant chat | **`/Plan check`** finds gaps across Areas, goals and projects. It suggests fixes for you to consider. |
 | **Tidy capture** | A **New** Inbox capture | **`/Tidy capture`** proposes clearer wording and waits for confirmation. The **Tidy capture** button authorises the rewrite immediately. |
 | **Voice summary** | A **New** Inbox capture with a **Transcript** toggle | Say **“Summarize this voice note.”** Confirm the summary, check what should enter the brain, then set **Ready**. |
-| **Clean email** | A new Inbox capture containing a pasted email thread | **`/Clean email`** cleans the page directly, preserving message wording and removing clutter. It asks when something is unclear. Check it, then set **Ready**. |
+| **Clean email** | An Inbox capture containing a pasted email thread, best while still **New** | **`/Clean email`** cleans the page directly, preserving message wording and removing clutter. It asks when something is unclear. Check it, then set **Ready**. |
 | **Write up** | A promoted Document | Click the **Write up** button. Review and edit the result before clicking **Accept**. |
 | **Refresh report** | A report in Documents | Click **Refresh report**. Review its proposed text before replacing the current report and clicking **Accept**. |
 
