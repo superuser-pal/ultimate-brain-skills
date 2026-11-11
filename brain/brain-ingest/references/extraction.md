@@ -152,7 +152,7 @@ Fact keys are lowercase `snake_case` and stable: `launch_date`, `budget`, `deadl
 ## People
 
 - **Match by alias:** "Maria", "María López" and "Maria (Acme, PM)" are all `per-3h8w2n6c` if those aliases are on her note. When a person is matched under a spelling that is not yet an alias, propose `add_link` with `field: aliases` and the spelling **exactly as written** in the minutes, including the surname if given ("Mari López", not "Mari") (decision 0028). Do this only when organization and role leave no doubt it is the same person; otherwise stop and ask.
-- **New person:** create a person note with `title` = their full name as written, `aliases` = the short forms used, `org` if the minutes name their organization and it has a note, `facts.role` + a matching timeline entry only when the role is stated, and `sources` = the meeting. Their note lists the project in `projects`; also propose `add_link` to add them to the project's `people`, because the project note is an existing note.
+- **New person:** create a person note with `title` = their full name as written, `aliases` = the short forms used, `org` if the minutes name their organization and it has a note, `facts.role` + a matching timeline entry only when the role is stated, and `sources` = the meeting. Their note lists the project in `projects`; also propose `add_link` to add them to the project's `people`, because the project note is an existing note. When the dry run skips the new note as `WITHHELD_MATCH`, the person already exists and waits for cleanup: link the `existing` id instead (SKILL.md step 7.2).
 - **Same name, different person, or one name matching two people:** stop and ask (SKILL.md stop conditions).
 
 ## Subject boundary and verbatim (AGENTS.md rule 4)
