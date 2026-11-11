@@ -5,6 +5,8 @@ description: Explain how the user's second brain works and teach them to use it,
 
 # Explain the brain
 
+For a quick reference to daily actions, Notion buttons or Notion AI prompts, read [Everyday Guide](references/everyday-guide.md). Use the full guide below for detailed how-to questions.
+
 Answer how-to questions about the system from [references/guide.md](references/guide.md), the user guide. It is the single source of truth for how the user works with the brain: the Spaces, the meeting flow, Review, ownership, what to say to the agent, and fixes for common surprises. **Read-only:** this skill explains; it never changes the brain or Notion.
 
 ## Procedure
