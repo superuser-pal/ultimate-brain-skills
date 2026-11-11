@@ -46,9 +46,9 @@ The list becomes the last report: "yes N" places that item, "N: <change>" correc
 The brain-setup skill's step 6 runs this flow on the user's description of their work, with no review session around it: it reads no Notion snapshot and computes no findings. Everything above holds, with these differences:
 
 - **One preview, in groups:** Domains (only with two or more contexts), Areas (with Domain and What to track), Projects (Area, Status, a one-line purpose, the client Org), Orgs, People (5 to 10, each with Org and role), then the line about key documents. Numbered from 1.
-- **Matching** is against the brain only: `brain query --candidates "<the name>" --types domain,area,project,org,person`, titles and aliases. A match shows as `already in the brain` with nothing to say yes to, so a seeding run again after an interruption writes nothing twice.
+- **Matching** is against the brain only, by titles and aliases: `brain query --candidates "<the name>" --types area,project,org,person`, and for Domains, which `brain query` doesn't search, the `domain` notes of `brain index --json`. A match shows as `already in the brain` with nothing to say yes to, so a seeding run again after an interruption writes nothing twice.
 - **The source** is the setup's own owner-ruling source (`Setup: my work (owner ruling)`, `agent:<agent>/<YYYY-MM-DD>-setup-seeding`), holding the description and the preview's answers verbatim. Every seeded note lists it in `sources`.
-- **The publish** covers every seeded note in one round, whatever `settings.publish` says: the preview's yes covers it. Then each Project's Status and each Domain's Type are set on the new pages through the MCP under the same yes.
+- **The publish** covers every seeded note and the setup's source in one round, whatever `settings.publish` says: the preview's yes covers it. It follows the brain-sync skill's Push (its `publish` log line and commit). Then each Project's Status and each Domain's Type are set on the new pages through the MCP under the same yes.
 - **Tasks and captures** are not part of seeding: a to-do or an idea in the description is offered after seeding, as an ordinary ramble item.
 - No session record, closing summary or `assistant` log line: brain-setup logs the step (`seeding`, with its counts).
 
