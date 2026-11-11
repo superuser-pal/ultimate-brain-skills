@@ -119,20 +119,29 @@ A Document is a `reference` note with an `origin` (references/extraction.md, "Do
 ```json
 { "proposals": [
   { "kind": "update_fact", "title": "Acme budget: 80000 → 95000 EUR", "target": "prj-9x4t1b7e", "field": "budget",
-    "after": "95000 EUR", "why": "Budget raised to 95000 EUR to cover the CMS licence.", "source": "mtg-pcpyn31n" },
+    "after": "95000 EUR", "why": "Budget raised to 95000 EUR to cover the CMS licence.", "source": "mtg-pcpyn31n",
+    "passages": ["mtg-pcpyn31n"] },
   { "kind": "update_fact", "title": "Carlos Ruiz role: Developer → tech lead", "target": "per-9t2c6m4a", "field": "role",
-    "after": "tech lead", "why": "Carlos is now tech lead for the website.", "source": "mtg-pcpyn31n" }
+    "after": "tech lead", "why": "Carlos is now tech lead for the website.", "source": "mtg-pcpyn31n",
+    "passages": ["mtg-pcpyn31n"] }
 ] }
 ```
+
+- **`passages`** on every item (spec/eligibility.md §9.1; the CLI refuses an item without them, `INPUT_INVALID` at `/proposals/<i>/passages`): the passages the change rests on, a non-empty list, each once. Everything the change draws from counts: its value, its wording, its framing and `^[inferred]` lines, and the line that names a person for a link; every `^[src-…#¶n:…]` reference in its `content`, `answer` or `note.body` must be in the list.
+  - **A selected input** (an extract, references/selection.md): the passage reference `src-…#¶n:<passage_hash>` of each paragraph it draws from, the hash from the extract's `passages`. A paragraph the extract doesn't hold is excluded: no change rests on it.
+  - **An input with no paragraph ids** (minutes ingested whole, a document, a URL, a pasted text): the input itself, the same value as `source` (`"passages": ["mtg-pcpyn31n"]`, or the `src-` id). Add an owner ruling's source id when the change rests on the ruling too.
+  - A change resting on a note the brain already has (a learned Document's own text) adds that note's id.
+
+  A passage that is no longer live gets the item skipped as `SOURCE_EXCLUDED` (SKILL.md step 8). Never pad the list to look supported, and never leave out a passage the change draws from to get past the check: a change that restates an excluded paragraph is not written at all.
 
 - **Don't send `before`;** the CLI fills it from the current fact. **`from`** (only `update_fact` and `contradiction` have one): leave it out for a meeting (the CLI uses the meeting's date). For any other source, send it: the date the text gives for the change ("approved on 5 December 2026" → `2026-12-05`), else the source's `file_date`; otherwise the CLI would use today.
 - **`add_link`** (decision 0028) adds one value to a list of an existing note. Send one item per link, each with its own `title` and `why`: the CLI groups the items with the same `target` and `source` into one proposal, one Review row (decision 0037), and writes the group's title itself:
   ```json
   { "kind": "add_link", "title": "Acme website: add Lucía Fernández to People", "target": "prj-9x4t1b7e", "field": "people",
-    "after": "per-zzvs98vn", "why": "Lucía Fernández (Acme, marketing lead)", "source": "mtg-pcpyn31n" }
+    "after": "per-zzvs98vn", "why": "Lucía Fernández (Acme, marketing lead)", "source": "mtg-pcpyn31n", "passages": ["mtg-pcpyn31n"] }
   ```
   `field` is one of `aliases`, `tags`, `projects`, `people`, `attendees`, `deciders`. A value that is already listed is skipped as `ALREADY_LINKED`.
-- **`why`** is the sentence from the minutes, verbatim.
+- **`why`** is the sentence from the minutes, verbatim: a sentence of an included paragraph, never of an excluded one (SKILL.md, "The writing rule").
 - **`title`** reads as a Review row: `<subject> <field>: <old> → <new>`.
 - **Other kinds** (spec/schema.md §11):
   - `add_to_note`: `target`, `content`. A link in `content` is relative to the target note's folder.
@@ -144,14 +153,16 @@ A Document is a `reference` note with an `origin` (references/extraction.md, "Do
 - **`review_notes`** (decisions 0041, 0043, 0045): one per input, in the same batch as its `add_link`, `update_fact`, `update_body` and `add_to_note` items, which the CLI folds into it as lettered items (changes first, then notes, then links):
   ```json
   { "kind": "review_notes", "source": "mtg-pcpyn31n",
-    "notes": ["mtg-pcpyn31n", "per-zzvs98vn", "dec-axker49q", "dec-xe9x6apm", "que-wtnyy4r6", "que-zv7ckbtk"] }
+    "notes": ["mtg-pcpyn31n", "per-zzvs98vn", "dec-axker49q", "dec-xe9x6apm", "que-wtnyy4r6", "que-zv7ckbtk"],
+    "note_passages": { "mtg-pcpyn31n": ["mtg-pcpyn31n"], "per-zzvs98vn": ["mtg-pcpyn31n"], "dec-axker49q": ["mtg-pcpyn31n"],
+      "dec-xe9x6apm": ["mtg-pcpyn31n"], "que-wtnyy4r6": ["mtg-pcpyn31n"], "que-zv7ckbtk": ["mtg-pcpyn31n"] } }
   ```
-  `source` is the meeting id for minutes, else the source's id: the same value the batch's other proposals carry. `notes` lists every knowledge note `note new` created for this input (never the source), or is `[]` when it created none (a re-read). The CLI writes the title ("From Acme launch review: 1 change, 6 new notes and 2 links"). A note can be in only one `review_notes`. The reply's `created` has one proposal for all of them; folded items are not listed separately.
+  `source` is the meeting id for minutes, else the source's id: the same value the batch's other proposals carry. `notes` lists every knowledge note `note new` created for this input (never the source), or is `[]` when it created none (a re-read). `note_passages` gives each listed note its passages, by the rules of `passages` above (for a selected input, the `src-…#¶n:…` of the paragraphs its body and facts draw from); no key for a note not in `notes`, and none at all with `notes: []`. The review_notes itself takes no `passages`: each folded change and link brings its own. The CLI writes the title ("From Acme launch review: 1 change, 6 new notes and 2 links"). A note can be in only one `review_notes`. The reply's `created` has one proposal for all of them; folded items are not listed separately.
 - **`answer`** (decision 0041), on an open question the input answers:
   ```json
   { "kind": "answer", "title": "Who owns the mobile app: Carlos Ruiz", "target": "que-8n3v5x1d",
     "answer": "Carlos Ruiz owns the mobile app.", "answer_note": "dec-axker49q",
-    "why": "Carlos takes over the mobile app from January.", "source": "mtg-pcpyn31n" }
+    "why": "Carlos takes over the mobile app from January.", "source": "mtg-pcpyn31n", "passages": ["mtg-pcpyn31n"] }
   ```
   `answer_note` only when a note answers it (usually a decision of this batch). A question that already has an answer is skipped as `ALREADY_ANSWERED`.
 - **A re-run is safe:** identical pending proposals are skipped as `DUPLICATE_PENDING`.
