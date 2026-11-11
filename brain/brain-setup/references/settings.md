@@ -26,7 +26,7 @@ Your brain's settings. Say "keep these", or change any line ("drop folder ~/Inbo
 
  1. Brain folder: ~/brain
     Your brain: Markdown notes in a Git repository. Everything the brain knows is here.
- 2. Git identity: Sam Rivera <sam@example.com>, for all your repositories
+ 2. Git identity: Sam Rivera <sam@studio.example>, for all your repositories
     Every change the brain makes is a commit with this name; without it nothing is saved.
  3. Private remote: a new private GitHub repository "brain", created for you
     A private copy of your brain, so nothing is lost and another machine can use it.
@@ -72,7 +72,7 @@ In this order; a failure stops the step with its fix, and logs `step=settings re
 1. **Git identity.** `git config --global user.name "<name>"` and `user.email`, or without `--global` in the brain folder when the user chose "this repository only".
 2. **The remote,** when the brain has no `origin`:
    - `gh` on: `gh repo create <name> --private --source <brain folder> --push`. A failure (the name is taken, no network): reason `remote-failed`; offer another name, or the steps below.
-   - `gh` off: give the steps for the user's Git host: create an empty private repository (no README), copy the URL the host shows for it (HTTPS or SSH), then, in the brain folder, `git remote add origin <that URL>` and `git push -u origin HEAD`. Wait for "done", then check that `git remote get-url origin` has a URL and `git ls-remote origin` lists the branch. No URL, or nothing pushed: reason `remote-failed`, say which, and stop.
+   - `gh` off: give the steps for the user's Git host: create an empty private repository (no README), copy the URL the host shows for it (`https:` or `ssh`), then, in the brain folder, `git remote add origin <that URL>` and `git push -u origin HEAD`. Wait for "done", then check that `git remote get-url origin` has a URL and `git ls-remote origin` lists the branch. No URL, or nothing pushed: reason `remote-failed`, say which, and stop.
 3. **The drop folder:** create it (`mkdir -p`, with `~` expanded).
 4. **The two `AGENTS.md` lines** (below).
 5. **Settings:** `brain config set settings.<key> '"<value>"'` for `publish`, `push`, `recall`, `markitdown` and `gh`, each one the screen shows, whether changed or not, so the choice is recorded. `settings.schedule` waits for step 8.
