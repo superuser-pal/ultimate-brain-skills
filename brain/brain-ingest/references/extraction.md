@@ -64,14 +64,14 @@ What the brain learned from an input, an idea, a method or a definition, is a **
 - `title`: the idea's name ("Blue-green deploys"); `frontmatter`: `origin: learned`, `summary` (one line: what it is), `sources: [<the input's source or meeting id>]`, and `area`, `projects` or `tags` from what it is about;
 - body: the explanation in your own words, short, every figure and name as stated; `^[inferred]` on what the input implies but doesn't say;
 - it is a draft like any new note: it goes in the input's `review_notes`. It is written whether or not the Documents module is on: with it off, it stays in Git and in `brain query`, unpublished;
-- one per idea: an idea the brain already has a learned Document for gets an `add_to_note` (or `update_body`) on it, never a second one;
+- one per idea: an idea the brain already has a learned Document for (search `brain query --candidates "<the idea>" --types reference`, and read the candidate with `brain query --read`) gets an `add_to_note` (or `update_body`) on it, never a second one;
 - never for something the user asked to keep (that is `whole` or `part`, below), nor for a decision, a question or a fact.
 
 ### Documents: keeping an input as a page (decisions 0045, 0049) *(Documents)*
 
 A Document is a `reference` note shown in Notion's Documents database: something the user wants to read and refer to from any database. The extraction above runs **either way**: keeping an input as a page never stops its decisions, questions and facts from being taken out (decision 0049). There are three kinds the user asks for, by `origin` (a fourth, `learned`, is above):
 
-- **`whole`:** the input is to be kept and **Only keep is empty** (Document asked on its Inbox row, "all" in the drop folder's question, "keep the Acme brief as a document" in chat). One Document per source, its body the source's body **byte for byte** (the CLI checks the hash): copy the source's body, never retype or tidy it.
+- **`whole`:** the input is to be kept and **Only keep is empty** (Document asked on its Inbox row, "all" in the drop folder's question, "keep the Acme brief as a document" in chat). One Document per source, its body the source's body **byte for byte** (the CLI checks the hash): copy the source's body, never retype or tidy it. For an input of this run, that is the body you snapshot; for a source already in the brain, the `body` `brain query --read <src-id>` returns, never its file. A source the read withholds, or returns with `restricted: true`, is not kept now: name it under Needs you.
   - `title`: the input's title without the kind ("Acme website brief"), `frontmatter`: `origin: whole`, `summary` (one line: what the file is), `sources: [<that one source id>]`, and `area` and `projects` from the row or the project the input is about;
   - it needs **no Review**: the CLI writes it as `reviewed`, and it never goes in `review_notes`;
   - an Inbox row **with files attached** keeps each **file**, not the capture's text: one `whole` Document per attached source (`attached_to` = the row's source);
@@ -81,14 +81,14 @@ A Document is a `reference` note shown in Notion's Documents database: something
   - `frontmatter`: `origin: part`, `summary` (one line: what it holds and from which document, without a version or date, so a new version doesn't make it stale), `sources: [<the source id>]`, and `area` and `projects`;
   - body: the kept content, as a Markdown list or table, in the document's order and wording; every figure, date and name exactly as stated. No commentary, no links of your own;
   - it is a draft like any new note: it goes in the input's `review_notes` (for a request on a source already in the brain, a new `review_notes` with that source).
-- **`promoted`:** Promote asked on a decision (a `promote_requests` item; decisions only since 0.9.1, decision 0071). One Document seeded from the note, linked to it:
+- **`promoted`:** Promote asked on a decision (a `promote_requests` item; decisions only since 0.9.1, decision 0071). One Document seeded from the note, linked to it. Read the note with `brain query --read <dec-id>` and copy only what it returned: promote it only when it comes back with `restricted: false`. A note withheld, or returned with `restricted: true` (part of it is excluded, so its title, summary or a line is missing), is not promoted now: name it under Needs you ("Use Supabase for auth can't become a Document while part of it waits for cleanup"; by its `cite` label when the read gave no title), and leave Promote asked ticked so a later run promotes it once the cleanup is done. Never take its text from its file or its Notion page:
   - `title`: the note's title, `frontmatter`: `origin: promoted`, `promoted_from: <the note id>`, `summary` = the note's summary, and the note's `area`, `projects` and `sources` copied;
   - body: the note's summary, a blank line, then the note's body;
   - the CLI gives it the note's lifecycle, and it needs no Review. From then on **its body is the user's**: never propose an `update_body` on it.
 
 The source records what the user asked to keep in `only_keep` (cli-inputs.md §1b), so a new version knows it.
 
-**A new version of a file that has a Document** (the source has `replaces`, sources.md "New versions"): never a second Document. Read the Document's body, change only the lines the new version changes (`brain source diff` says which), and propose the result as an `update_body` on that Document: `content` = the whole new body, every unchanged line copied exactly, so the Review row shows only the lines that differ. `why` names what changed ("Requirement 4: deadline 1 Mar → 15 Mar"). It goes in the new source's `review_notes` as a lettered item. A new version that changes nothing a `part` Document keeps proposes nothing for it.
+**A new version of a file that has a Document** (the source has `replaces`, sources.md "New versions"): never a second Document. Read the Document's body with `brain query --read <ref-id>`; when it is withheld or comes back with `restricted: true`, propose nothing for it and name it under Check ("the Acme requirements Document waits for cleanup; its new version's changes are not proposed yet"). Otherwise change only the lines the new version changes (`brain source diff` says which), and propose the result as an `update_body` on that Document: `content` = the whole new body, every unchanged line copied exactly, so the Review row shows only the lines that differ. `why` names what changed ("Requirement 4: deadline 1 Mar → 15 Mar"). It goes in the new source's `review_notes` as a lettered item. A new version that changes nothing a `part` Document keeps proposes nothing for it.
 
 ### Re-reads: only what changed (decision 0045)
 
@@ -100,8 +100,9 @@ A corrected input read again (a meeting set back to Reviewed, an Inbox row set b
 - a removed or reversed line that a note rests on (a decision the minutes no longer record, a misheard name) → never archive or rewrite that note yourself. Name it under the report's Check, with what to do ("Use Firebase for auth rests on a line the corrected minutes removed: reject it in Review if it's still pending, or say 'archive it'").
 - the meeting note's own text (its summary and body) still says what the first version said: when a change touches it, add one `add_to_note` on the meeting ("Corrected minutes: the launch moves to March 2027, not February"), and name under Check any `summary` the change makes stale (a project's, the meeting's): no proposal kind rewrites a summary;
 - an action item only when its line changed (a new owner or date): it becomes a task as in a first ingest. Unchanged ones already are tasks, and the report doesn't list them again;
-- **a line the brain already holds as a question** (a question note raised in this meeting, or citing this input, that says the same thing; open, answered or dropped) is never turned into a task, even when it now reads as the owner's to-do: only the to-do tidy converts it ([todo-tidy.md](todo-tidy.md)). A line the user **rewrote** into a to-do is a changed line: it gets its task once, unless the question it replaces was dropped with a `task` (that task stands); name the old question under Check: "<question> is now your task: say 'drop it'" (the tidy's Drop);
+- **a line the brain already holds as a question** (a question note raised in this meeting, or citing this input, that says the same thing; open, answered or dropped; find it with `brain query --candidates "<the line>" --types question` and read it with `brain query --read`) is never turned into a task, even when it now reads as the owner's to-do: only the to-do tidy converts it ([todo-tidy.md](todo-tidy.md)). A line the user **rewrote** into a to-do is a changed line: it gets its task once, unless the question it replaces was dropped with a `task` (that task stands); name the old question under Check: "<question> is now your task: say 'drop it'" (the tidy's Drop);
 - unchanged lines are not read again: what they gave is already in the brain.
+- **a selected input** (an extract): a paragraph the new version leaves out, or one the user marked Meeting only, is excluded. A correction says what holds now and never repeats the excluded wording, not even as "the earlier minutes said …"; the Check line names the note without quoting it ("Acme sync's text still holds the earlier wording; the correction is added below it"). A change no live paragraph supports is not proposed.
 
 ### Tasks for the owner (decision 0037)
 
@@ -139,7 +140,7 @@ Anything smaller ("send the deck on Friday", "use the blue logo") stays a line i
 
 ## Facts: change, new, or contradiction
 
-Compare each fact with the loaded notes' current `facts`:
+Compare each fact with the loaded notes' current `facts`, as step 5's `brain query --read` returned them (a fact the read left out is not there: it is not compared, proposed against or mentioned):
 - **Same value:** nothing to do.
 - **The minutes state a new value as a change** ("launch moves to February"): `update_fact`, with `after` copied verbatim and `from` = the meeting date (the CLI fills `before`).
 - **No current value:** `update_fact` without `before`.

@@ -66,6 +66,7 @@ The proposal, one per approved candidate:
   "title": "Remember: Ask before running migrations",
   "why": "said yes at the closing review",
   "source": "agent:brain-query/20261108T140000Z",
+  "passages": ["agent:brain-query/20261108T140000Z"],
   "note": { "type": "memory", "title": "Ask before running migrations",
     "frontmatter": { "summary": "acme-api: ask before running migrations; the production database is shared.",
       "scope": "project", "projects": ["prj-9x4t1b7e"], "confidence": "verified", "origin": "acme-api",
@@ -79,11 +80,11 @@ The decision, for each proposal id that `proposal new` returned, with the curren
 { "decisions": [ { "proposal": "prp-…", "action": "approve", "decided_at": "2026-11-08T14:31:05Z", "decided_by": "chat" } ] }
 ```
 
-- `source` and `sources` hold the session key `agent:brain-query/<the session's start, YYYYMMDDTHHMMSSZ>`. Add the ids of brain notes the lesson comes from, when there are any.
+- `source`, `sources` and `passages` hold the session key `agent:brain-query/<the session's start, YYYYMMDDTHHMMSSZ>` (`proposal new` refuses a proposal without `passages`). Add to `sources` and `passages` the ids of brain notes the lesson comes from, when there are any: only notes `brain query --read` or `brain recall` returned.
 - `scope` with exactly its list: `projects`, `areas` or `stacks`, never two. `general` has none.
 - `confidence`: `verified` when the user said it, `inferred` when you drew it from the session, `unverified` when the user doubts it. Approval never changes it.
 - `origin`: the `repo` of the folder's `.brain`, or `brain`.
-- **A candidate that replaces a memory:** after its `new_item` is applied, a second proposal `{ "kind": "supersede", "title": "…", "why": "…", "source": "<the session key>", "target": "<the new mem- id>", "supersedes": "<the old mem- id>" }`, approved the same way. The old memory stays, archived.
+- **A candidate that replaces a memory:** after its `new_item` is applied, a second proposal `{ "kind": "supersede", "title": "…", "why": "…", "source": "<the session key>", "passages": ["<the session key>"], "target": "<the new mem- id>", "supersedes": "<the old mem- id>" }`, approved the same way. The old memory stays, archived.
 
 Then commit in the brain: `git -C <brain path> add -A memories _proposals log` and `git -C <brain path> commit -m "memory: <title>"` (or `memory: <n> lessons`). The brain path is `brain status --json`'s. Push per `settings.push`; when the brain has no remote, say "not pushed: the brain has no remote". From a linked repo, this is the one write the brain gets; everything else stays read-only.
 
@@ -91,7 +92,11 @@ End with one line: `Saved <n> lessons; <n> declined. Stopped line on <task>.` (o
 
 ## 4. Searching memories
 
-`brain recall --search "<words>" --json` returns the approved memories that reach this folder, ranked. Add `--include-superseded` to see the history, marked `superseded_by`. Read a memory's file only when a decision needs the whole text.
+`brain recall --search "<words>" --json` returns the approved memories that reach this folder, ranked. When a decision needs a memory's whole text, read it with `brain query --read <mem-id> --json`: it returns a memory that reaches this folder, is approved and is replaced by nothing.
+
+**History, only for a question about the past** ("what was the rule before it changed?"): add `--include-superseded` to the search, which also returns the replaced memories that reach this folder and aren't drafts, after the current ones, each marked `superseded_by`. Read a replaced memory's whole text with `brain query --read <mem-id> --historical --json`; without `--historical` it is withheld. Give the old rule as history and name what replaced it. A question about how things are now, and the "Replaces" check of §3.2, never use either form.
+
+A memory file found any other way (a grep, a folder listing, `brain index --json`) is not eligible and is never used or mentioned.
 
 ## 5. A conflicting instruction
 
