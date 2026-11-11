@@ -60,7 +60,7 @@ On "set up my brain" (or "continue setup"):
    | end | Setup report | a `finished` line exists | [references/report.md](references/report.md) |
 
    Without Notion AI (the latest `prerequisites` line has `notion_ai=no`), steps 4a and 4b are left out: see "Without Notion AI" below. A check that failed in an earlier step (a Git identity removed since) makes that step the first unfinished one: fix only the failing item, then go on.
-4. **Say where setup stands,** in one line, then start that step: "Setup: 6 of 9 done. Next: paste the minutes prompt." The counts are `setup.required.done` and `setup.required.total`. A first run says instead: "Let's set up your brain. It takes about an hour, and you can stop any time: say "set up my brain" to pick up where you left off."
+4. **Say where setup stands,** in one line, then start that step: "Setup: 6 of 9 done. Next: paste the minutes prompt." The counts are `setup.required.done` and `setup.required.total`, the required items only; once they are all done, say "All 9 required items done. Next: describe your work." (seeding, first value and the schedule). A first run says instead: "Let's set up your brain. It takes about an hour, and you can stop any time: say "set up my brain" to pick up where you left off."
 5. **Run the steps** from there, each by its guide, in order. After each, run `brain status` again before the next.
 6. **Everything done:** say so in one line, and offer only what is left: the setup report when no `finished` line exists (then log `finished`), the schedule when it was never answered. Nothing else is asked.
 

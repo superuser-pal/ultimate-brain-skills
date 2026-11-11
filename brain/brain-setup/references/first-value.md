@@ -4,18 +4,21 @@
 
 Setup ends with three checks on the user's own seeded material (decision 0078 §5): **correct tasks, a report, and the information organised**. No meeting is needed. Run each, show its evidence, and ask the user to judge what only they can.
 
-1. **Decide the Review rows first.** The seeded documents' Review rows (seeding.md, "Key documents") are part of this step: "Your documents left <n> rows in Review. Open Review in Notion and approve, edit or reject them, then say "done"." Then run the brain-catch-up skill, or brain-apply, to carry out what they decided. With no seeded document, the tasks check has nothing to read: offer to take one now (seeding.md, "Key documents"); without one, the tasks check is `fail` (no document), and the report check runs on what the brain has.
+1. **Decide the Review rows first,** when the seeded documents left any (seeding.md, "Key documents"); with none, skip to item 2: "Your documents left <n> rows in Review. Open Review in Notion and approve, edit or reject them, then say "done"." Then run the brain-catch-up skill, or brain-apply, to carry out what they decided. With no seeded document, the tasks check has nothing to read: offer to take one now (seeding.md, "Key documents"); without one, the tasks check is `fail` (no document), and the report check runs on what the brain has.
 2. **Correct tasks** (Tasks on). Show the tasks the ingest created from one seeded document, each with its Project and Due. Ask: "Are these exactly your own commitments in <document>, with the right project and due date, and none of someone else's?" Yes: `tasks=pass`. No: `tasks=fail`, and note what was wrong (a missing task, someone else's task, a wrong project or date) for the report as a count, never the text. With Tasks off: `tasks=skip`.
-3. **A report.** Ask the user to say "report on <main project>" (the brain-query skill, report mode), or run it with their yes. Check that the report landed in Documents, linked from the project, and cites the seeded document. All three: `report=pass`; else `report=fail` and which of the three is missing.
+3. **A report.** Ask the user to say "report on <main project>" (the brain-query skill, report mode), or run it with their yes. Check that the report landed in Documents, linked from the project, and cites the seeded document. All three: `report=pass`; else `report=fail` and which of the three is missing. With no seeded document it can't cite one, so the check is `fail` (no document); say so before running it.
 4. **The information organised.** List each note the seeding and the documents' Review wrote, under its Area and Project:
 
    ```text
    Clients
      Harbor Lane renovation: 2 decisions, 1 question, 1 Document
-     People: Robin Vale, Jamie Ortiz, Kim Okafor
    Family
      Garden redesign: 1 Document
+   People, by Org
+     Harbor Lane Homes: Robin Vale, Jamie Ortiz, Kim Okafor
    ```
+
+   People have an Org and no Area, so they are listed by Org (no Org: `no org`).
 
    Ask: "Is each where you expect it, and is anyone listed twice?" Yes: `organised=pass`. No: `organised=fail`, and note what was misplaced or duplicated.
 5. **Log** `step=first-value result=done tasks=<pass|fail|skip> report=<pass|fail> organised=<pass|fail>`, commit. Each check passes or fails on its own. A failure is named to the user and not retried in setup: it goes in the setup report, and the user can say "that's wrong: …" to fix it the usual way. The step is done when the three were run.
