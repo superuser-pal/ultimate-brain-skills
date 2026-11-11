@@ -66,6 +66,7 @@ The proposal, one per approved candidate:
   "title": "Remember: Ask before running migrations",
   "why": "said yes at the closing review",
   "source": "agent:brain-query/20261108T140000Z",
+  "passages": ["agent:brain-query/20261108T140000Z"],
   "note": { "type": "memory", "title": "Ask before running migrations",
     "frontmatter": { "summary": "acme-api: ask before running migrations; the production database is shared.",
       "scope": "project", "projects": ["prj-9x4t1b7e"], "confidence": "verified", "origin": "acme-api",
@@ -79,11 +80,11 @@ The decision, for each proposal id that `proposal new` returned, with the curren
 { "decisions": [ { "proposal": "prp-…", "action": "approve", "decided_at": "2026-11-08T14:31:05Z", "decided_by": "chat" } ] }
 ```
 
-- `source` and `sources` hold the session key `agent:brain-query/<the session's start, YYYYMMDDTHHMMSSZ>`. Add the ids of brain notes the lesson comes from, when there are any.
+- `source`, `sources` and `passages` hold the session key `agent:brain-query/<the session's start, YYYYMMDDTHHMMSSZ>` (`proposal new` refuses a proposal without `passages`). Add to `sources` and `passages` the ids of brain notes the lesson comes from, when there are any: only notes `brain query --read` or `brain recall` returned.
 - `scope` with exactly its list: `projects`, `areas` or `stacks`, never two. `general` has none.
 - `confidence`: `verified` when the user said it, `inferred` when you drew it from the session, `unverified` when the user doubts it. Approval never changes it.
 - `origin`: the `repo` of the folder's `.brain`, or `brain`.
-- **A candidate that replaces a memory:** after its `new_item` is applied, a second proposal `{ "kind": "supersede", "title": "…", "why": "…", "source": "<the session key>", "target": "<the new mem- id>", "supersedes": "<the old mem- id>" }`, approved the same way. The old memory stays, archived.
+- **A candidate that replaces a memory:** after its `new_item` is applied, a second proposal `{ "kind": "supersede", "title": "…", "why": "…", "source": "<the session key>", "passages": ["<the session key>"], "target": "<the new mem- id>", "supersedes": "<the old mem- id>" }`, approved the same way. The old memory stays, archived.
 
 Then commit in the brain: `git -C <brain path> add -A memories _proposals log` and `git -C <brain path> commit -m "memory: <title>"` (or `memory: <n> lessons`). The brain path is `brain status --json`'s. Push per `settings.push`; when the brain has no remote, say "not pushed: the brain has no remote". From a linked repo, this is the one write the brain gets; everything else stays read-only.
 
