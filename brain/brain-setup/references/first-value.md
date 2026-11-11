@@ -2,12 +2,38 @@
 
 ## Step 7: the first-value check
 
-Setup ends with three checks on the user's own seeded material (decision 0078 §5): **correct tasks, a report, and the information organised**. No meeting is needed. Run each, show its evidence, and ask the user to judge what only they can.
+Setup ends with four checks on the user's own seeded material (decision 0078 §5, and the loop the brain is for: capture, review, a cited answer): **correct tasks, a report, the information organised, and a cited answer**. No meeting is needed. Run each, show its evidence, and ask the user to judge what only they can.
 
-1. **Decide the Review rows first,** when the seeded documents left any (seeding.md, "Key documents"); with none, skip to item 2: "Your documents left <n> rows in Review. Open Review in Notion and approve, edit or reject them, then say "done"." Then run the brain-catch-up skill, or brain-apply, to carry out what they decided. With no seeded document, the tasks check has nothing to read: offer to take one now (seeding.md, "Key documents"); without one, the tasks check is `fail` (no document), and the report check runs on what the brain has.
-2. **Correct tasks** (Tasks on). Show the tasks the ingest created from one seeded document, each with its Project and Due. Ask: "Are these exactly your own commitments in <document>, with the right project and due date, and none of someone else's?" Yes: `tasks=pass`. No: `tasks=fail`, and note what was wrong (a missing task, someone else's task, a wrong project or date) for the report as a count, never the text. With Tasks off: `tasks=skip`.
-3. **A report.** Ask the user to say "report on <main project>" (the brain-query skill, report mode), or run it with their yes. Check that the report landed in Documents, linked from the project, and cites the seeded document. All three: `report=pass`; else `report=fail` and which of the three is missing. With no seeded document it can't cite one, so the check is `fail` (no document); say so before running it.
-4. **The information organised.** List each note the seeding and the documents' Review wrote, under its Area and Project:
+**An attempt is not a pass.** Running the checks records an attempt. First value passes only when every applicable check passes; until then it is unresolved, setup stops at this step, and the schedule is not offered.
+
+### Each check's outcome
+
+- `pass`: the check passed, and the user confirmed what only they can judge.
+- `fail`: it ran and something was wrong. Name what ("this task is someone else's commitment", "the person appears twice").
+- `unsuitable`: the material can't show it: no seeded document holds a commitment of the owner, there is no main project to report on, a document's Review row holds no item to accept, or no useful question can be answered from the accepted item. Say why. **Never invent** a commitment, a proposal, a Review item or an answer to pass a check.
+- `skip`: `tasks` only, with the Tasks module off. Show it as `skipped (Tasks off)`, never as a pass.
+- Not run in this attempt (the user stopped first): left out of the log line.
+
+### Which checks to run
+
+Read the latest `first-value` attempt: `setup.first_value` in `brain status` (`at` and the four outcomes, `null` for a check not run yet) or, when `status` has no `first_value`, the latest `first-value` log line.
+
+- **No attempt yet:** run all four.
+- **An unresolved attempt:** keep the checks that passed and run only the others (`fail`, `unsuitable`, or not run yet).
+- **Run all four again** when a `seeding` line is newer than that attempt (the material changed); run `tasks` again when it was `skip` and the Tasks module is now on.
+- The user can ask for any check again ("check the report again"); then it runs whatever it was.
+
+Say in one line which checks are kept and which run: "Kept from last time: tasks, report. Checking now: organised, answer."
+
+### Before the checks: the seeded documents' Review rows
+
+The seeded documents left one Review row per file (seeding.md, "Key documents"). The `answer` check needs one item from them accepted, so ask now, when a check that needs them is to run: "Your documents left <n> rows in Review. Open Review in Notion, approve or reject what's there (accept at least one item you'd want the brain to know), then say "done"." Then carry out what the user decided with the brain-apply skill (or brain-catch-up). With no seeded document, offer to take one now (seeding.md, "Key documents"); without one, `tasks` and `answer` are `unsuitable` (no document).
+
+### The four checks
+
+1. **Correct tasks** (`tasks`, Tasks on). Show the tasks the ingest created from one seeded document, each with its Project and Due. Ask: "Are these exactly your own commitments in <document>, with the right project and due date, and none of someone else's?" Yes: `pass`. No: `fail`, and name what was wrong (a missing task, someone else's task, a wrong project or date). No seeded document holds a commitment of the owner: `unsuitable`, and the smallest next action is to drop a document that holds one of their commitments. With Tasks off: `skip`.
+2. **A report** (`report`). Ask the user to say "report on <main project>" (the brain-query skill, report mode), or run it with their yes. It passes when the report landed in Documents, linked from the project, citing a seeded document; else `fail`, naming which of the three is missing. No main project: `unsuitable`.
+3. **The information organised** (`organised`). List each note the seeding and the documents' Review wrote, under its Area and Project:
 
    ```text
    Clients
@@ -18,16 +44,32 @@ Setup ends with three checks on the user's own seeded material (decision 0078 §
      Harbor Lane Homes: Robin Vale, Jamie Ortiz, Kim Okafor
    ```
 
-   People have an Org and no Area, so they are listed by Org (no Org: `no org`).
+   People have an Org and no Area, so they are listed by Org (no Org: `no org`). Ask: "Is each where you expect it, and is anyone listed twice?" Yes: `pass`. No: `fail`, naming what was misplaced or duplicated.
+4. **A cited answer** (`answer`). Name the item the user accepted from a seeded document's Review row and applied. Ask: "Ask me one question about it that you'd really ask." Answer with the brain-query skill, showing the answer and the source passage it cites. It passes when the answer rests on the applied item and cites the seeded document, and the user confirms the answer is useful and the passage supports it; else `fail`, naming which. No item accepted from a seeded document, or no useful question can be answered from it: `unsuitable`.
 
-   Ask: "Is each where you expect it, and is anyone listed twice?" Yes: `organised=pass`. No: `organised=fail`, and note what was misplaced or duplicated.
-5. **Log** `step=first-value result=done tasks=<pass|fail|skip> report=<pass|fail> organised=<pass|fail>`, commit. Each check passes or fails on its own. A failure is named to the user and not retried in setup: it goes in the setup report, and the user can say "that's wrong: …" to fix it the usual way. The step is done when the three were run.
+A published report that cites a document does not show by itself that an answer is useful and supported: that is the fourth check's job.
 
-**The first meeting** is checked later, by the first catch-up that ingests a Reviewed meeting after this step: its report adds one line saying how it went. Tell the user: "Your first meeting is the last check: mark it Reviewed after it's summarised, and the next catch-up tells you how it went."
+### Log the attempt
+
+When the attempt's checks are done, or the user stops, write one line with each check's outcome as it stands, carrying the kept ones unchanged:
+
+- **First value passes** (`report`, `organised` and `answer` are `pass`, and `tasks` is `pass` or, with Tasks off, `skip`): log `step=first-value result=done tasks=… report=pass organised=pass answer=pass`, commit `setup: first-value`, and go on to step 8.
+- **Otherwise, unresolved:** log `step=first-value result=failed reason=first-value-unresolved` with the checks as they stand (a check not run is left out), commit, and stop at step 7. Show one line per check not passed: what failed or couldn't be shown, the smallest next action, and how to resume:
+
+  ```text
+  First value isn't there yet:
+  - organised: Robin Vale appears twice. Next: say "merge the two Robin Vale notes".
+  - answer: no item from your documents was accepted in Review. Next: accept one item in Review.
+  Say "set up my brain" when that's done: I'll check only these two again.
+  ```
+
+  Offer no schedule, and write no `finished` line. The setup report can still be shown (report.md); it unlocks nothing.
+
+**The first meeting** is checked later, by the first catch-up that ingests a Reviewed meeting once first value has passed: its report adds one line saying how it went. When first value passes, tell the user: "Your first meeting is the last check: mark it Reviewed after it's summarised, and the next catch-up tells you how it went."
 
 ## Step 8: the scheduled catch-up
 
-Offered only now, once first value works (decision 0078 §2).
+Offered only once first value passes (decision 0078 §2).
 
 Ask: "Catch-up can run on its own at set times, taking in only what you've marked ready. Turn it on? (You can change this any time.)"
 
