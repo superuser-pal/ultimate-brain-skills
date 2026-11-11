@@ -41,6 +41,7 @@ On "set up my brain" (or "continue setup"):
 2. **Online checks**, the cheap ones `status` can't make:
    - **Notion:** search for the page **Brain Data** through the Notion MCP. Found once: the connection works. No Notion tools in this session, or not found: step 3 is unfinished again, even when it was recorded.
    - **The remote is private,** when `settings.gh` is `on`: `gh repo view --json isPrivate` in the brain folder. `false`: step 2 is unfinished again ("Your brain's remote is public. Make it private on your Git host, or say "make it private" and I'll run `gh repo edit --visibility private --accept-visibility-change-consequences`").
+   - **A recorded step whose online check fails now** is logged `failed` with its reason (`notion-unreachable`, `brain-data-not-found`, `remote-failed`), then `brain status` is run again, so the count below is the one after the checks.
    - **Never re-run a by-hand check recorded as done** (the minutes prompt, Brain Assistant): its log line is the proof. The user can ask for it again ("check the minutes prompt again"), and then it runs and logs again.
 3. **Find the first unfinished step,** in this order:
 
