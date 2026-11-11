@@ -21,13 +21,14 @@ Read the latest `first-value` attempt: `setup.first_value` in `brain status` (`a
 - **No attempt yet:** run all four.
 - **An unresolved attempt:** keep the checks that passed and run only the others (`fail`, `unsuitable`, or not run yet).
 - **Run all four again** when a `seeding` line is newer than that attempt (the material changed); run `tasks` again when it was `skip` and the Tasks module is now on.
+- **The Tasks module turned off since:** a `tasks` check not passed becomes `skip`, without running.
 - The user can ask for any check again ("check the report again"); then it runs whatever it was.
 
 Say in one line which checks are kept and which run: "Kept from last time: tasks, report. Checking now: organised, answer."
 
 ### Before the checks: the seeded documents' Review rows
 
-The seeded documents left one Review row per file (seeding.md, "Key documents"). The `answer` check needs one item from them accepted, so ask now, when a check that needs them is to run: "Your documents left <n> rows in Review. Open Review in Notion, approve or reject what's there (accept at least one item you'd want the brain to know), then say "done"." Then carry out what the user decided with the brain-apply skill (or brain-catch-up). With no seeded document, offer to take one now (seeding.md, "Key documents"); without one, `tasks` and `answer` are `unsuitable` (no document). A document taken in this step goes through the ingest as usual, with its own publish question (`settings.publish`); it writes no new `seeding` line, so the checks already passed are kept.
+The seeded documents left one Review row per file (seeding.md, "Key documents"). The `answer` check needs one item from them accepted, so ask now, when a check that needs them is to run: "Your documents left <n> rows in Review. Open Review in Notion, approve or reject what's there (accept at least one item you'd want the brain to know), then say "done"." Then carry out what the user decided with the brain-apply skill (or brain-catch-up). With no seeded document, offer to take one now (seeding.md, "Key documents"); without one, `tasks` and `answer` are `unsuitable` (no document). A document taken in this step goes through the ingest as usual, with its own publish question (`settings.publish`); it writes no new `seeding` line, so the checks already passed are kept. The same offer applies when the seeded documents' rows were decided with nothing accepted: the `answer` check needs another document, or the user's yes to an item they rejected, taken again as a new input.
 
 ### The four checks
 
