@@ -91,7 +91,11 @@ End with one line: `Saved <n> lessons; <n> declined. Stopped line on <task>.` (o
 
 ## 4. Searching memories
 
-`brain recall --search "<words>" --json` returns the approved memories that reach this folder, ranked. Add `--include-superseded` to see the history, marked `superseded_by`. Read a memory's file only when a decision needs the whole text.
+`brain recall --search "<words>" --json` returns the approved memories that reach this folder, ranked. When a decision needs a memory's whole text, read it with `brain query --read <mem-id> --json`: it returns a memory that reaches this folder, is approved and is replaced by nothing.
+
+**History, only for a question about the past** ("what was the rule before it changed?"): add `--include-superseded` to the search, which also returns the replaced memories that reach this folder and aren't drafts, after the current ones, each marked `superseded_by`. Read a replaced memory's whole text with `brain query --read <mem-id> --historical --json`; without `--historical` it is withheld. Give the old rule as history and name what replaced it. A question about how things are now, and the "Replaces" check of §3.2, never use either form.
+
+A memory file found any other way (a grep, a folder listing, `brain index --json`) is not eligible and is never used or mentioned.
 
 ## 5. A conflicting instruction
 

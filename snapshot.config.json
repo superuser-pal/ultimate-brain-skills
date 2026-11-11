@@ -1,4 +1,4 @@
 {
-  "cli": ">=0.12.0-0 <0.13.0",
+  "cli": ">=0.13.0-0 <0.14.0",
   "linked_repo": ["brain-query", "brain-workflow", "brain-workflow-adopt"]
 }
