@@ -2,6 +2,8 @@
 
 The brain starts with the user's work: their Domains (when they have more than one context), Areas, Projects, Orgs, the people they work with most, and a few key documents. The user describes it once, sees one preview, and nothing is written before their yes (decision 0078 §3). Notion is connected by now, so the seeded notes are published in one go.
 
+Seeding goes through Ultimate Assistant's ramble (decision 0064): run the ultimate-assistant skill's `references/ramble.md`, its "Seeding" section and the rows of "Where each item goes" for each kind of note, with the preview, the source and the writes below. This file holds what setup adds: the groups and their counts, the key documents, the publish and the log line.
+
 ## 1. Describe
 
 Ask once: "Tell me about your work in a few sentences: what you do, for whom, and with whom. Add any other part of your life you want the brain to hold (a second business, personal projects). If there is a folder or a repo with a project's plans, name it too."
@@ -53,7 +55,7 @@ The answers work as in the ramble: "yes to all", "yes 1–7, 9", "N: <change>", 
 
 1. **Domains first, when there are any:** `brain modules on domains` (the CLI refuses a Domain note while the module is off).
 2. **The description is a source.** One owner-ruling source note (decision 0031, as brain-connect-notion's identities step makes), as an item of the batch below: `"type": "source"`, `"title": "Setup: my work (owner ruling)"`, `"file_date"` today (next to `title`, not in `frontmatter`), `frontmatter` `{ "source_key": "agent:<agent>/<YYYY-MM-DD>-setup-seeding", "kind": "note" }`, body = the user's description and their answers to the preview, verbatim. Every seeded note lists its `source_key` in `sources`.
-3. **The notes,** in this order so each relation names an existing id: Orgs, Domains, Areas, Projects, People. One `brain note new --input <file>` batch (`{ "notes": [ { "type", "title", "frontmatter", "body" } ] }`) holds the source and every note, since a batch may reference notes in the same batch; ids from `brain id new <type> --count <n>` go at the item's top level. Check it with `--dry-run` first.
+3. **The notes,** as the ramble's rows write each kind, in this order so each relation names an existing id: Orgs, Domains, Areas, Projects, People. One `brain note new --input <file>` batch (`{ "notes": [ { "type", "title", "frontmatter", "body" } ] }`) holds the source and every note, since a batch may reference notes in the same batch; ids from `brain id new <type> --count <n>` go at the item's top level. Check it with `--dry-run` first.
    - Every note: `title`, `summary` (one line, in the user's words where they gave one), `sources: [<the source>]`.
    - Domain: `org` when the preview names one. Area: `domain` when there are Domains, and `track` with the What to track list. Project: `area` (required), `client` (an `org-` id) when given; body: the one-line purpose. Person: `org` when they have one; `facts: { "role": "<role>" }` and, beside it in `frontmatter`, `timeline: [ { "field": "role", "value": "<role>", "from": "<today>", "learned": "<today>", "source": "<the source_key>", "assessment": "accepted" } ]`.
    - Domains, Areas, Projects and Orgs are written `reviewed` by the CLI (decision 0070). People are written `draft`, like every new person: they are published as Draft, so the first meeting matches them, and the user marks them Reviewed in Notion when they like.
