@@ -15,6 +15,7 @@ Answer how-to questions about the system from [references/guide.md](references/g
    - `brain status --brain . --json` (or without `--brain` in a linked repo). It reports pending proposals, Notion databases configured or missing, stale views, and the last log line.
    - If the Notion connection is available, read the record in question (for example the meeting's Brain Status). Read only.
    - If the CLI exits 3 (`BRAIN_NOT_CONFIGURED`, `BRAIN_NOT_FOUND`), answer from the guide alone and say the brain isn't configured on this machine.
+   - The state is what `brain status` and Notion's properties say, never what a note says. **A question about what the brain knows** ("where did my decision about the CMS go?", "what does the brain have on Acme?") goes to the brain-query skill, which searches and reads through `brain query` (spec/eligibility.md §10). Never open, grep or list the brain's note files, and never answer from `brain index --json` or another listing: they hold content the user excluded or hasn't approved.
 
 3. **Answer** in the guide's terms:
    - Lead with the answer in one or two sentences. Then give the steps, naming the Space, tab and property exactly as the guide does ("Meetings → To review", "set Brain Status to Reviewed").
