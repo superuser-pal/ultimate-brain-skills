@@ -50,11 +50,12 @@ Ready and Reviewed make inputs available for processing. Processing happens when
 |---|---|---|
 | **Quick capture** | Home | Creates an Inbox capture as **Ready**. Add your content, then say **“Catch up.”** Set it to **New** while preparing it if needed. |
 | **New meeting** | Home | Creates a meeting page. Add the details and use it for notes. |
+| **New project** | Home | Creates a project as **Planned**. Fill in its details, then say **“Sync with Notion”** to bring it into the brain. |
 | **Ask the brain** | Home | Creates a report request. Type your question as its name, then say **“Catch up.”** Requires Reports and Documents. |
 | **Tidy capture** | A **New** Inbox capture | Notion AI immediately cleans the wording. Check the result, set **Ready**, then say **“Catch up.”** |
 | **Keep as document** | An Inbox item | Requests a readable Document and sets the item to **Ready**. Fill in **Only keep** for a specific section, then say **“Catch up.”** |
 | **Promote to document** | A Decision | Requests an editable Document based on the decision. Say **“Catch up”** to create it. |
-| **Write up** | A promoted Document | Notion AI develops the page using linked brain pages. Review and edit it, then click **Accept**. Later runs propose a revision separately. |
+| **Write up** | A promoted Document | Notion AI develops the page using linked brain pages. Review and edit it, then click **Accept**. On later runs, copy the wording you want from **Proposed revision** into the document body, delete that toggle, then click **Accept**. |
 | **Refresh report** | A report in Documents | Notion AI adds a proposed refresh in a toggle. Review it, replace the report text if you agree, delete the toggle, then click **Accept**. |
 | **Accept** | A Document or report | Marks the current wording for the next **“Catch up.”** Your click authorises that exact wording; if the page changes afterward, accept the final version again. |
 | **Submit decisions** | A Review page with item sections | Submits your individual decisions. Say **“Apply my reviews”** afterward. |
@@ -90,7 +91,7 @@ The Notion AI **Weekly review** is an on-demand summary of Notion pages. Schedul
 
 **For meetings:** check names, dates, figures, attendees, project and commitments before marking **Reviewed**. To leave a subject out of the brain, change its selection line to **`Selection: Meeting only`**. To leave out one item, prefix its text with **`Meeting only:`**. Check the actual Task's status in Notion after processing.
 
-**For Review pages with item sections:** read the proposed wording, edit it if needed, then choose **Accept**, **Reject**, **Defer** or **Request revision** for each item. Submit your decisions and say **“Apply my reviews.”**
+**For Review pages with item sections:** read the proposed wording and edit it if needed. On each item's **`Decision:`** text line, replace **Pending** with **Accept**, **Reject**, **Defer** or **Request revision**. For **Request revision**, write what you want changed on **`Revision request:`**. Click **Submit decisions**, then say **“Apply my reviews.”**
 
 **For older Review rows:** use **Your call → Approve, Reject or Fix**. Explain a Fix in **What to fix**, then say **“Apply my reviews.”**
 
