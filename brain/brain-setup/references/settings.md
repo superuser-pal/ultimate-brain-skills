@@ -59,7 +59,7 @@ Still to do after this screen:
  - Check the first results
 ```
 
-- Show the remote as it will be once created, and where the brain lives (the folder, and the remote once there is one).
+- Show the remote as it will be once created, and where the brain lives (the folder, and the remote once there is one). Without `gh`, item 3 reads: `Private remote: an empty private repository you create on your Git host (GitHub, GitLab…); I'll give you the steps`.
 - An item the user can't leave empty (an email, a language) is asked for before the yes: "Item 2 needs your email."
 - MarkItDown `on` while it isn't installed: give its install command (`pipx install 'markitdown[all]'`, or `pip install 'markitdown[all]'`) and check `markitdown --version` again before applying.
 - `gh` `on` while `gh auth status` fails: "Run `gh auth login` in your terminal, then say "done"." Check again before applying.
@@ -72,13 +72,13 @@ In this order; a failure stops the step with its fix, and logs `step=settings re
 1. **Git identity.** `git config --global user.name "<name>"` and `user.email`, or without `--global` in the brain folder when the user chose "this repository only".
 2. **The remote,** when the brain has no `origin`:
    - `gh` on: `gh repo create <name> --private --source <brain folder> --push`. A failure (the name is taken, no network): reason `remote-failed`; offer another name, or the steps below.
-   - `gh` off: give the steps for the user's Git host: create an empty private repository (no README), then, in the brain folder, `git remote add origin <its URL>` and `git push -u origin main`. Wait for "done", then check `git remote get-url origin`. Still none: reason `remote-failed`, and stop.
+   - `gh` off: give the steps for the user's Git host: create an empty private repository (no README), copy the URL the host shows for it (HTTPS or SSH), then, in the brain folder, `git remote add origin <that URL>` and `git push -u origin HEAD`. Wait for "done", then check that `git remote get-url origin` has a URL and `git ls-remote origin` lists the branch. No URL, or nothing pushed: reason `remote-failed`, say which, and stop.
 3. **The drop folder:** create it (`mkdir -p`, with `~` expanded).
 4. **The two `AGENTS.md` lines** (below).
 5. **Settings:** `brain config set settings.<key> '"<value>"'` for `publish`, `push`, `recall`, `markitdown` and `gh`, each one the screen shows, whether changed or not, so the choice is recorded. `settings.schedule` waits for step 8.
 6. **Modules:** `brain modules on|off <module>` for each change.
-7. **Commit and push:** `rules: drop folder and language` for the `AGENTS.md` lines, on their own; then `setup: settings` for `brain.json` and the log line below. Push (the first push sets the upstream when `gh repo create` didn't).
-8. **Log** `step=settings result=done`. Run `brain status`: `checks` `git_identity`, `remote`, `drop_folder` and `language` must pass. One that doesn't is fixed now, then the step is done.
+7. **Check** with `brain status`: `checks` `git_identity`, `remote`, `drop_folder` and `language` must pass. One that doesn't is fixed now.
+8. **Log, commit and push:** commit `rules: drop folder and language` for the `AGENTS.md` lines, on their own; log `step=settings result=done`; commit `setup: settings` with `brain.json` and the `setup` log lines not yet committed (`started`, `prerequisites`, this one); `git push -u origin HEAD` (the brain's branch may be `main` or `master`).
 
 ## The `AGENTS.md` lines
 

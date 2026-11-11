@@ -5,11 +5,12 @@ The Notion half of setup: the template, the agent's connection, the brain's data
 ## Step 3: the template and the connection
 
 1. **The template.** Read `<product.path>/notion/TEMPLATE.md` and give the user its link: "Open this link and choose Duplicate, into the workspace you'll use for your brain: <link>." Never build the space from the prompts in setup. A user who prefers to build it gets the checklist's text from `<product.path>/notion/CHECKLIST.md`, which you give them, then comes back to this step.
-   - `TEMPLATE.md` missing or without a link (an install older than the template): say so, give the checklist's text as above, and go on once the space is built.
-2. **The connection,** when this session has no Notion tools: give the steps for the agent in use from the brain-connect-notion skill, "Connect your agent to Notion" (the hosted Notion MCP first), and say: "Once it's connected, restart me in your brain folder and say "set up my brain"." Stop there: the agent has to restart to load the connection.
+   - `TEMPLATE.md` missing or without a link (an install older than the template): say so, and give the checklist's text as above.
+   - **Building from the checklist:** give the text of each file it names (a prompt, a module's steps) in the chat when the user reaches it, one at a time, never its path; and adapt it to the modules chosen on the settings screen (delete the lines tagged with a module that is off, keep the rest), whatever the checklist's own defaults say.
+2. **The connection,** when this session has no Notion tools: give the steps for the agent in use from the brain-connect-notion skill, "Connect your agent to Notion" (the hosted Notion MCP first), in the same message as the template's link, since the agent has to restart anyway. End with: "Once the space is duplicated and I'm connected, restart me in your brain folder and say "set up my brain"." Stop there, and log nothing: the step isn't checked until the user comes back.
 3. **Check:** search for the page **Brain Data** through the MCP.
    - Found once: log `step=notion-mcp result=done`, commit, and go on.
-   - No Notion tools: log `result=failed reason=notion-unreachable` and give the steps of item 2.
+   - No Notion tools after the user said it is connected (the restart done): log `result=failed reason=notion-unreachable` and give the steps of item 2 again.
    - Not found: log `result=failed reason=brain-data-not-found`. Say what brain-connect-notion step 1 says for it: with the hosted MCP, the user's own Notion account must have access to the duplicated space; with an integration token, add the integration to Brain Data (`•••` → Connections). The duplicate may also still be in progress: "Wait until the duplicate opens in your workspace, then say "check again"."
    - Found twice (an older space next to the duplicate): ask which one; the other stays untouched.
 

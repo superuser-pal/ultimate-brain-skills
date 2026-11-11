@@ -16,7 +16,7 @@ Run every CLI command as `brain <command> --brain <brain> --json`. Exit 1 means 
 - **Ultimate Assistant's voice** (decision 0064): short messages, one question at a time (the settings screen and the seeding preview are the two exceptions, answered as a whole), each message ending with what the user does next.
 - **Required items stop setup** until they are done. Say what is missing and how to fix it, and stop there; the next "set up my brain" resumes at that step. There is no skip list: a required item can't be skipped, and an optional one is a setting whose value is recorded, so it never counts as unfinished.
 - **The user can stop any time** ("stop", "later"). Log nothing for the step in progress (unless one of its checks had started, a test page or a test task: then log it `failed` with `reason=user-stopped`), commit what was written, and say: "Stopped at <step>. Say "set up my brain" to continue from there."
-- **Commit** each step's writes with its log line, as `setup: <step>`. With `settings.push` `auto` and a remote, push after each commit; a failed push is reported with reason `push-failed` and setup goes on.
+- **Commit** each step's writes with its log line, as `setup: <step>`: log first, then commit. **No commit before the Git identity exists** (step 2): until then, the log lines stay uncommitted and go into step 2's `setup: settings` commit, so no commit carries an identity Git made up. With `settings.push` `auto` and a remote, push after each commit (`git push`); a failed push is reported with reason `push-failed` and setup goes on.
 
 ## The `setup` log line
 
@@ -31,13 +31,13 @@ brain log setup - step=<step> result=<done|failed|declined> [<key>=<value>…] -
 - Extra keys: `prerequisites` adds `notion_ai=yes|no custom_agents=yes|no`; `seeding` adds `notes=<n> documents=<n>`; `first-value` adds `tasks=pass|fail|skip report=pass|fail organised=pass|fail`.
 - **Values never carry names, paths, ids or the user's words.** Only the codes and counts above.
 
-Read the lines back with `grep -h ' setup - step=' <brain>/log/*.md`, oldest first.
+Read the lines back with `grep -h ' setup - ' <brain>/log/*.md`, oldest first, and take each line's `step=` and `result=` (the CLI writes an empty title, `setup - "" step=…`).
 
 ## Start or resume
 
 On "set up my brain" (or "continue setup"):
 
-1. **Status.** Run `brain status`. Note `product.path`, `modules`, `settings`, `notion`, and the `setup` block: `checks` (`git_identity`, `remote`, `databases`, `drop_folder`, `language`, `owner_person`), `recorded` (the timestamps of `notion-mcp`, `minutes-prompt`, `brain-assistant`, `seeding`, `first-value`, `schedule`), `template_version`, `required`, `next`, `finished`. Read the `setup` log lines too, for the steps `recorded` doesn't hold (`prerequisites`, `settings`, `connect`, `identities`, `finished`). No `setup` line at all: log `step=started result=done`.
+1. **Status.** Run `brain status`, and `brain config get settings` (status shows only `publish`, `push` and `unattended`; `recall`, `markitdown`, `gh` and `schedule` are in `brain.json`, absent meaning `off`). Note `product.path`, `modules`, `notion`, and the `setup` block: `checks` (`git_identity`, `remote`, `databases`, `drop_folder`, `language`, `owner_person`), `recorded` (the timestamps of `notion-mcp`, `minutes-prompt`, `brain-assistant`, `seeding`, `first-value`, `schedule`), `template_version`, `required`, `next`, `finished`. Read the `setup` log lines too, for the steps `recorded` doesn't hold (`prerequisites`, `settings`, `connect`, `identities`, `finished`). No `setup` line at all: log `step=started result=done`.
 2. **Online checks**, the cheap ones `status` can't make:
    - **Notion:** search for the page **Brain Data** through the Notion MCP. Found once: the connection works. No Notion tools in this session, or not found: step 3 is unfinished again, even when it was recorded.
    - **The remote is private,** when `settings.gh` is `on`: `gh repo view --json isPrivate` in the brain folder. `false`: step 2 is unfinished again ("Your brain's remote is public. Make it private on your Git host, or say "make it private" and I'll run `gh repo edit --visibility private --accept-visibility-change-consequences`").
