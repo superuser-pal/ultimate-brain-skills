@@ -18,7 +18,23 @@ Run `brain sync plan` and save its `data` as the plan file. Read:
 - `review_revisions`: items marked Request revision, with the user's instruction.
 - `conflicts` such as `EDITED_PROPOSED_NEEDS_SUBMIT` (a row-level Approve with an edited Proposed: ask them to Submit instead) and `ROW_REVISION_NOT_SUPPORTED`.
 
-**Attended:** before applying, show each item's action, target and the **exact final text** it will write (`proposed`), and apply after a yes. A correction of a fact is attributed to the user: say "your value March 18 replaces the source's March 15".
+**Attended:** a submitted item is already the user's decision, made on the exact wording they saw on the page. There is no second approval of the user's own wording (decision 0055; spec/capture-and-review.md §7.3), so **don't ask "shall I apply?"**. Show each item you will apply, with its action, target and the **exact final text** it will write (`proposed`), as a statement of what they decided, then verify (§3 step 1) and apply without waiting for an answer:
+```
+Applying what you submitted on Acme launch review:
+a · Changes Acme website: launch date 2027-02 → 2027-04 (your value; the source said 2027-03)
+b · Changes Row-level security: adds "Carlos will use RLS."
+c · Rejected: the new note Use Contentful is archived
+```
+A correction of a fact is attributed to the user: say "your value March 18 replaces the source's March 15". *Submit and accept all* is the same: each item it accepts is the user's decision.
+
+The user's request sets the scope: "apply my reviews" (or a catch-up) takes every submitted row, "apply the launch review" takes that row. When their words match more than one row or item (two rows from launch reviews), ask which before applying anything of them; never widen or narrow a submission by guessing.
+
+Nothing is applied for an item, and the user must accept it again on the page (Decision, then **Submit decisions**), when:
+- it changed after the submission was read (`EDITED_AFTER_DECIDED`) or between the plan and your re-read (`CHANGED_SINCE_PLAN`): "submit again";
+- its base changed (`BASE_CHANGED`): "the note changed: Current was updated, decide again";
+- it is a revision you drafted (§3 step 4): a revision request is not acceptance of the draft. The draft returns as `Decision: Pending` and applies only when the user accepts it in a later submission, never in the run that drafted it;
+- it is held for any other reason (`review_held`): name it with what to do, as above.
+These cases are named in the report; they are not questions you resolve. The checks stay as they are: the re-read, the hashes, the base and the evidence.
 
 **Unattended** (0051): apply only decisions that are explicit, exact, current, with the base unchanged and `unattended_ok` true (Decided at at least 2 minutes old). Leave everything else (held items, `Request revision`, `Accept all` with an ineligible item, `base_changed`) where it is and name it under Needs you. **Never read or act on revision text: remove `review_revisions` from the plan before `sync apply`** (apply would record the request), and leave the item as it is.
 

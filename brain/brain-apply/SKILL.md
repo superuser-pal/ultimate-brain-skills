@@ -53,7 +53,7 @@ Run every CLI command as `brain <command> --brain <brain> --json`. Exit 1 means 
 
 ## Notion mode
 
-**Rows with item sections** (rendered since migration 0013: one section per change, a `Decision:` line each, **Submit decisions**) follow [references/review-items.md](references/review-items.md), including how to verify, apply, draft a requested revision and write back. The steps below are for rows of the older layout (the Proposed property, Your call, What to fix), which keep their rules until they are terminal.
+**Rows with item sections** (rendered since migration 0013: one section per change, a `Decision:` line each, **Submit decisions**) follow [references/review-items.md](references/review-items.md), including how to verify, apply, draft a requested revision and write back. A submitted Accept is the user's decision on the exact wording: show it and apply it after the re-read, without asking for a yes. The steps below are for rows of the older layout (the Proposed property, Your call, What to fix), which keep their rules until they are terminal.
 
 1. **Read** the Review database through the Notion MCP: the rows where **Your call** is set and **State** is Pending. Normalize each row into the snapshot format of spec/cli.md §5.14.1:
    - `database: "review"`, the `page_id` and `last_edited`;
