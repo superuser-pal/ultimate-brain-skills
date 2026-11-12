@@ -32,7 +32,7 @@ What `--read` returns is all there is. A note with `status: "withheld"` is not l
 
 ## Selected input (decision 0055)
 
-When a meeting's summary or a capture has subjects and item ids, the user decides what enters the brain: read [references/selection.md](references/selection.md) before step 2. It replaces the source snapshot of step 3 with an **extract** (only the selected paragraphs, written by `brain source extract`), gates every input on its confirmation, and sets the rules for Tasks (yours by default, Waiting On only when the item says `Track: Waiting On —`). A summary with no ids is ingested whole by the procedure below, unchanged.
+When a meeting's summary or a capture has subjects and item ids, or a **For the brain** toggle (lean minutes, decision 0079), the user decides what enters the brain: read [references/selection.md](references/selection.md) before step 2. It replaces the source snapshot of step 3 with an **extract** (only the selected paragraphs, written by `brain source extract`), gates every input on its confirmation, and sets the rules for Tasks (yours by default, Waiting On only when the item says `Track: Waiting On —`, and in lean minutes one Task for each quick follow-up left unticked). A summary with no ids and no For the brain toggle is ingested whole by the procedure below, unchanged.
 
 ## To-do questions (decision 0071)
 
@@ -52,7 +52,7 @@ When the user asks to turn their to-do questions into tasks (or to clean up open
    - one name is spelled several ways in the minutes ("Maria Lopez", "Maria Lopes") and no person note settles it. A new spelling of a known person whose organization and role leave no doubt is not a question: it is an alias `add_link` (step 8, references/extraction.md "People");
    - the user's notes and the minutes disagree on a fact.
 
-   If nothing blocks, don't ask. An empty Project is not a blocker (see the stop conditions). **When the Project property is empty and the minutes have a `## Projects` section** (notion/minutes-format.md), use the projects it lists, matched in step 4, instead of asking (decision 0043).
+   If nothing blocks, don't ask. An empty Project is not a blocker (see the stop conditions). **When the Project property is empty and the minutes have a `## Projects` section** (notion/minutes-format.md), or in lean minutes a `Projects:` line in the For the brain toggle, use the projects it lists, matched in step 4, instead of asking (decision 0043).
 
    **Attachments** *(Notion)*: files attached to the meeting page (file, PDF and image blocks in the body, or a Files property) are ingested with it, each as its own source under the meeting's: [references/sources.md](references/sources.md), "Attachments". List them in this question, all selected by default.
 
