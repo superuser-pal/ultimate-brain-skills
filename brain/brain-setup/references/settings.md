@@ -18,6 +18,7 @@ One screen, every item with its default filled in and a one-line explanation. Th
 | 10 | MarkItDown | `settings.markitdown` when set; else `on` when `markitdown --version` works, else `off` | optional |
 | 11 | `gh` | `settings.gh` when set; else `on` when `gh auth status` passes, else `off` | optional |
 | 12 | Scheduled catch-up | asked after the first-value check (step 8) | optional |
+| 13 | How the brain talks to you | the current `settings.style` (below); absent: Standard | optional |
 
 ## The screen
 
@@ -48,6 +49,8 @@ Your brain's settings. Say "keep these", or change any line ("drop folder ~/Inbo
     Lets setup create the private remote and file your setup report for you.
 12. Scheduled catch-up: asked after your first check
     Catch-up runs on its own at set times; it only takes in what you've marked ready.
+13. How the brain talks to you: Standard
+    Standard, Simple (plain words, short answers, the answer first) or Custom (you choose how much it explains, how long and how direct it is); change it any time by asking.
 
 Still to do after this screen:
  - Duplicate the Notion template and connect your agent to Notion
@@ -65,6 +68,46 @@ Still to do after this screen:
 - `gh` `on` while `gh auth status` fails: "Run `gh auth login` in your terminal, then say "done"." Check again before applying.
 - Without Notion AI (SKILL.md), add under the screen what is lost, and leave the minutes prompt and Brain Assistant out of "Still to do".
 
+## Item 13: how the brain talks to you
+
+The response style (decision 0081, spec/setup.md §7). It shapes only what you write in your own words; text a command returns that a skill shows exactly as returned stays as it is.
+
+- **What the line shows:** read `brain status`'s `settings.style` (its `preset` and each dial's effective value). The preset's name when every dial has the preset's value (`Standard`, `Simple`); else `Custom:` and the three values in words (`Custom: plain words, short answers, the answer first`). A new brain has no `settings.style`, so the line shows `Standard`.
+- **Standard is the default.** "Keep these" keeps the line as shown. Nothing is written for this item before the user's yes to the whole screen; a setup stopped before that yes writes no `settings.style`.
+- **Custom** ("style: custom"): before showing the screen again, ask the three dials in one message, each with its levels and what it changes, Standard's level first:
+
+  ```text
+  Choose one level for each, or say "keep" for the first:
+   - Explaining: some (a new term is defined once) · expert (no terms defined) · plain (no jargon, and an example for each term)
+   - Length: normal · short (at most five items at a time, "more" shows the rest) · full (the details and the reasons)
+   - What comes first: context first · the answer first (and "step 3 of 5" in work with several steps)
+  ```
+
+  The screen shown again has the three choices on the item's line.
+- **The value written,** in "Applying it" step 5: Standard `'{ "preset": "standard" }'`, Simple `'{ "preset": "simple" }'`, Custom the three dials with no preset (`'{ "explain": "plain", "length": "normal", "directness": "answer-first" }'`).
+- **From the next message of the setup,** answer in the new style: the brain's `AGENTS.md` now has it (or, for Standard, no longer has a style block).
+
+## Changing the response style
+
+The user asks in their own words, in any session in the brain: "talk to me more simply", "shorter answers", "more detail", "skip the jargon", "get to the point", "go back to normal". This is not a setup step: it writes no `setup` log line, and it works whether or not setup has finished (spec/setup.md §7.1).
+
+1. **Map the request to one write,** with `brain config set` (it rewrites the style block in `AGENTS.md` and reports it in `files`):
+
+   | Asked | Write |
+   |---|---|
+   | the whole style: "talk to me more simply", "simple mode" | `brain config set settings.style '{ "preset": "simple" }'` |
+   | back to the default: "go back to normal", "use Standard", "talk to me as before" | `brain config set settings.style '{ "preset": "standard" }'` |
+   | how much it explains: "skip the jargon", "explain more" · "you don't need to explain terms" · "explain like before" | `settings.style.explain` `'"plain"'` · `'"expert"'` · `'"some"'` |
+   | length: "shorter answers" · "more detail", "longer answers" · "normal length" | `settings.style.length` `'"short"'` · `'"full"'` · `'"normal"'` |
+   | what comes first: "get to the point", "answer first" · "give me the context first" | `settings.style.directness` `'"answer-first"'` · `'"context-first"'` |
+
+   A whole-style write clears every dial set before; a dial write keeps the other keys. A request that maps to none of these, or to two that pull apart ("simpler but more detail"), gets one question naming the choices, and nothing is written before the answer.
+2. **Read `files`:** `AGENTS.md` `skipped` (warning `AGENTS_BLOCK_NOT_FOUND`) means the setting is saved but the brain's instructions don't show it: say "Saved, but your AGENTS.md has lost its markers, so the brain can't follow it yet. Run `brain upgrade` to restore them." and go on to commit.
+3. **Commit** `brain.json` and `AGENTS.md` when they changed, as `settings: response style`, then push per `settings.push`.
+4. **Answer in one line, in the new style:** what changed ("From now on: plain words, short answers, the answer first."). When `brain status` lists `repos`, or the user has linked a folder with `brain link` (the brain keeps no list of those, so add it when unsure), add: `Linked folders follow the next time brain link runs there, or brain upgrade for a linked project registered in the brain.`
+
+The working principles and reply rules in the rules block are not part of the style and don't change with it.
+
 ## Applying it, after the yes
 
 In this order; a failure stops the step with its fix, and logs `step=settings result=failed reason=<code>`.
@@ -75,10 +118,10 @@ In this order; a failure stops the step with its fix, and logs `step=settings re
    - `gh` off: give the steps for the user's Git host: create an empty private repository (no README), copy the URL the host shows for it (`https:` or `ssh`), then, in the brain folder, `git remote add origin <that URL>` and `git push -u origin HEAD`. Wait for "done", then check that `git remote get-url origin` has a URL and `git ls-remote origin` lists the branch. No URL, or nothing pushed: reason `remote-failed`, say which, and stop.
 3. **The drop folder:** create it (`mkdir -p`, with `~` expanded).
 4. **The two `AGENTS.md` lines** (below).
-5. **Settings:** `brain config set settings.<key> '"<value>"'` for `publish`, `push`, `recall`, `markitdown` and `gh`, each one the screen shows, whether changed or not, so the choice is recorded. `settings.schedule` waits for step 8.
+5. **Settings:** `brain config set settings.<key> '"<value>"'` for `publish`, `push`, `recall`, `markitdown` and `gh`, each one the screen shows, whether changed or not, so the choice is recorded, then `brain config set settings.style '<value>'` for item 13 ("Item 13" above), which also writes the style block in `AGENTS.md`. `settings.schedule` waits for step 8.
 6. **Modules:** `brain modules on|off <module>` for each change.
 7. **Check** with `brain status`: `checks` `git_identity`, `remote`, `drop_folder` and `language` must pass. One that doesn't is fixed now.
-8. **Log, commit and push:** commit `rules: drop folder and language` for the `AGENTS.md` lines, on their own; log `step=settings result=done`; commit `setup: settings` with `brain.json` and the `setup` log lines not yet committed (`started`, `prerequisites`, this one); `git push -u origin HEAD` (the brain's branch may be `main` or `master`).
+8. **Log, commit and push:** commit `rules: drop folder and language` for the `AGENTS.md` lines, on their own (with the style block too when step 5 changed it: `rules: drop folder, language and response style`); log `step=settings result=done`; commit `setup: settings` with `brain.json` and the `setup` log lines not yet committed (`started`, `prerequisites`, this one); `git push -u origin HEAD` (the brain's branch may be `main` or `master`).
 
 ## The `AGENTS.md` lines
 
