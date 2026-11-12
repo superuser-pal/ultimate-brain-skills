@@ -9,6 +9,14 @@ How to read one meeting's minutes and decide what becomes a note, what becomes a
 - **Pronouns:** write the person's name or "they". Never guess a pronoun from a name (decision 0043); keep one only when the source itself uses it for that person, verbatim.
 - **Projects are per item.** A meeting may touch several projects: set `projects` on each decision and question from what that item is about, and list every one on the meeting. Ask only when an item could belong to two. Action items too: give each its `projects` in the `sync tasks` input ([cli-inputs.md](cli-inputs.md) §4); left out, a task gets the meeting's projects.
 
+## What an Area tracks (decision 0061)
+
+An area note may hold a `track` list: 1 to 8 short lowercase phrases naming the kinds of thing worth extracting in that Area (`[budget, deadlines, scope changes, risks]`), set in setup's seeding preview or when the user asks ("in Clients, also track renewals"). Absent, the generic rules below apply alone.
+
+- **Which list:** the `track` of the Area the input is placed in: its project's `area`, or the Area the user or the row named. An input placed in several Areas uses each one's list for the items about it. A Domain or project has no list of its own.
+- **How it is used:** when you choose what to extract within the budget ("Earn every note", below), favour the items that match a tracked kind: when the budget forces a choice, a tracked kind goes first, and a fact of a tracked kind (a budget, a deadline) is kept as a fact on its subject rather than left in the body. The generic kinds still apply; the list adds weight, it never removes one.
+- **What it never changes:** the note types, the decision gate (a tracked kind still passes it to become a decision), Review, and the owner's tasks. It is not published to Notion and needs no question.
+
 ## What each part of the minutes becomes
 
 | In the minutes | Becomes | Through |

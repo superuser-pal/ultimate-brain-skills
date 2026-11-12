@@ -48,7 +48,8 @@ Migrations run once each, in number order (notion/migrations/README.md). The fil
    - **Page blocks** (a line above a page's tabs, a Brain Assistant skill's text): through the block API, after reading the page's blocks. When the API can't insert where the migration says (above the first block of a column), add it right after and ask the user to drag it once.
 3. **Notion AI and by-hand steps:** give the user each prompt, as written in the migration, with the page to open first, one at a time, and wait until they say it's done. Never rephrase a prompt.
 4. **Check** (below), limited to what the migration touched, then go through its **Verify** list with the user. Items that need a catch-up ("after the first catch-up …") are checked after the next "catch up".
-5. **Report:** what was changed, what the user still has to do by hand, and the Verify items still open.
+5. **The template version** (decision 0078). Once the migration's steps are done and checked, read `brain config get notion.template_version` (a `USAGE` error saying there is no value means the version is unknown). When it is set and lower than the migration's number (the four digits that start its file name, compared as numbers), run `brain config set notion.template_version '"<NNNN>"'`, commit in the brain (`config: template version <NNNN>`) and push per `settings.push`. A version already equal or higher stays. An unknown version (absent) stays unknown: it is never guessed from one migration. The migration's own last step updates the System page's `Template version` line in Notion; when a migration has no such step, say the line still shows the old number (with the version unknown: that the line is unchanged) and that the user can correct it by hand.
+6. **Report:** what was changed, what the user still has to do by hand, the Verify items still open, and the template version now stored (or that it is unknown).
 
 ## Check
 

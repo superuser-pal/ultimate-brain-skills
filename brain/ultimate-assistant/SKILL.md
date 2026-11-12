@@ -1,6 +1,6 @@
 ---
 name: ultimate-assistant
-description: Ultimate Assistant reviews the structure of the user's work (Areas, Domains, Projects and Tasks), finds what is overdue, stalled, missing a next step, finished but still open, misplaced or duplicated, recommends a change for each, and applies what the user says yes to, writes a Review row when asked ("propose 5"), or remembers a skip. It also places what the user rambles about as tasks, projects and Inbox captures after a yes. Use when the user says "review my projects", "what's stalled?", "what's overdue in Clients?", "anything misplaced?", "review again", or talks through their work to get it placed. With "report only" in the request it only reports and changes nothing.
+description: Ultimate Assistant reviews the structure of the user's work (Areas, Domains, Projects and Tasks), finds what is overdue, stalled, missing a next step, finished but still open, misplaced or duplicated, recommends a change for each, and applies what the user says yes to, writes a Review row when asked ("propose 5"), or remembers a skip. It also places what the user rambles about as tasks, projects, Areas, Domains, Orgs, people and Inbox captures after a yes, and guides setup's seeding of the user's work. Use when the user says "review my projects", "what's stalled?", "what's overdue in Clients?", "anything misplaced?", "review again", or talks through their work to get it placed. With "report only" in the request it only reports and changes nothing.
 ---
 
 # Ultimate Assistant
@@ -56,12 +56,12 @@ Close only when the user ends the session in words ("done", "that's all", "stop"
 3. **Commit** what isn't committed yet, naming the paths: `_assistant/dismissals.json` when a skip changed it, the regenerated index and views, the log. Every commit of the session names the paths the skill's commands wrote; never `git add -A`, so the user's own uncommitted edits stay as they are. Message: `assistant: close session <session id>`.
 4. **Push** per `settings.push` (the brain's AGENTS.md, "Write path"). When `brain lint` reported errors: still commit your own paths (each was written by a CLI command that validates it), push nothing, and add to the summary `brain lint found <n> errors (first: <path>); nothing was pushed. Run brain lint to see them.`
 5. **The closing summary,** one line, then the push line of AGENTS.md:
-   `Done: <n> changed, <n> Review rows, <n> skipped, <n> created (<t> tasks, <p> projects, <c> captures).`
+   `Done: <n> changed, <n> Review rows, <n> skipped, <n> created (<t> tasks, <p> projects, <c> captures, <o> other notes).`
    Parts at 0 are left out; `Nothing changed.` when every count is 0.
    - **changed:** each proposal applied after a yes in this session (a `notion_change` once it is settled `applied`), one per proposal: a merge yes that also moves 4 tasks is 5; a status taken from a skip's offer counts here, not as skipped. Step 3's waiting writes count here too, and a yes that replays an `approved` proposal counts once.
    - **Review rows:** the proposals written for "propose" (one proposed and later said yes to counts in both).
    - **skipped:** the skips written with `brain assistant dismiss`.
-   - **created:** what a ramble created.
+   - **created:** what a ramble created. **Other notes** are the Domains, Areas, Orgs and people it created; they are named here and not counted in the log line, which keeps its keys.
 
    Items a ramble couldn't place (brain only) are named after it: `Not placed (Notion unreachable): <item>; <item>.`
 
