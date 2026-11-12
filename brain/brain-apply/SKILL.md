@@ -9,6 +9,8 @@ Proposals are changes the brain wants to make to existing notes (decision 0003).
 
 Run every CLI command as `brain <command> --brain <brain> --json`. Exit 1 means some items need attention; read them. Exit 2 or 4 means your command or input was wrong: fix it. Exit 3 or 5 means stop and report. Exit 10: report a bug. If `brain` is not found (`command not found`), install it with `npm install -g ultimate-brain`, then retry.
 
+**Working files.** Make your own temporary folder with `mktemp -d`, outside the brain, and keep every file you write for the CLI in it: the snapshot, the plan files (the first plan and the one you verify with), the `--input` files of `apply`, `proposal revise` and `proposal settle`, the render output you write back from and the page conversions. Never use a fixed name such as `/tmp/ub-apply` or `/tmp/plan.json`: another session on the same machine would overwrite your plan or your render, and you would apply or publish its content. Inside a catch-up, use the catch-up's folder.
+
 ## Pick the mode
 
 - **Chat:** the user wants to decide here ("what needs my decision?", "approve the budget change"). Use this, or when Notion is not configured.
@@ -53,7 +55,7 @@ Run every CLI command as `brain <command> --brain <brain> --json`. Exit 1 means 
 
 ## Notion mode
 
-**Rows with item sections** (rendered since migration 0013: one section per change, a `Decision:` line each, **Submit decisions**) follow [references/review-items.md](references/review-items.md), including how to verify, apply, draft a requested revision and write back. The steps below are for rows of the older layout (the Proposed property, Your call, What to fix), which keep their rules until they are terminal.
+**Rows with item sections** (rendered since migration 0013: one section per change, a `Decision:` line each, **Submit decisions**) follow [references/review-items.md](references/review-items.md), including how to verify, apply, draft a requested revision and write back. A submitted Accept is the user's decision on the exact wording: show it and apply it after the re-read, without asking for a yes. The steps below are for rows of the older layout (the Proposed property, Your call, What to fix), which keep their rules until they are terminal.
 
 1. **Read** the Review database through the Notion MCP: the rows where **Your call** is set and **State** is Pending. Normalize each row into the snapshot format of spec/cli.md §5.14.1:
    - `database: "review"`, the `page_id` and `last_edited`;
