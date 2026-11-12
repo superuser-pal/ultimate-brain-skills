@@ -91,6 +91,7 @@ Things the CLI checks that are easy to get wrong:
 - **Every reference must exist** in the brain or in the batch, and every relative link must resolve. Get the paths from a `--dry-run` first (SKILL.md step 7).
 - **The meeting body uses relative links**, e.g. `../people/…`, `../decisions/…`, `../../projects/<slug>/project.md`.
 - **Sources (`sources`) of knowledge notes are the meeting id.** The meeting itself cites the source snapshot.
+- **A person or org may come back in `skipped` as `WITHHELD_MATCH`** (`{ "input_index": 2, "reason": "WITHHELD_MATCH", "existing": "per-3k8m2q7x", "cite": "person per-3k8m2q7x, title withheld: awaiting cleanup" }`, `cite` only when the title is withheld): its name matches a note the brain withholds. Use `existing` in its place (SKILL.md step 7.2). `distinct_from` (a list of ids, on a person or org item, next to `type` and not inside `frontmatter`) writes it anyway, and only when the user said it is someone else. An item that still references the skipped item's id is `INPUT_INVALID`.
 
 ### Documents (decisions 0045, 0049)
 
