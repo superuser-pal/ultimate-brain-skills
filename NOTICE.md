@@ -14,6 +14,7 @@ The path says which is which. Upstream content stays at upstream's paths, and up
 | `.github/` | This fork's workflows and PR template. Upstream's `.github/` is never merged in, so upstream workflows don't run here |
 | `NOTICE.md`, `BRAIN-SKILLS.md`, `upstream.json`, `snapshot.config.json`, `.gitattributes` | This file, how the operational skills are written and released ([BRAIN-SKILLS.md](BRAIN-SKILLS.md)), the recorded upstream base, the next snapshot's CLI range and linked-repo skills, and byte-exact checkouts |
 | The last paragraph of `LICENSE` | The licence line for these additions. The rest of `LICENSE` is upstream's, verbatim |
+| `third-party/humanizer/` | humanizer, a general skill copied unchanged from [blader/humanizer](https://github.com/blader/humanizer) under the MIT licence (Copyright (c) 2025 Siqi Chen), kept verbatim in its folder's `LICENSE`. Its `ORIGIN.md` records the upstream commit and the files copied; only `ORIGIN.md` is local |
 
 A general skill this fork adds lives in a folder upstream doesn't use, and is listed in this table when it's added. A third-party skill also carries its origin and licence in its own folder.
 

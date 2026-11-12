@@ -69,6 +69,8 @@ Run every CLI command as `brain <command> --brain <brain> --json`. Exit 1 means 
 
 ## Reading What to fix
 
+Text you word yourself from a What to fix (a sentence to add, a reference's new text, an answer) follows [the writing reference](../brain-query/references/writing.md) (decision 0081 §7). A value or wording the user wrote is applied as they wrote it.
+
 What to fix is the user's instruction for that one row, in plain words (decisions 0037, 0045). The CLI never interprets it; you do, and you **never apply a change the text doesn't clearly ask for**. Read the letters against the proposal itself (`brain proposal list --target <a note id>`, then its `changes`, `notes` and `links`), never against what you remember of the row. Letters run over the items in the order of spec/schema.md §11.3: every entry of `changes` (as stored), then `notes`, then `links`; `a` is `{ "change": 0 }` when the row has changes. A letter the row doesn't have → ask. A title works like a letter ("all except the risk"). Every decision you write carries `note` = the text as written, `decided_at` = the row's `last_edited`, `decided_by: notion` (in chat: now and `chat`).
 
 - **Approve with a narrower scope** ("all except b, e", "only Ana"): `approve` with one `exclude` entry per item left out: `{ "change": <index> }`, `{ "note": "<id>" }` or `{ "target", "field", "value" }` on a Review notes row, `{ "field", "value" }` from `links` on an `add_link` row. On a Review notes row the excluded items move to a new pending row; say so in the report.
