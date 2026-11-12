@@ -397,6 +397,20 @@ While you work, Notion owns each task's status: what you set there wins. Each ta
 
 ---
 
+## How the brain talks to you
+
+Your agent follows a **response style** you choose: how much it explains, how long its answers are, and what comes first. Setup asks once, on the settings screen ("How the brain talks to you"), and you can change it any time by saying so.
+
+- **Standard** (the default) is how the agent talks out of the box: it defines a new term once, gives answers of normal length, and gives the context before the answer.
+- **Simple:** plain words with no jargon (a term it needs comes with a short example), short answers (at most five items at a time; say "more" for the rest), and the answer or the next action on the first line, with where you are ("step 3 of 5") in work with several steps.
+- **Custom:** you choose each of the three on its own. "Shorter answers" on top of Simple keeps the rest of Simple.
+
+Say "talk to me more simply", "shorter answers", "more detail", "skip the jargon", "get to the point", or "go back to normal" for Standard. The agent saves it in your brain's settings, says in one line what changed, and answers that way from its next reply. Folders you linked follow the next time you run `brain link` there; a linked project registered in the brain also follows at the next `brain upgrade`. Ask in a session in your brain folder: a linked folder reads the brain but doesn't change it.
+
+The style covers what the agent says to you in its own words. Reports and summaries a command produces are shown as they are. Some rules hold whatever the style: no "Great question!" or "Let me know if…", an error comes with its cause and its fix, and a reply that leaves something open ends with the one next action.
+
+---
+
 ## What to say to your agent
 
 Run these in Claude Code or Codex, from your brain's folder.
@@ -424,6 +438,7 @@ Run these in Claude Code or Codex, from your brain's folder.
 | Get what's on your mind into tasks, projects and captures | tell Ultimate Assistant in a few sentences, then "yes to all" |
 | Find contradictions, out-of-date facts, duplicate notes and recurring themes, and decide what to do | "tidy the brain", "any duplicates?", then "yes 2", "1a", "later 4", "skip 5 because …", "done" |
 | Ask how the system works | "how do I …?", "why didn't … ?" (or ask Brain Assistant in Notion) |
+| Change how the agent talks to you | "talk to me more simply", "shorter answers", "more detail", "get to the point", "go back to normal" |
 | Change the Notion structure (a property, an option, a view) | "add a property to Projects …". Structure is changed in the product first, then in Notion |
 | Check your Notion space | "check my Notion space" |
 | Update the brain software | `npm install -g ultimate-brain@latest`, then "run brain upgrade" |
