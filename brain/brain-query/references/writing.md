@@ -16,7 +16,7 @@ It lives in brain-query because every brain and every linked folder has brain-qu
 Write the plain sentence that states the fact. Each pattern below is followed by a sentence that has it, and the same sentence without it. An after uses only what the source says; where the source gives no specific fact, write the simpler sentence and add nothing.
 
 **1. "Not X but Y" contrasts.** A contrast that only adds weight, when nobody said X.
-- Before: The budget review isn't just a formality, it's a turning point for the project.
+- Before: The budget review isn't just a formality, it's a turning point: it decides whether the project keeps its second developer.
 - After: The budget review decides whether the project keeps its second developer.
 
 **2. One-line closers.** A last line that repeats the point or tells the reader how to feel.
@@ -24,7 +24,7 @@ Write the plain sentence that states the fact. Each pattern below is followed by
 - After: The vendor missed the third deadline in a row.
 
 **3. Forced lists of three.** Three items because three sounds complete, when the facts give one or two.
-- Before: The new intake form is faster, simpler and more reliable.
+- Before: The new intake form is faster, simpler and more reliable, with four fields instead of eleven.
 - After: The new intake form has four fields instead of eleven.
 
 **4. Dashes as a connector.** A dash where a comma, a colon, a full stop or "because" says how the parts relate.
@@ -36,7 +36,7 @@ Write the plain sentence that states the fact. Each pattern below is followed by
 - After: The platform team leads the migration, and the export may time out.
 
 **6. Inflated claims.** Words that make an ordinary fact sound pivotal, expert-backed or historic.
-- Before: In a pivotal move, the team made the crucial decision to adopt weekly releases.
+- Before: In a pivotal move, the team made the crucial decision to adopt weekly releases on 3 March.
 - After: The team moved to weekly releases on 3 March.
 
 ## Before you save

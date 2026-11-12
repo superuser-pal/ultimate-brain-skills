@@ -11,6 +11,8 @@ Bring the work an existing project already has into a connected workflow (decisi
 
 ## Procedure
 
+Titles and descriptions taken from the source stay as the source wrote them. Any text you word yourself for Notion (a new item's scope or criteria) follows [the writing reference](../brain-query/references/writing.md) (decision 0081 §7).
+
 1. **The workflow.** Read `.brain-workflow.json` in the folder.
    - None, or an ended one: this is new connected work. First **inspect** (step 2), so you can say what you found; then run the brain-workflow skill's setup ([references/setup.md](../brain-workflow/references/setup.md) there) up to its "Connect this work to Notion?" and `workflow new`. Connecting is its own yes; nothing is adopted yet.
    - Connected or paused: use it (`brain workflow show <wf>`).
