@@ -27,7 +27,7 @@ What remains has two parts:
 - **Minutes:** the AI-written minutes in the body. When the page holds a Notion AI meeting-notes block (`<meeting-notes>`), take only its `<summary>` (the block's own one, which ends at its matching `</summary>`, after any toggle inside it); the transcript and the empty `<notes>` stay out.
 - **The user's notes:** the "My notes" toggle, or any other text the user wrote on the page.
 
-**Source body, built the same way every time,** so the duplicate check (`content_hash`) recognises a re-run. It is for minutes stored whole (a legacy summary, with no ids and no For the brain toggle); a summary with ids or a For the brain toggle goes to `extract-plan` as selection.md §2 says, never through these rules:
+**Source body, built the same way every time,** so the duplicate check (`content_hash`) recognises a re-run. It is for minutes stored whole (a legacy summary, with no ids, escaped or not, and no For the brain toggle: [selection.md](selection.md), "Which flow?"); a summary with ids or a For the brain toggle goes to `extract-plan` as selection.md §2 says, never through these rules:
 1. `## Minutes`, a blank line, then the minutes;
 2. if the user's notes are not empty: a blank line, `## My notes`, a blank line, then the notes;
 3. drop wrapper tags (`<meeting-notes>`, `<summary>`, `<details>`) and the indentation they add;

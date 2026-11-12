@@ -32,7 +32,7 @@ What `--read` returns is all there is. A note with `status: "withheld"` is not l
 
 ## Selected input (decision 0055)
 
-When a meeting's summary or a capture has subjects and item ids, or a **For the brain** toggle (lean minutes, decision 0079), the user decides what enters the brain: read [references/selection.md](references/selection.md) before step 2. It replaces the source snapshot of step 3 with an **extract** (only the selected paragraphs, written by `brain source extract`), gates every input on its confirmation, and sets the rules for Tasks (yours by default, Waiting On only when the item says `Track: Waiting On —`, and in lean minutes one Task for each quick follow-up left unticked). A summary with no ids and no For the brain toggle is ingested whole by the procedure below, unchanged.
+When a meeting's summary or a capture has subjects and item ids (escaped or not, references/selection.md), or a **For the brain** toggle (lean minutes, decision 0079), the user decides what enters the brain: read [references/selection.md](references/selection.md) before step 2. It replaces the source snapshot of step 3 with an **extract** (only the selected paragraphs, written by `brain source extract`), gates every input on its confirmation, and sets the rules for Tasks (yours by default, Waiting On only when the item says `Track: Waiting On —`, and in lean minutes one Task for each quick follow-up left unticked). A summary with no ids and no For the brain toggle is ingested whole by the procedure below, unchanged.
 
 ## To-do questions (decision 0071)
 
