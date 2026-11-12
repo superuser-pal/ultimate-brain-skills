@@ -14,7 +14,7 @@ Time: 52 min (first setup line to the last)
 1 prerequisites: done
 2 settings: done (markitdown off, gh on)
 3 notion-mcp: failed once (notion-unreachable), then done
-4 connect: done (template 0024, 7 examples removed)
+4 connect: done (template 0024, 15 examples removed)
 4a minutes-prompt: failed once (shape-wrong), then done
 4b brain-assistant: done (custom agent)
 5 identities: done
