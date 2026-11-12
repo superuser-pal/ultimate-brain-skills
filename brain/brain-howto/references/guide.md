@@ -1,5 +1,7 @@
 # How your brain works
 
+For the daily routine, copyable requests, Notion buttons and Notion AI prompts, start with the [Everyday Guide](everyday-guide.md).
+
 Your second brain has three parts:
 - **The brain itself:** Markdown notes in a private Git repo. It's the source of truth: every fact traces back to a meeting or document, and history is kept.
 - **Notion:** where you look at the brain, review what came in, and decide on changes.

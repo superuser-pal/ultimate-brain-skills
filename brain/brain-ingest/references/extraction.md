@@ -9,6 +9,14 @@ How to read one meeting's minutes and decide what becomes a note, what becomes a
 - **Pronouns:** write the person's name or "they". Never guess a pronoun from a name (decision 0043); keep one only when the source itself uses it for that person, verbatim.
 - **Projects are per item.** A meeting may touch several projects: set `projects` on each decision and question from what that item is about, and list every one on the meeting. Ask only when an item could belong to two. Action items too: give each its `projects` in the `sync tasks` input ([cli-inputs.md](cli-inputs.md) §4); left out, a task gets the meeting's projects.
 
+## What an Area tracks (decision 0061)
+
+An area note may hold a `track` list: 1 to 8 short lowercase phrases naming the kinds of thing worth extracting in that Area (`[budget, deadlines, scope changes, risks]`), set in setup's seeding preview or when the user asks ("in Clients, also track renewals"). Absent, the generic rules below apply alone.
+
+- **Which list:** the `track` of the Area the input is placed in: its project's `area`, or the Area the user or the row named. An input placed in several Areas uses each one's list for the items about it. A Domain or project has no list of its own.
+- **How it is used:** when you choose what to extract within the budget ("Earn every note", below), favour the items that match a tracked kind: when the budget forces a choice, a tracked kind goes first, and a fact of a tracked kind (a budget, a deadline) is kept as a fact on its subject rather than left in the body. The generic kinds still apply; the list adds weight, it never removes one.
+- **What it never changes:** the note types, the decision gate (a tracked kind still passes it to become a decision), Review, and the owner's tasks. It is not published to Notion and needs no question.
+
 ## What each part of the minutes becomes
 
 | In the minutes | Becomes | Through |
@@ -152,7 +160,7 @@ Fact keys are lowercase `snake_case` and stable: `launch_date`, `budget`, `deadl
 ## People
 
 - **Match by alias:** "Maria", "María López" and "Maria (Acme, PM)" are all `per-3h8w2n6c` if those aliases are on her note. When a person is matched under a spelling that is not yet an alias, propose `add_link` with `field: aliases` and the spelling **exactly as written** in the minutes, including the surname if given ("Mari López", not "Mari") (decision 0028). Do this only when organization and role leave no doubt it is the same person; otherwise stop and ask.
-- **New person:** create a person note with `title` = their full name as written, `aliases` = the short forms used, `org` if the minutes name their organization and it has a note, `facts.role` + a matching timeline entry only when the role is stated, and `sources` = the meeting. Their note lists the project in `projects`; also propose `add_link` to add them to the project's `people`, because the project note is an existing note.
+- **New person:** create a person note with `title` = their full name as written, `aliases` = the short forms used, `org` if the minutes name their organization and it has a note, `facts.role` + a matching timeline entry only when the role is stated, and `sources` = the meeting. Their note lists the project in `projects`; also propose `add_link` to add them to the project's `people`, because the project note is an existing note. When the dry run skips the new note as `WITHHELD_MATCH`, the person already exists and the brain withholds their name until a cleanup is done: link the `existing` id instead (SKILL.md step 7.2).
 - **Same name, different person, or one name matching two people:** stop and ask (SKILL.md stop conditions).
 
 ## Subject boundary and verbatim (AGENTS.md rule 4)
