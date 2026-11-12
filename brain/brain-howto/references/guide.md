@@ -40,7 +40,7 @@ The navigation on the left of every page lists the Spaces. Each one has tabs tha
 | **Plan** | Check that your work serves your goals | Goals · Key results · Areas · Projects by goal |
 | **Review** | Decide on the changes the brain proposes | Needs my decision · Sources disagree · Approved recently · Rejected |
 | **Knowledge** | Find what the brain knows, and everything that came in | Decisions · Questions · Documents · People · Orgs · Inbox (What came in?: everything ingested, with what it produced; the captures still waiting are in Home's Inbox tab) |
-| **Archive** (under System) | Find finished and archived records | One tab per database |
+| **Archive** (linked from System) | Find finished and archived records | One tab per database |
 
 **Area pages** collect everything for one area: its goals, projects, tasks, meetings, decisions and open questions in views, and its people and clients as lists at the top. The brain adds a **Brief** toggle at the end: the area's projects with their status, and its recent decisions and open questions. Open one from Plan → Areas.
 

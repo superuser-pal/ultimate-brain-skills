@@ -65,7 +65,7 @@ The Notion AI buttons need Brain Assistant configured. Document and report butto
 
 ## Notion AI prompts
 
-Find the assistant under **Agents → Brain Assistant**. The reusable prompt texts live as pages in **Brain Assistant Skills**. If your setup uses personal Notion AI skills instead, run the same named skills there.
+Find the assistant under **Agents → Brain Assistant**. The reusable prompt texts live as pages in the **Skills** database (Brain Assistant's skills; in a space built before 0.14.0 it may be called **Brain Assistant Skills**). If your setup uses personal Notion AI skills instead, run the same named skills there.
 
 For a prompt about one page, open or reference that page so the assistant knows which one you mean.
 
