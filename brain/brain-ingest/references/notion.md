@@ -9,7 +9,7 @@ The CLI never calls Notion (spec/cli.md §1). You read and write Notion through 
    - **page id:** becomes `notion:<id>` as the source key, and the meeting note's `notion`;
    - **`last_edited_time`:** becomes the source's `origin_edited`;
    - **Name and Date:** become the meeting's title and date;
-   - **Attendees, Project, Area:** relations to Notion pages. Map each page id back to a brain note through the `notion` field in `brain index --json` (`notes[].notion`);
+   - **Attendees, Project, Area:** relations to Notion pages. Map each page id back to a brain note through the `notion` field in `brain index --json` (`notes[].notion`). In lean minutes the `Attendees:` and `Projects:` lines inside the For the brain toggle stand where a `## Projects` section would: they fill an empty property, as SKILL.md step 3 says;
    - **the minutes:** see "What counts as minutes" below;
    - **attachments:** file, PDF and image blocks in the body, and any Files property: [sources.md](sources.md), "Attachments". They are never part of the minutes text.
 3. **Put the Notion page id on the meeting note:** add `"notion": "<meeting page id>"` to the meeting's `frontmatter` in the `note new` batch. Publishing (step 11) updates that existing page and never creates a meeting page, so without the id `sync render` reports `MEETING_NOT_PUBLISHED`.
@@ -20,6 +20,8 @@ The minutes are the page body **without the template parts**. Leave out:
 - the "Minutes format" callout (it holds the prompt, not minutes);
 - the "Before marking Reviewed" checklist;
 - the linked or inline Decisions, Questions and Tasks views.
+
+**The For the brain toggle** (lean minutes, decision 0079) is not minutes text either: it holds the selection and the quotes, for the ingest. A summary that holds one is in the lean shape and is read by [selection.md](selection.md), which passes it to `extract-plan` whole; it is never a legacy summary, so a read that stores the minutes whole never stores it. If you find one while building a source body below, stop and follow selection.md instead.
 
 What remains has two parts:
 - **Minutes:** the AI-written minutes in the body. When the page holds a Notion AI meeting-notes block (`<meeting-notes>`), take only its `<summary>`; the transcript and the empty `<notes>` stay out.
@@ -70,9 +72,9 @@ Do these in order, after the ingest commit: pages first, so every task's project
    3. **Pending relations:** items that list `pending_relations` reference notes not yet published. Publish and record those first, then run `sync render --changed` again. An item with empty `properties` is only waiting for them (a decision you just approved, its meeting's Decisions): write nothing for it and leave it out of the record; the next render sends the relation. A draft decision, question or Document is never pending: it gets its page once approved in Review (decision 0071), and its relations fill in then.
    4. Run `brain sync record` with one record per page written: `{ "id", "notion": <page id>, "synced_at": <now>, "published": <the item's published> }`.
 2. **Tasks,** now that the pages they link to exist (decision 0037). If `brain status` shows `tasks_database: true`:
-   1. Run `brain sync tasks --meeting <mtg-id> --input <items.json>`, or `--source <src-id>` for the owner's tasks from any other source.
+   1. Run `brain sync tasks --meeting <mtg-id> --input <items.json>`, or `--source <src-id>` for the owner's tasks from any other source and from a selected input (its extract). The quick follow-ups of lean minutes that become Tasks go in the same `--source` call, each with its `follow_up` id ([selection.md](selection.md) §6, "Follow-ups").
    2. Create one Notion page per returned item **without** `pending_relations`, in its `database_id` with its `properties`. An item with `pending_relations` names a page not yet in Notion (a project, or the source's own Inbox row): **don't create it**: after step 1 that page is a project not in Notion yet, so leave the item out and list it in the report. An `owner` of type `person_name` is written as text, or resolved to a Notion user if the mapped property is a people property.
-   3. Run `brain sync record` with `{ "records": [ { "id": "<mtg-id or src-id>", "synced_at": "<now, ISO 8601 UTC>", "tasks": ["<new task page id>", …] } ] }`. `synced_at` is required on every record (spec/cli.md §5.14.6).
+   3. Run `brain sync record` with `{ "records": [ { "id": "<mtg-id or src-id>", "synced_at": "<now, ISO 8601 UTC>", "tasks": ["<new task page id>", …] } ] }`. `synced_at` is required on every record (spec/cli.md §5.14.6). For an extract, the record also carries `task_items`: each Task's item id, or a follow-up's `q` id, mapped to its page id; a follow-up's Task is recorded on the meeting too (selection.md §6).
 3. **Commit:** `publish: <meeting title> <date>`. Then run `brain log publish <mtg-id> pages=<n>`, and commit it with the publish.
 
 ### Inbox bodies (decision 0043)
