@@ -1,3 +1,9 @@
+<!-- ultimate-brain: start (this block is the fork's; upstream's README follows it unchanged) -->
+> **This fork holds the skills behind [Ultimate Brain](https://github.com/superuser-pal/ultimate-brain)**, an AI-assisted second brain in Markdown and Git, with Notion as its interface. They are in [`brain/`](brain/). To use them, set up Ultimate Brain by following its [Get started](https://github.com/superuser-pal/ultimate-brain#get-started): it installs them into your brain for you.
+>
+> Everything below this block is upstream's README, unchanged.
+<!-- ultimate-brain: end -->
+
 <p>
   <a href="https://www.aihero.dev/s/skills-newsletter">
     <picture>
