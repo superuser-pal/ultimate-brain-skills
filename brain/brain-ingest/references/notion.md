@@ -21,13 +21,13 @@ The minutes are the page body **without the template parts**. Leave out:
 - the "Before marking Reviewed" checklist;
 - the linked or inline Decisions, Questions and Tasks views.
 
-**The For the brain toggle** (lean minutes, decision 0079) is not minutes text either: it holds the selection and the quotes, for the ingest. A summary that holds one is in the lean shape and is read by [selection.md](selection.md), which passes it to `extract-plan` whole; it is never a legacy summary, so a read that stores the minutes whole never stores it. If you find one while building a source body below, stop and follow selection.md instead.
+**The For the brain toggle** (lean minutes, decision 0079) is not minutes text to store: it holds the selection and the quotes, for the ingest. A summary that holds one is in the lean shape and is read by [selection.md](selection.md) (§2 step 1), which gives `extract-plan` the summary with the toggle kept whole: its `<details>` and `<summary>For the brain</summary>` tags, its lines and their indentation. The CLI finds the toggle by those tags; without them its Selection lines and quotes are controls in the wrong place (`SELECTION_UNREADABLE`). Such a summary is never a legacy summary, so the source body below never holds it, and its rule 3 never applies to it. If you find one while building a source body, stop and follow selection.md instead.
 
 What remains has two parts:
-- **Minutes:** the AI-written minutes in the body. When the page holds a Notion AI meeting-notes block (`<meeting-notes>`), take only its `<summary>`; the transcript and the empty `<notes>` stay out.
+- **Minutes:** the AI-written minutes in the body. When the page holds a Notion AI meeting-notes block (`<meeting-notes>`), take only its `<summary>` (the block's own one, which ends at its matching `</summary>`, after any toggle inside it); the transcript and the empty `<notes>` stay out.
 - **The user's notes:** the "My notes" toggle, or any other text the user wrote on the page.
 
-**Source body, built the same way every time,** so the duplicate check (`content_hash`) recognises a re-run:
+**Source body, built the same way every time,** so the duplicate check (`content_hash`) recognises a re-run. It is for minutes stored whole (a legacy summary, with no ids and no For the brain toggle); a summary with ids or a For the brain toggle goes to `extract-plan` as selection.md §2 says, never through these rules:
 1. `## Minutes`, a blank line, then the minutes;
 2. if the user's notes are not empty: a blank line, `## My notes`, a blank line, then the notes;
 3. drop wrapper tags (`<meeting-notes>`, `<summary>`, `<details>`) and the indentation they add;
