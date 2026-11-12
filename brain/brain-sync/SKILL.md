@@ -28,6 +28,8 @@ Run CLI commands as `brain <command> --brain <brain> --json`. Database ids come 
    | Documents (learned Documents included: there is no Concepts database since 0.9.1) | Documents is on |
    | Goals, Key Results | Planning is on |
 
+   **Example rows** (decision 0084): leave out of the snapshot every row whose title starts with `Example · ` (the word `Example`, a space, the middle dot `·`, a space, matched exactly): the Notion template's invented rows, which setup removes when it connects the brain. Left out, such a row is never imported, corrected or matched, and nothing in the brain is made from it. Leaving it out is not skipping a database. Name how many once in the report: "2 example rows left out: delete them in Notion, or say "set up my brain" to remove them".
+
    A database whose module is off is never read, even when its id is set: `sync plan` would ignore its rows (`MODULE_OFF`). Meetings are not read here. Of the Inbox, read only:
    - *(Documents)* the rows whose **Document asked** box is ticked (by the Keep as document button) **and** that have a Brain ID, with Document asked, Only keep and Brain ID. `sync plan` turns each into a `document_requests` item for the brain-catch-up skill (step 3.5). A ticked row with no Brain ID isn't taken in yet: the ingest takes it in, with its Only keep, when it is Ready;
    - *(Reports)* nothing since 0.9.1: the **Report rows** are Documents pages with Origin Report (decision 0071). In a space not yet on migration 0019 they are still Inbox rows of Kind Report: read them as below, with `database: "inbox"`.
