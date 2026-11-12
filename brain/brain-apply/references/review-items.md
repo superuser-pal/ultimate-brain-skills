@@ -6,7 +6,7 @@ You apply **exactly what the user wrote and decided**. You never accept, reject 
 
 ## 1. Read (Notion mode)
 
-For each Review row in State Pending, build the snapshot row of spec/cli.md §5.14.1 and add the object `review`:
+For each Review row in State Pending, except an Example row (SKILL.md, "Notion mode"), build the snapshot row of spec/cli.md §5.14.1 and add the object `review`:
 `{ "decided": <Decided ticked>, "decided_at": <Decided at, or null>, "accept_all": <Accept all ticked>, "page_edited_at": <the page's last_edited_time>, "body_markdown": "<the page body as Markdown>" }`.
 Convert the body with the rules of cli §5.14.7 (headings, lists, toggles with their children); write a block you cannot convert as the line `<!-- unconvertible block -->`; use `null` when the body cannot be read at all. Do not read `Previous proposal` or any other text yourself: the CLI parses the sections.
 
