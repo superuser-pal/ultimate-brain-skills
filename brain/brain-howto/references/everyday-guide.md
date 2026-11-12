@@ -65,7 +65,7 @@ The Notion AI buttons need Brain Assistant configured. Document and report butto
 
 ## Notion AI prompts
 
-Find the assistant under **Agents → Brain Assistant**. The reusable prompt texts live as pages in **Brain Assistant Skills**. If your setup uses personal Notion AI skills instead, run the same named skills there.
+Find the assistant under **Agents → Brain Assistant**. The reusable prompt texts live as pages in the **Skills** database (Brain Assistant's skills; in a space built before 0.14.0 it may be called **Brain Assistant Skills**). If your setup uses personal Notion AI skills instead, run the same named skills there.
 
 For a prompt about one page, open or reference that page so the assistant knows which one you mean.
 
@@ -89,7 +89,7 @@ The Notion AI **Weekly review** is an on-demand summary of Notion pages. Schedul
 
 ## Review meetings and proposals
 
-**For meetings:** check names, dates, figures, attendees, project and commitments before marking **Reviewed**. To leave a subject out of the brain, change its selection line to **`Selection: Meeting only`**. To leave out one item, prefix its text with **`Meeting only:`**. Check the actual Task's status in Notion after processing.
+**For meetings:** the minutes start with **In one line**, your **Quick follow-ups** and the **Tasks for the brain**, then a few lines per subject; a collapsed **For the brain** toggle at the end holds the selection lines and the quotes behind each line. Check names, dates, figures, attendees, project and commitments before marking **Reviewed**. Tick the follow-ups you've done before **Reviewed**: each one still unticked becomes a Task with no due date; tick or delete one to keep it out. To leave a subject out of the brain, open **For the brain** and change its selection line to **`Selection: Meeting only`**. To leave out one item, write **`Meeting only:`** at the start of its quote line there, never on the summary line, where it blocks the meeting. Minutes written with an earlier prompt are read as before (**`Meeting only:`** goes at the start of the item), and their follow-ups never become Tasks. Check the actual Task's status in Notion after processing.
 
 **For Review pages with item sections:** read the proposed wording and edit it if needed. On each item's **`Decision:`** text line, replace **Pending** with **Accept**, **Reject**, **Defer** or **Request revision**. For **Request revision**, write what you want changed on **`Revision request:`**. Click **Submit decisions**, then say **“Apply my reviews.”**
 

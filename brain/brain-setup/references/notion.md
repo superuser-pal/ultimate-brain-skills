@@ -19,7 +19,7 @@ The Notion half of setup: the template, the agent's connection, the brain's data
 Run the brain-connect-notion skill's procedure, with two differences:
 
 - **Skip its step 0:** the modules were chosen on the settings screen.
-- **The template version** is stored by its step 4a (from the System page's `Template version: NNNN` line). A space without the line (built from the prompts, or older) leaves it unknown; that is not a failure.
+- **The template version** is stored by its step 4a (from the `Template version: NNNN` line in the System callout on the space's top page). A space without the line (built from the prompts, or older) leaves it unknown; that is not a failure.
 
 A database still missing: log `result=failed reason=database-missing`, name the databases missing (from `notion.missing`), and stop: in a duplicate of the template, a missing database means the duplicate is incomplete or the connection can't see it.
 
@@ -73,7 +73,7 @@ It has two subjects (the kitchen layout, the schedule), one decision (the island
 Brain Assistant is the Notion AI agent the user chats with in Notion (`/Today`, Check minutes, the buttons that message it).
 
 1. **Walk through.** Give the steps from `<product.path>/notion/TEMPLATE.md` for a duplicate when it has them (pointing the agent at the copy), else the "Setup" of `<product.path>/notion/brain-assistant.md`, as text in the chat:
-   - **A Custom Agent** when the `prerequisites` line has `custom_agents=yes`: Tools and access limited to Brain Data, How it works and Brain Assistant Skills.
+   - **A Custom Agent** when the `prerequisites` line has `custom_agents=yes`: Tools and access limited to Brain Data, How it works and the Skills database (Brain Assistant's skills; "Brain Assistant Skills" in a space built before 0.14.0).
    - **Personal Instructions** otherwise: the same Instructions text in the user's personal Notion AI Instructions, and the skills as personal skills.
 
    Wait for "done".

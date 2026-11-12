@@ -40,7 +40,7 @@ The navigation on the left of every page lists the Spaces. Each one has tabs tha
 | **Plan** | Check that your work serves your goals | Goals · Key results · Areas · Projects by goal |
 | **Review** | Decide on the changes the brain proposes | Needs my decision · Sources disagree · Approved recently · Rejected |
 | **Knowledge** | Find what the brain knows, and everything that came in | Decisions · Questions · Documents · People · Orgs · Inbox (What came in?: everything ingested, with what it produced; the captures still waiting are in Home's Inbox tab) |
-| **Archive** (under System) | Find finished and archived records | One tab per database |
+| **Archive** (linked from System) | Find finished and archived records | One tab per database |
 
 **Area pages** collect everything for one area: its goals, projects, tasks, meetings, decisions and open questions in views, and its people and clients as lists at the top. The brain adds a **Brief** toggle at the end: the area's projects with their status, and its recent decisions and open questions. Open one from Plan → Areas.
 
@@ -62,7 +62,7 @@ Every meeting moves through **Brain Status**:
    - minutes follow the format;
    - minutes checked and corrected.
 
-   Check the minutes, fix them, then set Brain Status to **Reviewed**. What the minutes get wrong, fix here: it's cheaper than fixing what the brain read from them.
+   Check the minutes, fix them, tick the quick follow-ups you've already done, then set Brain Status to **Reviewed**. What the minutes get wrong, fix here: it's cheaper than fixing what the brain read from them.
 4. **Ingest:** tell your agent "ingest my reviewed meetings". The brain reads the minutes and sets the meeting to **Ingested**. Then:
    - new decisions, questions and Documents wait in one **Review notes** row in Review: each gets its page in Notion once you accept it there. New people arrive as **Draft** straight away, so the meeting can list them;
    - changes to things the brain already knew go to **Review**, and so does an answer it found to one of your open questions;
@@ -78,15 +78,16 @@ The brain only ingests meetings you marked **Reviewed**, and only when you ask: 
 
 ## Choosing what enters the brain
 
-A meeting summary or a voice note is written as **subjects**, each with a line `Selection: Use in brain`, and **items**, one line each with an id like `[s2.i3]` and a short quote from the transcript (notion/minutes-format.md; ask Brain Assistant to "check minutes" or run "Voice summary"). Everything is included unless you mark it:
+Meeting minutes (notion/minutes-format.md; ask Brain Assistant to "check minutes") are a short summary for you: **In one line**, your **Quick follow-ups** (checkboxes tagged `[q1]`, `[q2]`, …), the **Tasks for the brain**, then one block per subject whose lines start `Decided:`, `Open:`, `Concern:`, `Waiting on <name>:` or `Idea:` and end with an id like `[s2.i3]`. A collapsed toggle **For the brain** at the end holds the Attendees and Projects, each subject's line `[s2] Selection: Use in brain`, and the quotes from the transcript behind each line. Correct a summary line and the brain reads your wording; keep its tag at the end. A voice note ("Voice summary") is written as **subjects**, each with a line `Selection: Use in brain`, and **items**, one line each with an id and a short quote from the transcript. Everything is included unless you mark it:
 
-- **Leave a subject out:** change its line to `Selection: Meeting only`. It stays on your Notion page and out of the brain.
-- **Leave one item out:** write `Meeting only:` at the start of the item. **Keep one inside an excluded subject:** write `Use in brain:` at the start.
+- **Leave a subject out:** change its line to `Selection: Meeting only` (in a meeting, that line is in **For the brain**). It stays on your Notion page and out of the brain.
+- **Leave one item out:** in a meeting, open **For the brain** and write `Meeting only:` at the start of its quote line (`Meeting only: [s2.i3] "…"`); in a voice note, at the start of the item. **Keep one inside an excluded subject:** write `Use in brain:` in the same place. In a meeting, never write them on a summary line: there they block the meeting, and the brain says why.
 - **Confirm:** set the meeting to **Reviewed** (a voice note or capture to **Ready**). Until then nothing is ingested, and the brain never confirms for you. Reviewed confirms what you can see on the page when the next run reads it.
 - The brain keeps only the **paragraphs** of the transcript your selection includes, not the whole transcript. A paragraph shared by an included and an excluded item stays out; the agent tells you which two items collide and proposes tighter quotes.
 - **Tasks:** only your own explicit commitments become Tasks. Someone else's commitment becomes a Waiting On task only when you write `Track: Waiting On —` before that item. A vague idea ("we could…") never becomes a task.
 - **Questions** are only what a later meeting or document can answer. A to-do is never filed as a question (0.9.1): yours becomes a task, someone else's stays in the meeting's text. If older open questions are really to-dos, say "turn my to-do questions into tasks": the brain lists them, and on your yes turns yours into tasks and drops the others (Status Dropped; they stay in the Archive).
-- **Quick follow-ups and Tasks (0.9.0):** your own actions come in two groups. **Quick follow-ups** (a link to send, a call to book) are checkboxes that stay on the meeting page: they never become Tasks or enter the brain. Each item under **Tasks** has a **Scope** toggle: edit Done when, Due, Project and Notes before you mark the meeting Reviewed, and the Task is created with them. Drag a line between the groups to change your mind.
+- **Quick follow-ups and Tasks:** your own actions come in two groups. **Quick follow-ups** (a link to send, a call to book) are checkboxes. Tick the follow-ups you've done before you mark the meeting Reviewed: each one still unticked becomes a Task with the meeting's projects and no due date (with the Tasks module off, they stay on the page); tick or delete one to keep it out. The brain never ticks or edits a checkbox, never creates the same follow-up twice, and keeps a follow-up's text out of its notes. Each item under **Tasks for the brain** has a **Scope** toggle: edit Done when, Due, Project and Notes before you mark the meeting Reviewed, and the Task is created with them.
+- **Minutes written with an earlier prompt** (before 0.14.0) are read as before: `Meeting only:` and `Use in brain:` go at the start of the item, and their quick follow-ups stay on the meeting page and never become Tasks.
 - **Quotes:** a quote that is too long or slightly reworded no longer blocks the meeting; the agent tells you which item it couldn't place. Only a quote under something marked Meeting only must match the transcript exactly.
 - **Changed your mind later?** Edit the tokens and set the meeting back to Reviewed (or the capture to Ready), or tell your agent. Deleting a line on its own is not a request: the brain keeps what it has until you ask. When something is taken out, a Review row **Exclusion cleanup** lists what already rests on it: **Remove**, **Restore** (a paragraph is back) or **Keep or Remove** for a note that cannot be tied to a passage. Rejecting it releases nothing; Tasks made from excluded content are listed for you to act on and are never cancelled by the brain.
 
