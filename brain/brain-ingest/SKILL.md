@@ -22,6 +22,8 @@ What `--read` returns is all there is. A note with `status: "withheld"` is not l
 
 **The writing rule** (spec/eligibility.md §9.6). Write nothing from content the user excluded: no statement from an excluded paragraph of the input you are reading (an item or subject marked Meeting only, a paragraph `extract-plan` leaves out, a paragraph a new version removed), cited or not, paraphrased or not, in a note, a proposal's `title`, `why`, value or text, a summary, a digest, a task or a report line. Every proposed change names the passages it rests on (`passages`, [references/cli-inputs.md](references/cli-inputs.md) §3): the CLI refuses a change without them and skips one that rests on an excluded passage.
 
+**Plain writing** (decision 0081 §7). People read what you write in Notion: a note's summary and body, an Inbox digest, a Review row's text, a task. Write it as [the writing reference](../brain-query/references/writing.md) says, without its six patterns. A quote, a fact's value and wording the user gave stay exactly as they are.
+
 ## Modes
 
 - **Notion mode (default):** meetings come from the Notion Meetings database through the Notion MCP. Run it only when `brain status` shows `notion.configured` includes `meetings`.

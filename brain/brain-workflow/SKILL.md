@@ -47,6 +47,8 @@ To take over an existing project's plans and tasks (a Markdown plan, issues, exi
 
 A **run** is one working session. Read [references/notion.md](references/notion.md) before the first Notion call: it has the snapshot, each operation, the toggles and the artifacts.
 
+Progress lines, item titles, scopes and acceptance criteria are read in Notion: write them as [the writing reference](../brain-query/references/writing.md) says (decision 0081 §7).
+
 **Start**
 1. **Reconcile.** Build the snapshot from Notion and the folder, then `brain workflow reconcile <wf> --input <snapshot> --start`, once per run. If Notion is unreachable, say so, work locally (records only), and try again at the end.
 2. **Ask once.** Put every `needs_you` entry, and every failed operation the run can't retry on its own (`runs_failed` 3 or more: "retry or drop?"), in **one** batch of questions, each with its choices in plain words. Apply the answers with `echo '{ "answers": [{ "id": "…", "choice": "…" }] }' | brain workflow resolve <wf> --rev <n> --input -` (retry: `op state … pending`; drop: `op state … dropped`, only on the user's word). Unanswered entries stay open, and their targets wait.
