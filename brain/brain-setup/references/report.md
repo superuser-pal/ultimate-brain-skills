@@ -58,6 +58,7 @@ The `reason=` of a `result=failed` line:
 | `database-missing` | a database of Core or of a module on is still missing after connect |
 | `examples-left` | the template's `Example · ` rows were not removed: the user declined, or a write failed |
 | `shape-wrong` | the minutes check found the shape wrong |
+| `transcript-missing` | the minutes check found the minutes but not the sample's transcript on the page |
 | `assistant-reads-outside` | `/Today` returned something from outside the brain's databases |
 | `remote-failed` | the backup couldn't be created, or `gh` can't read it (another host, no access) |
 | `remote-public` | the backup is a public repository (step 2) |
