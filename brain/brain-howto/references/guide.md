@@ -414,7 +414,7 @@ Your agent knows how your work is organised from the start of every session. You
 - **It doesn't let the agent invent structure.** The agent uses it to place what it writes. It creates a Domain, Area or Project only when you ask, or say yes to its suggestion.
 - **To change your structure,** say it to your agent ("add an Area for hiring under the studio") or change it in Notion; the list follows.
 
-**What belongs to a Project or an Area.** Ask "what's in Acme website?" or "what's open in Clients?". The agent reads the page's **Brief**, which lists its recent decisions, open questions, meetings and Documents (an Area's Brief also lists its Projects), and reads the tasks live from Notion each time, so you always get today's status.
+**What belongs to a Project or an Area.** Ask "what's in Acme website?" or "what's open in Clients?". The agent reads the page's **Brief**, which lists its recent decisions, open questions, meetings and, when Documents is on, its Documents (an Area's Brief also lists its Projects), and reads the tasks live from Notion each time, so you always get today's status.
 
 **Linked folders** show only their own place: the Project, its Area and the Area's Domain. The block there is committed in that repository, which other people may read, so the rest of your structure stays in your brain.
 
