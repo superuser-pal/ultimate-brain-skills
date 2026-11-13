@@ -95,21 +95,48 @@ Meeting minutes (notion/minutes-format.md; ask Brain Assistant to "check minutes
 
 ## Deciding in Review
 
-**What approving does:** it makes the brain's notes **trusted**. Approved notes appear in your Briefs and in the brain's answers; until then, the brain treats them as unconfirmed. Start from Home → **Needs you → What's waiting for you?**: it counts what waits, by Kind, and each row's **About Page** opens the meeting or Inbox row it came from.
+**What approving does:** it makes the brain's notes **trusted**. Approved notes appear in your Briefs and in the brain's answers; until then, the brain treats them as unconfirmed. Start from Home → **Needs you → What's waiting for you?**: it lists the rows that need you, counted by Type, and opening one takes you to it.
 
-The brain never changes what it already knows without your yes. Each row in **Review → Needs my decision** says what it is **About**, what it is **Now** and what is **Proposed**, and **Why** quotes the source.
+The brain never changes what it already knows without your yes.
 
+**Status says what a row needs.** It comes first on every Review row and in every Review view:
+- **Needs you · decide in the page:** a row from a meeting, email or document. Open it and decide each change in the page (below).
+- **Needs you · set Your call:** a Conflict, Answer or Suggestion row, or a row from before the pages had sections. Decide it in **Your call** (below).
+- **Submitted: waiting for the brain:** you clicked Submit or set Your call. Tell your agent "apply my reviews" (or "catch up"), or wait for the next scheduled catch-up.
+- **Done** or **Closed:** nothing left to do.
+
+**Four types of row.** The **Type** column says which, and the row's Name starts the same way:
+
+| Type | Where you decide | What accepting does |
+|---|---|---|
+| **From source** ("From Acme launch review: …") | In the page | The new notes become Reviewed and get their pages; each change to a note is made with the wording shown; the links are added |
+| **Conflict** ("Conflict: …") | Your call | Two sources disagree: both claims are kept as contested (Fix with the true value). A newer decision replaces an older one: the older is archived. A possible duplicate: it is folded into the other record |
+| **Answer** ("Answer: …") | Your call | The question gets this answer and shows as **Answered** in Notion. Fix it to give the answer yourself; Reject it and the question stays open |
+| **Suggestion** ("Suggestion: …") | Your call | The change Ultimate Assistant suggested when you said "propose" (a task's Status or Due, a project's Area) is made in Notion by your agent's next run |
+
+The brain also keeps a **Kind** on each row, with the exact change it proposes. It is hidden, and you never need it.
+
+**Deciding in the page** (Status: Needs you · decide in the page). A row from one meeting, email or document is a page: a short summary at the top, then one section per item, `## [a · it-9f2c1e44] Changes: Launch date on Acme website`, each with what the note says now, a toggle **Proposed final wording**, and a `Decision:` line.
+1. Edit the text inside **Proposed final wording** if you want it different. That exact text is what the brain writes. If you change a fact (March 15 to March 18), your value becomes current and the brain records it as your correction; the source's value stays in the history, attributed to the source.
+2. Type the decision on the `Decision:` line of each item: `Accept`, `Reject`, `Defer` or `Request revision` (write what you want on the line `Revision request:`). Leave `Pending` to decide later. Decide some items now and the rest later.
+3. Click **Submit decisions**, or **Submit and accept all** to accept every item still on Pending (items you decided explicitly keep your decision). Nothing is read before you click.
+4. Tell your agent "apply my reviews". It shows each item's action and exact text first (in an attended run), and applies only what you decided. A scheduled run applies only decisions that are explicit, exact, unchanged and at least two minutes old, and never reads a revision request.
+5. The top summary shows "3 of 5 decided: 2 applied, 1 closed, 2 waiting for you". An applied or closed status is not written into your sections. If the note changed after the item was written, the section is updated with the new text and your decision resets to Pending. A requested revision comes back as a new draft in **Proposed final wording**, with your earlier text in **Previous proposal**, and `Decision: Pending`: the brain never accepts a draft for you.
+6. Your edits are safe: the brain does not rewrite a row that has edited wording or a decision on it. If you edit a section after clicking Submit, the brain keeps your edit and shows what it would have written in a toggle "Brain update"; submit again to change it. A tiny window remains between the agent's read and its write; Notion's page history recovers an overwritten sentence, and nothing canonical is lost.
+7. An item that rests only on content you excluded is closed without applying anything, even if you accepted it.
+
+A row from a source keeps **About**, **Now**, **Proposed** and **Why** empty, and they don't show: the page holds all of it.
+
+**Deciding in Your call** (Status: Needs you · set Your call). The row says what it is **About**, what it is **Now** and what is **Proposed**, and **Why** quotes the source; **Source Meeting** links to the meeting when there is one.
 1. Set **Your call**:
    - **Approve** applies it;
    - **Reject** drops it;
    - **Fix** applies it, corrected: say what's wrong in **What to fix**, in your own words ("it's March, not February", "Lucía is on Acme website, not Acme app").
-2. **What to fix** also works with Approve, to leave items out: "all except b, e".
-3. Tell your agent "apply my reviews" (or "catch up"). The agent reads What to fix, applies it, and repeats every correction back to you in its report ("a: launch set to March, not February"), so you can check it read you right. It never applies something you didn't clearly say; when unsure, it asks.
-4. **30 days after you decide,** the next catch-up moves the row to Notion's trash, so Review holds only what's recent. The brain keeps every decision, and Notion keeps the trash for 30 more days.
+2. Tell your agent "apply my reviews" (or "catch up"). The agent reads What to fix, applies it, and repeats every correction back to you in its report ("a: launch set to March, not February"), so you can check it read you right. It never applies something you didn't clearly say; when unsure, it asks.
 
-**Suggestion rows** come from Ultimate Assistant when you say "propose" (see Review your work): one change each, such as a task's Status or a project's Area, with Now and Proposed. Approve, Reject or Fix them like any row; an approved one is made in Notion by your agent's next run.
+**Type your corrections in What to fix,** never in About, Now or Proposed: those are the brain's, and typing there does nothing.
 
-**One row per meeting, email or document.** Everything one input brings is one row, "From Acme launch review: 2 changes, 6 new notes and 2 links", with its items lettered in **Proposed**:
+**Older rows from a source.** A row written before the sections existed holds everything one input brings, "From Acme launch review: 2 changes, 6 new notes and 2 links", with its items lettered in **Proposed**:
 
 ```
 a) ⚠ Launch date on Acme website: 2027-02 → 2027-03
@@ -120,48 +147,14 @@ d) Question: Who signs off the launch post?
 h) People on Acme website: Lucía Fernández
 ```
 
-Changes to what the brain already knew come first, and a changed fact is marked ⚠: those are the ones to read closely.
+Changes to what the brain already knew come first, and a changed fact is marked ⚠: those are the ones to read closely. You decide such a row in **Your call**, and **What to fix** also works with Approve, to leave items out: "all except b, e".
 - **Approve** accepts them all: the changes are made, the notes become **Reviewed** and appear in the Briefs, and the links are added.
 - **Approve** with "all except b, h" accepts the rest. b and h aren't rejected: they move to a new row, "Deferred from Acme launch review", for you to decide later.
 - **Fix** with "a: March" applies everything, with a corrected.
 - **Reject** applies nothing, and archives the notes that are still Draft: they never get a page in Notion. Nothing is deleted.
 - If a fact changed since the row was written (you edited it in Notion, say), only that item is dropped, and the report says so. The rest applies.
 
-**Review rows with sections (after migration 0013).** A row from one input is a page: a short summary at the top, then one section per item, `## [a · it-9f2c1e44] Changes: Launch date on Acme website`, each with what the note says now, a toggle **Proposed final wording**, and a `Decision:` line.
-1. Edit the text inside **Proposed final wording** if you want it different. That exact text is what the brain writes. If you change a fact (March 15 to March 18), your value becomes current and the brain records it as your correction; the source's value stays in the history, attributed to the source.
-2. Type the decision on the `Decision:` line of each item: `Accept`, `Reject`, `Defer` or `Request revision` (write what you want on the line `Revision request:`). Leave `Pending` to decide later. Decide some items now and the rest later.
-3. Click **Submit decisions**, or **Submit and accept all** to accept every item still on Pending (items you decided explicitly keep your decision). Nothing is read before you click.
-4. Tell your agent "apply my reviews". It shows each item's action and exact text first (in an attended run), and applies only what you decided. A scheduled run applies only decisions that are explicit, exact, unchanged and at least two minutes old, and never reads a revision request.
-5. The top summary shows "3 of 5 decided: 2 applied, 1 closed, 2 waiting for you". An applied or closed status is not written into your sections. If the note changed after the item was written, the section is updated with the new text and your decision resets to Pending. A requested revision comes back as a new draft in **Proposed final wording**, with your earlier text in **Previous proposal**, and `Decision: Pending`: the brain never accepts a draft for you.
-6. Your edits are safe: the brain does not rewrite a row that has edited wording or a decision on it. If you edit a section after clicking Submit, the brain keeps your edit and shows what it would have written in a toggle "Brain update"; submit again to change it. A tiny window remains between the agent's read and its write; Notion's page history recovers an overwritten sentence, and nothing canonical is lost.
-7. An item that rests only on content you excluded is closed without applying anything, even if you accepted it.
-Rows from before the migration keep **Your call** and **What to fix** until they are done.
-
-**Three kinds of row.** Every Review row's Name says which it is:
-- **From <source>:** everything one meeting, email or document brings, lettered as above;
-- **Conflict: …** two sources disagree, a new decision replaces an older one, or two records may be duplicates. These need your judgment, so each has a row of its own;
-- **Answer: …** new material answers one of your open questions.
-
-**Answer rows.** When new material answers one of your open questions, an Answer row says so: "Who owns the mobile app? → Carlos Ruiz owns it". Approve it and the question shows as **Answered** in Notion; Fix it to give the answer yourself; Reject it and the question stays open.
-
-**Type your corrections in What to fix,** never in About, Now or Proposed: those are the brain's, and typing there does nothing.
-
-The row's **Kind** property (hidden in your views) says exactly what the brain proposes:
-
-| Kind | Approve means |
-|---|---|
-| Review Notes | Everything listed: the changes are made, the notes become Reviewed and get their pages, the links are added. Reject archives the Draft notes |
-| Update Fact | The new value replaces the old one; the old one stays in the history |
-| Add To Note | The text is added to the note |
-| Update Body | A Document's text is replaced by its new version; Proposed shows the lines that change (`-` old, `+` new) |
-| Add Link | The links listed are added (people to a project, an alias to a person) |
-| Contradiction | Two sources disagree; both claims are kept as contested. Fix with the true value |
-| Supersede | A newer note replaces an older one, which is archived |
-| Merge | A duplicate is folded into the record it duplicates |
-| New Item | A new note is created as Reviewed, with its page |
-| Answer | The question gets this answer and shows as Answered |
-
-**Fix works on every kind.** To see why a change was proposed, open the row: **Why** quotes the sentence from the source, and **Source Meeting** links to the meeting when there is one.
+**30 days after you decide,** the next catch-up moves the row to Notion's trash, so Review holds only what's recent. The brain keeps every decision, and Notion keeps the trash for 30 more days.
 
 A rejected change can come back if a later meeting says the same thing again.
 
@@ -171,7 +164,7 @@ A rejected change can come back if a later meeting says the same thing again.
 
 **How do I correct what came from a meeting?** It depends on where the mistake is:
 - **The minutes are wrong** (a misheard name, a wrong date): fix the minutes on the meeting page, then set Brain Status back to **Reviewed**. The next catch-up reads the meeting again and proposes only what changed, in one Review row. The same goes for a capture: fix its text and set its Brain Status to **Ready**.
-- **The minutes are right, but the brain read them wrong** (the wrong project, a suggestion taken as a decision): on the Review row, set Your call to **Fix** and say what's wrong in What to fix ("c is a suggestion, not a decision", "a belongs to Acme app"). If the row was already approved, tell your agent what's wrong, or set the note's Lifecycle to **Disputed**.
+- **The minutes are right, but the brain read them wrong** (the wrong project, a suggestion taken as a decision): on the Review page, correct the change's **Proposed final wording** before you accept it, or type `Request revision` and say what's wrong on its `Revision request:` line. On a row decided in Your call, set it to **Fix** and say what's wrong in What to fix ("c is a suggestion, not a decision", "a belongs to Acme app"). If the row was already approved, tell your agent what's wrong, or set the note's Lifecycle to **Disputed**.
 
 **How do I refresh a report?** Two ways. **Click Refresh report** on the report's page in Documents: Brain Assistant adds one toggle at the end of the page, "Proposed refresh · based on Notion", with a new version written from the brain's Notion pages (the report's own text stays as it is, and a second click replaces only the toggle). To use it, replace the report text with what is in the toggle, delete the toggle, and click **Accept**; the next "catch up" shows you what changes and takes it in. **Or** tick **Refresh asked** by hand (or say "refresh the Acme launch report") to have the brain rewrite it from its notes in Git; it waits while a proposed refresh or an unaccepted edit is on the page. A new **Ask the brain** row always makes a new report. The earlier versions stay in the brain's history.
 
