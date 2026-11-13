@@ -91,9 +91,11 @@ The Notion AI **Weekly review** is an on-demand summary of Notion pages. Schedul
 
 **For meetings:** the minutes start with **In one line**, your **Quick follow-ups** and the **Tasks for the brain**, then a few lines per subject; a collapsed **For the brain** toggle at the end holds the selection lines and the quotes behind each line. Check names, dates, figures, attendees, project and commitments before marking **Reviewed**. Tick the follow-ups you've done before **Reviewed**: each one still unticked becomes a Task with no due date; tick or delete one to keep it out. To leave a subject out of the brain, open **For the brain** and change its selection line to **`Selection: Meeting only`**. To leave out one item, write **`Meeting only:`** at the start of its quote line there, never on the summary line, where it blocks the meeting. Minutes written with an earlier prompt are read as before (**`Meeting only:`** goes at the start of the item), and their follow-ups never become Tasks. Check the actual Task's status in Notion after processing.
 
-**For Review pages with item sections:** read the proposed wording and edit it if needed. On each item's **`Decision:`** text line, replace **Pending** with **Accept**, **Reject**, **Defer** or **Request revision**. For **Request revision**, write what you want changed on **`Revision request:`**. Click **Submit decisions**, then say **“Apply my reviews.”**
+**Each Review row's Status says where to decide it:** **Needs you · decide in the page** or **Needs you · set Your call**. **Submitted: waiting for the brain** means your part is done.
 
-**For older Review rows:** use **Your call → Approve, Reject or Fix**. Explain a Fix in **What to fix**, then say **“Apply my reviews.”**
+**For Review pages with item sections** (decide in the page): read the proposed wording and edit it if needed. On each item's **`Decision:`** text line, replace **Pending** with **Accept**, **Reject**, **Defer** or **Request revision**. For **Request revision**, write what you want changed on **`Revision request:`**. Click **Submit decisions**, then say **“Apply my reviews.”**
+
+**For Conflict, Answer and Suggestion rows, and older Review rows** (set Your call): use **Your call → Approve, Reject or Fix**. Explain a Fix in **What to fix**, then say **“Apply my reviews.”**
 
 ## Occasional operations
 
