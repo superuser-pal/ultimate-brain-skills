@@ -40,7 +40,7 @@ When the user asks to turn their to-do questions into tasks (or to clean up open
 
 ## Procedure (per meeting)
 
-1. **Check the brain.** Run `brain status`. If `index_stale` is true, run `brain index`. Note the owner name and which Notion databases are configured. If Notion is configured and the brain has no area, project or person notes at all (all three counts are 0), run the brain-sync skill first (or ask the user to): without the synced Areas, Projects and People there is nothing to match against, and the ingest would create duplicates.
+1. **Check the brain.** Run `brain status`. If `index_stale` is true, run `brain index`. Note the owner name and which Notion databases are configured. If Notion is configured and the brain has no area, project or person notes at all (all three counts are 0), run the brain-sync skill first (or ask the user to): without the synced Areas, Projects and People there is nothing to match against, and the ingest would create duplicates. **Off its working branch:** when `brain status` has the warning `BRAIN_OFF_WORKING_BRANCH`, say its message in one line and offer "fix my backup" before writing anything (brain-setup references/backup.md, "Off the working branch, at the start of a run"). Never create a branch, a worktree or a pull request in the brain (decision 0086).
 
 2. **Fetch** *(Notion)*. Query the Meetings database for pages with Brain Status = **Reviewed**, oldest Date first, through its data source ([references/notion.md](references/notion.md)). Process them one at a time. Never take Not Reviewed or Skipped meetings (decision 0012), nor a meeting whose Name starts with `Example · ` (the Notion template's invented rows, decision 0084: nothing in the brain is made from one; name how many you skipped once in the report, "1 example meeting skipped: delete it in Notion"). For each page, read its properties (Name, Date, Attendees, Project, Area) and the minutes: which parts of the page count as minutes is in references/notion.md.
 
@@ -121,7 +121,7 @@ When the user asks to turn their to-do questions into tasks (or to clean up open
 
     Then commit again: `publish: <meeting title> <date>`.
 
-    **Push** after the run's last commit, per `settings.push` (the brain's AGENTS.md, "Write path").
+    **Push** after the run's last commit, per `settings.push` (the brain's AGENTS.md, "Write path"), never off the working branch. The report then ends with the backup line (brain-setup references/backup.md, "The report's last line"): none after a push that succeeded; `<n> changes not backed up yet (Back up after each run: remind me).` with `remind`; `Not backed up: <reason>. Say "fix my backup".` when the push failed or wasn't made.
 
 12. **Report** in three lines (decision 0037), once per run however many inputs it took:
     ```

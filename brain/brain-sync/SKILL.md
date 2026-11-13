@@ -16,7 +16,7 @@ Run CLI commands as `brain <command> --brain <brain> --json`. Database ids come 
 
 ## Pull
 
-1. **Check:** run `brain status`. Sync needs `notion.configured`; if it's empty, run `brain-connect-notion` first. Note `modules` (decision 0048).
+1. **Check:** run `brain status`. Sync needs `notion.configured`; if it's empty, run `brain-connect-notion` first. Note `modules` (decision 0048). **Off its working branch:** when `brain status` has the warning `BRAIN_OFF_WORKING_BRANCH`, say its message in one line and offer "fix my backup" before writing anything (brain-setup references/backup.md, "Off the working branch, at the start of a run"). Never create a branch, a worktree or a pull request in the brain (decision 0086).
 2. **Read** every row of **every** configured database of a module that is on, through the Notion MCP, with all pages (follow `next_cursor` until it is null). Skipping one is a bug (U-18): a database left out is never pulled, and its rows and edits are lost to the brain.
 
    | Database | Read when |
@@ -90,7 +90,7 @@ Run CLI commands as `brain <command> --brain <brain> --json`. Database ids come 
     - **`pending_relations`:** these point to notes not published yet. Publish those first, record them, then render again, **with the same `--plan plan.json`** (a render without it does not hold back a page whose Notion text is waiting). An item with empty `properties` is only waiting for them (a decision you just approved, its meeting's Decisions): write nothing for it and leave it out of the record; the next render sends the relation.
 11. **Record:** run `brain sync record` with `{ "records": [ … ] }`, one record per page written: `{ "id", "notion": <page id>, "synced_at": <now>, "published": <the item's published> }` (references/formats.md). Record only what you actually wrote. If a write failed, leave it out; the next render produces it again. For a Document or report body, add `@notion_body` from the read-back of step 10 ("Accepted wording" step 6); if the read-back failed, record `"@notion_body": null` for that page (a null on an `@` key removes the old baseline, so the next run holds the page, row 9, instead of comparing a new Git baseline with an old Notion one; this covers a previously published page that was just refreshed as well as a new one).
 12. **Clear Accepted** on the pages whose acceptance this run consumed ("Accepted wording" step 7).
-13. **Log** with `brain log publish - pages=<n>` (`sync record` does not log), then **commit:** `publish: <n> pages to Notion`. After the run's last commit, push per `settings.push` (the brain's AGENTS.md, "Write path").
+13. **Log** with `brain log publish - pages=<n>` (`sync record` does not log), then **commit:** `publish: <n> pages to Notion`. After the run's last commit, push per `settings.push` (the brain's AGENTS.md, "Write path"), never off the working branch. The report then ends with the backup line (brain-setup references/backup.md, "The report's last line"): none after a push that succeeded; `<n> changes not backed up yet (Back up after each run: remind me).` with `remind`; `Not backed up: <reason>. Say "fix my backup".` when the push failed or wasn't made.
 14. **Report** in three lines (decision 0037):
     ```
     Done: 3 imported · 1 corrected · 2 applied · 6 pages published · 4 old Review rows trashed
