@@ -43,7 +43,7 @@ Never delete a question, never set its Status or Lifecycle yourself, and never e
 
 ## 4. Finish
 
-Run `brain index`, `brain views`, `brain lint`; stop on a lint error in a file this run wrote. `brain log tidy-questions - converted=<n> dropped=<n>`, then commit in the brain repo: `tidy: <n> to-do questions converted, <n> dropped`. Publish (`brain sync render --changed` → MCP → `brain sync record`, references/notion.md), commit `publish: to-do tidy`, and push per `settings.push`.
+Run `brain index`, `brain views`, `brain lint`; stop on a lint error in a file this run wrote. `brain log tidy-questions - converted=<n> dropped=<n>`, then commit in the brain repo: `tidy: <n> to-do questions converted, <n> dropped`. Publish (`brain sync render --changed` → MCP → `brain sync record`, references/notion.md), commit `publish: to-do tidy`, and push per `settings.push` (the brain's AGENTS.md, "Write path"), never off the working branch. The report then ends with the backup line (brain-setup references/backup.md, "The report's last line"): none after a push that succeeded; `<n> changes not backed up yet (Back up after each run: remind me).` with `remind`; `Not backed up: <reason>. Say "fix my backup".` when the push failed or wasn't made.
 
 Report in three lines (SKILL.md step 12):
 

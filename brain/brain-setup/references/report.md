@@ -50,6 +50,8 @@ The `reason=` of a `result=failed` line:
 | Code | When |
 |---|---|
 | `missing-prerequisite` | Node, Git or the agent is missing (step 1) |
+| `gh-missing` | `gh` is not installed: `gh --version` fails (step 1) |
+| `gh-signed-out` | `gh` is not signed in to github.com: `gh auth status --hostname github.com` fails (step 1) |
 | `notion-ai-missing` | the plan has no Notion AI and the user didn't choose the path without it (step 1) |
 | `notion-unreachable` | no Notion tools in the session, or the MCP call failed |
 | `brain-data-not-found` | the search found no Brain Data page |
@@ -57,7 +59,8 @@ The `reason=` of a `result=failed` line:
 | `examples-left` | the template's `Example · ` rows were not removed: the user declined, or a write failed |
 | `shape-wrong` | the minutes check found the shape wrong |
 | `assistant-reads-outside` | `/Today` returned something from outside the brain's databases |
-| `remote-failed` | the private remote couldn't be created or found |
+| `remote-failed` | the backup couldn't be created, or `gh` can't read it (another host, no access) |
+| `remote-public` | the backup is a public repository (step 2) |
 | `push-failed` | a push failed |
 | `first-value-unresolved` | first value didn't pass: a check `fail`, `unsuitable` or not run yet (step 7) |
 | `user-stopped` | the user stopped during a check that had started (a test page made, a test task created) |
