@@ -147,7 +147,7 @@ d) Question: Who signs off the launch post?
 h) People on Acme website: Lucía Fernández
 ```
 
-Changes to what the brain already knew come first, and a changed fact is marked ⚠: those are the ones to read closely.
+Changes to what the brain already knew come first, and a changed fact is marked ⚠: those are the ones to read closely. You decide such a row in **Your call**, and **What to fix** also works with Approve, to leave items out: "all except b, e".
 - **Approve** accepts them all: the changes are made, the notes become **Reviewed** and appear in the Briefs, and the links are added.
 - **Approve** with "all except b, h" accepts the rest. b and h aren't rejected: they move to a new row, "Deferred from Acme launch review", for you to decide later.
 - **Fix** with "a: March" applies everything, with a corrected.
