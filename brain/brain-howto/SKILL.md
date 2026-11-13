@@ -11,7 +11,7 @@ Answer how-to questions about the system from [references/guide.md](references/g
 
 ## Procedure
 
-1. **Read the guide section** that matches the question. Its headings: The Spaces · The meeting flow · Deciding in Review · Correcting what came in (a meeting, a capture, a report; refreshing a report) · What you can edit · Adding things · Review your work (Ultimate Assistant) · Tidy the brain · Run catch-up on a schedule · Projects in other folders (linked repos, connected work, adoption) · How the brain talks to you (the response style) · What to say to your agent · When something looks wrong.
+1. **Read the guide section** that matches the question. Its headings: The Spaces · The meeting flow · Deciding in Review · Correcting what came in (a meeting, a capture, a report; refreshing a report) · What you can edit · Adding things · Review your work (Ultimate Assistant) · Tidy the brain · Run catch-up on a schedule · Projects in other folders (linked repos, connected work, adoption) · How the brain talks to you (the response style) · Where your work sits (the structure list in AGENTS.md, briefs, tasks) · What to say to your agent · When something looks wrong.
 
 2. **If the question is about something that happened** ("why didn't…", "where did … go", "is my … set up"), check the live state before answering:
    - `brain status --brain . --json` (or without `--brain` in a linked repo). It reports pending proposals, Notion databases configured or missing, stale views, and the last log line.

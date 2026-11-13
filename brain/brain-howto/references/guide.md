@@ -405,6 +405,21 @@ The style covers what the agent says to you in its own words. Reports and summar
 
 ---
 
+## Where your work sits
+
+Your agent knows how your work is organised from the start of every session. Your brain's `AGENTS.md` (the instructions every agent reads) has a section **Your structure**: your Domains, the Areas in each, and the active Projects in each, with their ids.
+
+- **You don't edit it.** The brain rewrites it after every change, so a new Area, a renamed Project or one you archive shows up there at the next run. Anything typed inside it is lost; your own rules go under **My rules**.
+- **Only active Projects are listed.** A Project you set to Planned, On Hold or Done, or archive, leaves the list; one just created and not yet synced is in it. An Area with no Domain is under **No domain**, and a Project with no Area under **No area**.
+- **It doesn't let the agent invent structure.** The agent uses it to place what it writes. It creates a Domain, Area or Project only when you ask, or say yes to its suggestion.
+- **To change your structure,** say it to your agent ("add an Area for hiring under the studio") or change it in Notion; the list follows.
+
+**What belongs to a Project or an Area.** Ask "what's in Acme website?" or "what's open in Clients?". The agent reads the page's **Brief**, which lists its recent decisions, open questions, meetings and, when Documents is on, its Documents (an Area's Brief also lists its Projects), and reads the tasks live from Notion each time, so you always get today's status.
+
+**Linked folders** show only their own place: the Project, its Area and the Area's Domain. The block there is committed in that repository, which other people may read, so the rest of your structure stays in your brain.
+
+---
+
 ## What to say to your agent
 
 Run these in Claude Code or Codex, from your brain's folder.
