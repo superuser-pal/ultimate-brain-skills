@@ -58,8 +58,8 @@ Ready and Reviewed make inputs available for processing. Processing happens when
 | **Write up** | A promoted Document | Notion AI develops the page using linked brain pages. Review and edit it, then click **Accept**. On later runs, copy the wording you want from **Proposed revision** into the document body, delete that toggle, then click **Accept**. |
 | **Refresh report** | A report in Documents | Notion AI adds a proposed refresh in a toggle. Review it, replace the report text if you agree, delete the toggle, then click **Accept**. |
 | **Accept** | A Document or report | Marks the current wording for the next **“Catch up.”** Your click authorises that exact wording; if the page changes afterward, accept the final version again. |
-| **Submit decisions** | A Review page with item sections | Submits your individual decisions. Say **“Apply my reviews”** afterward. |
-| **Submit and accept all** | A Review page with item sections | Submits your decisions **and accepts every item still Pending**. Check those remaining items before clicking. Then say **“Apply my reviews.”** |
+| **Review with me** | A Review row from a meeting, email or document | Brain Assistant goes through the page with you in rounds of questions, then writes what you agreed after your yes. Then set **Your call** and say **“Apply my reviews.”** |
+| **Submit decisions** | An older Review page you already started (under **Show all properties**) | Submits your individual decisions. Say **“Apply my reviews”** afterward. |
 
 The Notion AI buttons need Brain Assistant configured. Document and report buttons also depend on their modules being enabled. **Only keep** limits the document you preserve; it does not exclude the rest of an input from knowledge processing. Use the selection controls below for exclusions.
 
@@ -75,6 +75,7 @@ For a prompt about one page, open or reference that page so the assistant knows 
 |---|---|---|
 | **Today** | Brain Assistant chat | **"Run Today"** shows due tasks, today's meetings and pending decisions. |
 | **Review queue** | Brain Assistant chat | **"Run Review queue"** explains pending proposals and their sources. You make the decisions. |
+| **Grill review** | A Review row from a meeting, email or document | Click **Review with me**, or **"Run Grill review"** on the row. It asks what the page can't settle, three to five questions at a time with a recommended option, shows what it will write and writes after your yes. You set **Your call**. |
 | **Prep** | With a meeting page referenced | **"Run Prep"** gathers relevant meetings, questions, tasks and decisions before the meeting. |
 | **Check minutes** | A meeting page before it is Reviewed | **"Run Check minutes"** flags missing information and details to confirm. It fixes the text after your confirmation. |
 | **Weekly review** | Brain Assistant chat | **"Run Weekly review"** summarises the past week, project and goal health, and the coming week. |
@@ -85,7 +86,7 @@ For a prompt about one page, open or reference that page so the assistant knows 
 | **Write up** | A promoted Document | Click the **Write up** button. Review and edit the result before clicking **Accept**. |
 | **Refresh report** | A report in Documents | Click **Refresh report**. Review its proposed text before replacing the current report and clicking **Accept**. |
 
-**Meeting-summary prompt:** this is separate from the eleven skills. Keep the transcript on the meeting page: a recorded meeting's is in the meeting-notes block's Transcript, and one you paste goes in the page body. Open the Notion AI chat on that page, paste the minutes prompt followed by the line **“Write the minutes on this page, below the transcript, and nothing else.”**, and send. Don't run it from Notion AI's settings: there it can replace the transcript. If the transcript is gone, put it back above the minutes (Notion's version history, or paste it again): without it the brain can't read the meeting. Then run **Check minutes**, correct the result and mark the meeting **Reviewed**. If you cannot find the prompt, ask your agent **“Give me the minutes prompt.”** It is supplied with Ultimate Brain as `notion/minutes-format.md`; do not assume it is inside the meeting template.
+**Meeting-summary prompt:** this is separate from the twelve skills. Keep the transcript on the meeting page: a recorded meeting's is in the meeting-notes block's Transcript, and one you paste goes in the page body. Open the Notion AI chat on that page, paste the minutes prompt followed by the line **“Write the minutes on this page, below the transcript, and nothing else.”**, and send. Don't run it from Notion AI's settings: there it can replace the transcript. If the transcript is gone, put it back above the minutes (Notion's version history, or paste it again): without it the brain can't read the meeting. Then run **Check minutes**, correct the result and mark the meeting **Reviewed**. If you cannot find the prompt, ask your agent **“Give me the minutes prompt.”** It is supplied with Ultimate Brain as `notion/minutes-format.md`; do not assume it is inside the meeting template.
 
 The Notion AI **Weekly review** is an on-demand summary of Notion pages. Scheduling catch-up is a separate operation. Clicking **Refresh report** uses Notion pages; asking your agent to refresh a report uses the brain's canonical notes.
 
@@ -95,7 +96,7 @@ The Notion AI **Weekly review** is an on-demand summary of Notion pages. Schedul
 
 **Each Review row's Status says where to decide it:** **Needs you · decide in the page** or **Needs you · set Your call**. **Submitted: waiting for the brain** means your part is done.
 
-**For Review pages with item sections** (decide in the page): read the proposed wording and edit it if needed. On each item's **`Decision:`** text line, replace **Pending** with **Accept**, **Reject**, **Defer** or **Request revision**. For **Request revision**, write what you want changed on **`Revision request:`**. Click **Submit decisions**, then say **“Apply my reviews.”**
+**For Review pages from a meeting, email or document** (decide in the page): read it, or click **Review with me**. Correct a wording where it stands; type **Accept**, **Reject** or **Defer** on an item's **`Decision:`** line if you want. Then set **Your call**: **Approve** accepts what's still Pending except ⚠ and ⚑ items (they need **Accept** on their line), **Request revision** redrafts what **What to fix** says, **Reject** leaves the notes as they are. Then say **“Apply my reviews.”** An older page you had started keeps **Submit decisions**, under **Show all properties**.
 
 **For Conflict, Answer and Suggestion rows, and older Review rows** (set Your call): use **Your call → Approve, Reject or Fix**. Explain a Fix in **What to fix**, then say **“Apply my reviews.”**
 

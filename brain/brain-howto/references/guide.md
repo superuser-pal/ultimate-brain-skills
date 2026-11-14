@@ -101,30 +101,43 @@ Meeting minutes (notion/minutes-format.md; ask Brain Assistant to "check minutes
 The brain never changes what it already knows without your yes.
 
 **Status says what a row needs.** It comes first on every Review row and in every Review view:
-- **Needs you · decide in the page:** a row from a meeting, email or document. Open it and decide each change in the page (below).
+- **Needs you · decide in the page:** a row from a meeting, email or document. Open it, read it (or review it with Brain Assistant), then set Your call (below).
 - **Needs you · set Your call:** a Conflict, Answer or Suggestion row, or a row from before the pages had sections. Decide it in **Your call** (below).
-- **Submitted: waiting for the brain:** you clicked Submit or set Your call. Tell your agent "apply my reviews" (or "catch up"), or wait for the next scheduled catch-up.
+- **Submitted: waiting for the brain:** you set Your call (or, on an older page, clicked Submit). Tell your agent "apply my reviews" (or "catch up"), or wait for the next scheduled catch-up.
 - **Done** or **Closed:** nothing left to do.
 
 **Four types of row.** The **Type** column says which, and the row's Name starts the same way:
 
 | Type | Where you decide | What accepting does |
 |---|---|---|
-| **From source** ("From Acme launch review: …") | In the page | The new notes become Reviewed and get their pages; each change to a note is made with the wording shown; the links are added |
+| **From source** ("From Acme launch review: …") | In the page, then Your call | The new notes become Reviewed and get their pages; each change to a note is made with the wording shown; the links are added |
 | **Conflict** ("Conflict: …") | Your call | Two sources disagree: both claims are kept as contested (Fix with the true value). A newer decision replaces an older one: the older is archived. A possible duplicate: it is folded into the other record |
 | **Answer** ("Answer: …") | Your call | The question gets this answer and shows as **Answered** in Notion. Fix it to give the answer yourself; Reject it and the question stays open |
 | **Suggestion** ("Suggestion: …") | Your call | The change Ultimate Assistant suggested when you said "propose" (a task's Status or Due, a project's Area) is made in Notion by your agent's next run |
 
 The brain also keeps a **Kind** on each row, with the exact change it proposes. It is hidden, and you never need it.
 
-**Deciding in the page** (Status: Needs you · decide in the page). A row from one meeting, email or document is a page: a short summary at the top, then one section per item, `## [a · it-9f2c1e44] Changes: Launch date on Acme website`, each with what the note says now, a toggle **Proposed final wording**, and a `Decision:` line.
-1. Edit the text inside **Proposed final wording** if you want it different. That exact text is what the brain writes. If you change a fact (March 15 to March 18), your value becomes current and the brain records it as your correction; the source's value stays in the history, attributed to the source.
-2. Type the decision on the `Decision:` line of each item: `Accept`, `Reject`, `Defer` or `Request revision` (write what you want on the line `Revision request:`). Leave `Pending` to decide later. Decide some items now and the rest later.
-3. Click **Submit decisions**, or **Submit and accept all** to accept every item still on Pending (items you decided explicitly keep your decision). Nothing is read before you click.
-4. Tell your agent "apply my reviews". It shows each item's action and exact text first (in an attended run), and applies only what you decided. A scheduled run applies only decisions that are explicit, exact, unchanged and at least two minutes old, and never reads a revision request.
-5. The top summary shows "3 of 5 decided: 2 applied, 1 closed, 2 waiting for you". An applied or closed status is not written into your sections. If the note changed after the item was written, the section is updated with the new text and your decision resets to Pending. A requested revision comes back as a new draft in **Proposed final wording**, with your earlier text in **Previous proposal**, and `Decision: Pending`: the brain never accepts a draft for you.
-6. Your edits are safe: the brain does not rewrite a row that has edited wording or a decision on it. If you edit a section after clicking Submit, the brain keeps your edit and shows what it would have written in a toggle "Brain update"; submit again to change it. A tiny window remains between the agent's read and its write; Notion's page history recovers an overwritten sentence, and nothing canonical is lost.
-7. An item that rests only on content you excluded is closed without applying anything, even if you accepted it.
+**Deciding in the page** (Status: Needs you · decide in the page). A row from one meeting, email or document is a page that reads top to bottom:
+- **At the top:** what the source brings ("From Acme launch review: 2 changes, 3 new notes and 3 links"), what ⚠ and ⚑ mean, and what to do.
+- **Review summary:** what is still waiting, by group; after you decide, what happened to each item.
+- **What this meeting was about** (when the meeting's own summary is an item), then **Changes to what you know**, **New notes** and **Links**. Each item has a plain heading that says what accepting does ("⚠ Launch date on Acme website: 2027-02 → 2027-03", "New person: Ana Ortiz", "People on Acme website"), its wording right there (a new note's in a toggle **Read or edit the note**), a gray `ref it-…` line and a `Decision:` line. `[¶4]` is a passage of the source the wording rests on.
+  - **⚠** marks a change to something you already know. **⚑** marks something the brain is unsure about (two passages disagree, or it chose between readings).
+- **For Brain Assistant (brain context),** a toggle at the end: the source passages and what the brain knows about each item, for Brain Assistant. You can read it; the brain rewrites it and never reads it.
+
+**With Brain Assistant (Notion AI):** click **Review with me** at the top of the row. Brain Assistant asks you what the page can't settle, three to five questions at a time, each with lettered options and the one it recommends: answer with letters ("1a, 2c") or in your own words, and say "enough" or "write it" when you're done. It then shows exactly what it will write into the page (new wordings, moved `[¶n]` markers, `Decision:` lines you chose, and an `Agreed in review:` line under each wording it changes) and writes only after your yes. It never sets Your call. Agreeing on a wording is not accepting it: it writes `Decision: Accept` only on items you said to accept, and asks you about each ⚠ and ⚑ item, because Approve leaves those. Each run spends Notion AI credits; how many for a long page is not measured yet.
+
+**By hand (no Notion AI needed):**
+1. Correct a wording where it stands, if you want it different. That exact text is what the brain writes. If you change a fact (March 15 to March 18), your value becomes current and the brain records it as your correction; the source's value stays in the history, attributed to the source. If the changed value is in another passage, change its marker too (`[¶1]` to `[¶4]`): a fact whose value is in none of its passages is held.
+2. On an item's `Decision:` line you can type `Accept`, `Reject` or `Defer`. Leave `Pending` for what you're happy with: Approve accepts it.
+3. Set **Your call**:
+   - **Approve** takes the page as it reads now. Everything still on Pending is accepted, **except ⚠ changes and ⚑ items: they need `Accept` on their line**, or they wait for you;
+   - **Request revision**, and say in **What to fix** what to redraft ("the pilot figure is 9; drop Ana's alias"). The redraft comes back on this page after your next catch-up, and the row needs you again;
+   - **Reject** leaves the notes as they are now: a fact keeps its current value (an empty one stays empty), nothing is added, and the new notes are archived. An item you typed a decision on keeps it.
+4. Tell your agent "apply my reviews" (or wait for the catch-up). It shows what it applies, as your decision, and names each item it left and why ("b: ⚠ needs Accept on its line"). A scheduled run applies only a Your call at least two minutes old, and never reads What to fix. Your call counts from the row's last edit: an edit in the same minute as setting it may be read with it.
+5. Your edits are safe: the brain never rewrites a page you're working on. A redraft comes back in the item's section with your earlier text in **Previous proposal**, and `Decision: Pending`: the brain never accepts a draft for you.
+6. An item that rests only on content you excluded is closed without applying anything, even if you accepted it.
+
+**Older pages** (written before 0.15.0, headings like `## [a · it-9f2c1e44] Changes: …`): a page nobody touched was rebuilt in the new format. One you had started keeps its rules until it is done: edit the text inside **Proposed final wording**, type `Accept`, `Reject`, `Defer` or `Request revision` on each `Decision:` line, then open **Show all properties** and click **Submit decisions** (or **Submit and accept all**). Nothing on such a page is read before you click.
 
 A row from a source keeps **About**, **Now**, **Proposed** and **Why** empty, and they don't show: the page holds all of it.
 
@@ -264,6 +277,7 @@ The brain still reads every input for decisions, questions and people, whether o
 |---|---|
 | "Run Today" | What's due today, today's meetings, and what needs your decision |
 | "Run Review queue" | Each pending change explained, without deciding for you |
+| **Review with me** (a button on a Review row; or "Run Grill review" on it) | A review of that page with you, in rounds of questions with options; writes what you agreed into the page after your yes, never Your call |
 | "Run Check minutes" (on a meeting page) | Missing sections and names and numbers to confirm; fixes the text after you say yes |
 | "Run Prep" (on a meeting page) | Past meetings, open questions, tasks and recent decisions for that meeting |
 | "Run Weekly review" | What got done and decided, goal and project health, next week |
