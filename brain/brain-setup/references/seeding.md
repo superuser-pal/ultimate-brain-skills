@@ -43,7 +43,7 @@ People
  9. Jamie Ortiz · Harbor Lane Homes · Electrician
 10. Kim Okafor · Harbor Lane Homes · Client contact (already in the brain)
 Key documents
-11. Drop 3 to 5 key documents into ~/Documents/brain-dropbox/ after the yes (a brief, a plan, a contract). Each becomes a Document under its Project.
+11. Drop 3 to 5 key documents into <drop folder> after the yes (a brief, a plan, a contract). Each becomes a Document under its Project.
 
 You named 3 people: who else do you work with most?
 Answer with "yes to all", "yes 1–7, 9", a change ("5: Status On Hold"), or "drop 6".
