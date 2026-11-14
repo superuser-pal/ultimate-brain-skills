@@ -81,17 +81,23 @@ It has two subjects (the kitchen layout, the schedule), one decision (the island
 
 ## Step 4b: Brain Assistant
 
-Brain Assistant is the Notion AI agent the user chats with in Notion (`/Today`, Check minutes, the buttons that message it).
+Brain Assistant is the Notion AI agent the user chats with in Notion (Today, Check minutes, the buttons that message it).
+
+**Running a skill.** In Brain Assistant's chat the user asks for a skill by its name ("Run Today", or just "today"), or mentions the skill's page by its link, copied from this space's Skills database (••• → Copy link). A Custom Agent doesn't recognise a skill typed as a `/` command: never tell the user to type `/Today`. Never tell them to pick the page from the `@` picker either: it can offer another space's page of the same name, and a fresh duplicate's skills may not be indexed yet.
+
+**The space's name.** Before the walk-through, read the title of the space's top page (Brain Data's topmost parent page; "Ultimate Brain" in a fresh duplicate) through the MCP, and search the workspace (read only) for other pages with that title and for other databases titled `Skills` or `Brain Assistant Skills`. Call that title `<top page>` below.
+- Another page has the same title: "Your workspace has two pages called <top page>. Rename this one, for example to <top page> · Test, so you can tell them apart in Notion, then say done." Read the title again after "done". Nothing in the brain depends on it.
+- Other Skills databases exist: say how many, and that the right one is the one under <top page>.
 
 1. **Walk through.** Give the steps from `<product.path>/notion/TEMPLATE.md` for a duplicate when it has them (pointing the agent at the copy), else the "Setup" of `<product.path>/notion/brain-assistant.md`, as text in the chat:
-   - **A Custom Agent** when the `prerequisites` line has `custom_agents=yes`: Tools and access limited to Brain Data, How it works and the Skills database (Brain Assistant's skills; "Brain Assistant Skills" in a space built before 0.14.0).
+   - **A Custom Agent** when the `prerequisites` line has `custom_agents=yes`: Tools and access limited to Brain Data, How it works and the Skills database (Brain Assistant's skills; "Brain Assistant Skills" in a space built before 0.14.0), each named by its space: "Add **Brain Data**, **How it works** and **Skills** under <top page>. In the picker each result shows the page it sits under; pick only those under <top page>, and if a result doesn't show it, paste the page's link instead."
    - **Personal Instructions** otherwise: the same Instructions text in the user's personal Notion AI Instructions, and the skills as personal skills.
 
    Wait for "done".
 2. **The test task,** with Tasks on and its database mapped. Ask: "To check it, I'll create one task in your brain's Tasks, "Setup check: delete me", due today, and close it as Won't Do afterwards. OK?" On the yes, create it through the MCP in `notion.tasks.database`, with the mapped title, Due today, and Status `notion.tasks.new_task_status` when set. With Tasks off, create nothing.
-3. **The check.** "In Notion, run `/Today` with Brain Assistant, then paste or describe what it lists." It passes when the answer lists the test task (with Tasks on) and nothing from outside the brain's databases: no task, page or meeting from elsewhere in the workspace. With Tasks off, it passes when nothing from outside the brain's databases comes back.
+3. **The check.** Name this space's Tasks database: "In Brain Assistant's chat, ask **Run Today** (by name, not `/Today`). It should list **Setup check: delete me** from the Tasks database under <top page> › Brain Data, and nothing from outside <top page>. Paste or describe what it lists." It passes when the answer lists the test task (with Tasks on) and nothing from outside the brain's databases: no task, Review row, page or meeting from another space or elsewhere in the workspace. With Tasks off, it passes when nothing from outside the brain's databases comes back.
 4. **Close the test task** with the same yes: set its Status to `notion.tasks.wont_do_status` (default `Won't Do`) through the MCP.
-5. **Pass:** log `step=brain-assistant result=done`, commit. **Fail:** log `result=failed reason=assistant-reads-outside`, name what came back that shouldn't have, and give the likely cause: the agent's access isn't limited to Brain Data (a Custom Agent: its Tools and access; personal Instructions: the instruction to stay inside Ultimate Brain is missing or was pasted in part). Offer to check again.
+5. **Pass:** log `step=brain-assistant result=done`, commit. **Fail** (Today read another space, or elsewhere): log `result=failed reason=assistant-reads-outside`, name what came back that shouldn't have, and give the two fixes in this order: (a) **the run used another space's Today** (picked from the `@` picker): ask **Run Today** by name again, or mention the Today page by the link copied from the Skills database under <top page>; (b) **the agent's access reaches another space**: a Custom Agent, in Tools and access remove every Brain Data, How it works or Skills not under <top page>; personal Instructions, the instruction to stay inside Ultimate Brain is missing or was pasted in part, so paste the whole text again. Offer to check again.
 
 ## Step 5: identities
 

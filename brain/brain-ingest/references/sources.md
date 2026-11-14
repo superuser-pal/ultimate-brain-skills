@@ -91,7 +91,7 @@ A row the user created is a `capture`, whatever its Kind: its text is the captur
 
 **A row the brain already took in** (it has a Brain ID) and that the user set back to Ready is a **re-read** ("Re-reads" below): the user fixed it.
 
-**A pasted email or chat thread in a capture:** when the body is an email (header lines such as From, To, Date, Subject, a quoted reply chain, or the headings `/Clean email` writes, `### <sender> → <recipients> · <date>`, one per message, decision 0047) or a chat thread (speakers with timestamps), the source stays `kind: capture` with its `notion:` key, but you analyse it with the `email` or `chat` rules in [extraction.md](extraction.md), and take its date from the sent date. Say in the report that the capture was read as an email or chat. When the top message has no header (the latest reply pasted without From or Date), its date is the capture's Created date and its sender is the owner unless the text says otherwise.
+**A pasted email or chat thread in a capture:** when the body is an email (header lines such as From, To, Date, Subject, a quoted reply chain, or the headings the Clean email skill writes, `### <sender> → <recipients> · <date>`, one per message, decision 0047) or a chat thread (speakers with timestamps), the source stays `kind: capture` with its `notion:` key, but you analyse it with the `email` or `chat` rules in [extraction.md](extraction.md), and take its date from the sent date. Say in the report that the capture was read as an email or chat. When the top message has no header (the latest reply pasted without From or Date), its date is the capture's Created date and its sender is the owner unless the text says otherwise.
 
 ## 2. Pre-check
 
