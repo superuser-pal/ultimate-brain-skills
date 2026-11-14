@@ -7,13 +7,31 @@ description: Do everything that is waiting in one run. Pulls the user's Notion e
 
 One run for everything waiting (decision 0037). It has two halves: a **read-only pass** that finds the work and every question it raises, then **one batch of questions**, then a run that finishes without asking again. Anything that becomes blocked during the run is **skipped** and listed in the report; the rest goes on. Started as "catch up unattended", it asks nothing at all: follow "Unattended" at the end, which says what changes in each step.
 
-This skill orders the work; the other skills hold the steps. Read each one before running its part: brain-sync (pull and publish), brain-apply (decisions), brain-ingest with its references (meetings, sources, attachments, the drop folder, linked repos, Documents), brain-query (reports), brain-repos (a linked repo's task rollup). Their rules apply unchanged, including the trust rules in the brain's AGENTS.md and brain-ingest's "What you may read, and what you may write": what the brain already holds is read only with `brain query --candidates` and `brain query --read` (spec/eligibility.md §10), never by opening, grepping or listing its files, in every step below, in every sub-agent and in an unattended run. A note the read withholds is skipped, never replaced by its file, a listing or its Notion page.
+This skill orders the work; the other skills hold the steps: brain-sync (pull and publish), brain-apply (decisions), brain-ingest with its references (meetings, sources, attachments, the drop folder, linked repos, Documents), brain-query (reports), brain-repos (a linked repo's task rollup). Read each part when the run reaches it, and only when it has work ("What to read, and when" below). Their rules apply unchanged, whether or not this run read them, including the trust rules in the brain's AGENTS.md and brain-ingest's "What you may read, and what you may write": what the brain already holds is read only with `brain query --candidates` and `brain query --read` (spec/eligibility.md §10), never by opening, grepping or listing its files, in every step below, in every sub-agent and in an unattended run. A note the read withholds is skipped, never replaced by its file, a listing or its Notion page.
 
 **The bar** (decision 0043): over two meetings and one capture, from "go" to the report in under 5 minutes, without the session running out of context. So each input is analysed in its own sub-agent (step 3), Notion is written in one batch at the end (step 4), and nothing already in Notion is written twice. Note the time when the user says "catch up" (or the run starts), and count the notes whose full text the run and its sub-agents read: the run logs both at the end (decision 0045).
 
 **Modules** (decision 0048): `brain status` gives `modules`. A step marked with a module (*Knowledge*, *Orgs*, *Documents*, *Reports*, *Tasks*, *Planning*) runs only when that module is on; when it's off, skip the step and its questions without a word. Core (Inbox, Meetings, Projects, Areas, People, Review) always runs. A module that is on but whose database id is still empty (`brain modules` lists it under `missing`) is named once on the report's Needs you line: "Documents is on but its database isn't set up: say "set up documents"".
 
 **Example rows** (decisions 0084, 0087): a row whose title starts with `Example · ` (the word `Example`, a space, the middle dot `·`, a space) is one of the Notion template's invented rows, which setup removes when it connects the brain. Nothing in the brain is ever made from one: the pull leaves it out (brain-sync step 2), step 2b skips such a Review row as brain-apply does (decision 0087), and steps 4 and 5 skip such a meeting or Inbox row as brain-ingest does. The report names how many were left out, once, under Check: "2 example rows skipped: delete them in Notion, or say "set up my brain" to remove them". An unattended run does the same.
+
+**What to read, and when** (CC-264). Everything the run reads stays in the session and is paid for again on every later call, so read each part at its step, once, and skip it when its step has nothing this run. A sub-agent reads what its own work needs.
+
+| Read | At | Only when |
+|---|---|---|
+| brain-sync "Pull" steps 1–5, "Accepted wording" steps 1–3, references/formats.md | step 1.2 | Notion is configured |
+| brain-apply references/review-items.md §1–§3 | step 1.2b | a Pending Review row has item sections |
+| brain-apply "Reading What to fix" | step 1.3 | the plan has `NOTE_TO_READ` or `FIX_TO_READ` |
+| brain-ingest steps 2–3, references/selection.md §1–§3 | step 1.4 | a meeting is Reviewed, or a Ready Inbox row has subjects and ids or a For the brain toggle |
+| brain-ingest references/sources.md, the sections for the kinds waiting | steps 1.5–1.8 | an Inbox row is Ready, a file is in the drop folder, or a linked repo has changes |
+| brain-repos "The rollup (tracked-in-repo)" | step 1.8 | a found repo's kit has `tasks.mode` `tracked-in-repo` |
+| brain-query "Report mode" | step 1.9, Run step 6 | the plan has reports work, or there is an Ask row |
+| brain-ingest steps 4–10, references/extraction.md and cli-inputs.md, the writing reference | Run steps 2–3 | an input is ingested inline (a sub-agent reads them itself) |
+| brain-sync "Push" and "Accepted wording" steps 6–9, brain-ingest references/notion.md "Publish" | step 4.1 | the run publishes |
+| [references/unattended.md](references/unattended.md) | before the first command | the run is unattended |
+| [references/schedule.md](references/schedule.md) | — | the user asks for a schedule |
+
+Keep text out of the session that nothing needs: never print an input's text (a transcript, a file) to look at it when the command that takes it returns what the run uses (`brain source extract` returns the extract's passages), and when you need a few fields of a long `--json` reply, filter it (`jq`, or a short `python3 -c`). After a context summary, read again only the section you need, not the whole skill.
 
 **Working files.** Make your own temporary folder with `mktemp -d` and keep `snapshot.json`, `plan.json` and the conversions in it; never a fixed name such as `/tmp/ub-catchup`: another session on the same machine would overwrite your plan.
 
@@ -117,72 +135,10 @@ For each input, publishing waits for step 4 below. **Skipped, not asked:** an in
 
 ## Unattended: "catch up unattended"
 
-The prompt a schedule runs (see "Run on a schedule"), or the user by hand. Nobody is there to ask, so every question of step 2 takes its default or skips its input, and the run goes on (decision 0051). It carries out what the user already decided word for word and interprets no text of theirs, because turning their words into changes is judgment nobody would check. It may quote a What to fix as written (in a report, to say what waits); it never works out what it means or acts on it. The 5-minute bar is for attended runs; a budget of inputs replaces it.
+The prompt a schedule runs (see "Run on a schedule"), or the user by hand. Nobody is there to ask: every question takes its default or skips its input, and the run interprets no text of the user's (decision 0051). **Before its first command, read [references/unattended.md](references/unattended.md)** and follow it: it says what changes in each step, the defaults that replace the batch, the budget, the report, the log line and the Catch-up row. An attended run never reads it.
 
-**Off the working branch: stop at once** (decision 0086 §2, spec/cli.md §6.1). The run's first command is `brain status`. When its `branch` has `on_working` `false` (another branch checked out, or a detached `HEAD`) or `working` `null`, the run stops there: no read, no Notion call, no commit, no push and no log line, nothing written in the brain or in Notion. Its last line of output, which the scheduler's log keeps, is exactly:
-
-```text
-Not run: off-working-branch. The brain is not on its working branch; say "fix my backup" in a session in the brain.
-```
-
-The next attended session sees the warning in `brain status` and offers the fix. Never switch branches, merge or push to fix it yourself: that needs the user. A branch with commits the working branch lacks while the brain is on its working branch (`unmerged` alone) doesn't stop the run: its writes land on the working branch, and the warning waits for the attended session.
-
-Then do the read-only pass (step 1), but never interpret a What to fix: skip step 3, and in step 9 only note that a `report_fixes` item exists, without working out the proposals its text would become (its report and its refresh then wait, below). Then:
-
-1. **Nothing waiting and nothing failed: stop.** No commit, no Notion write, no log line, no report. A schedule that runs twice a day must leave no noise.
-2. **Take each question's answer from this table** instead of asking:
-
-   | The batch would ask about | Unattended |
-   |---|---|
-   | A sync conflict | **Skip the whole row**: nothing from it is applied or published (`--skip-conflicted`); named under Needs you |
-   | What to fix on a Review row, or on a report (`NOTE_TO_READ`, `FIX_TO_READ`, `FIX_WITHOUT_TEXT`, `report_fixes`) | **Skip** it: it waits for an attended run, and a report with a fix waiting isn't refreshed meanwhile |
-   | A meeting or Inbox row with a pre-check blocker, a likely new version, or a long attachment ("which parts matter?") | **Skip** it whole: the meeting stays Reviewed, the row Ready, a file stays in the queue |
-   | An input that is not Reviewed/Ready (unconfirmed), or confirmed less than 2 minutes ago (`TOO_FRESH`) | **Skip**; it is never set to Reviewed/Ready by the run. Named under Needs you |
-   | A selected input with a blocker (`SELECTION_UNMAPPABLE`, `SELECTION_UNREADABLE`, `UNNUMBERED_LINE`, or minutes with no transcript, named with selection.md's fix), or a re-read that changes the transcript | **Skip** it whole and name it with the line; nothing is ever ingested as the whole transcript |
-   | A confirmed, settled selected input; a re-read with the same transcript | **Default**: the extract is written without a preview (the report states that an edit in the confirming minute cannot be detected) |
-   | An item "possible Task" (`legacy_tasks`), an ambiguous owner, a Waiting On offer | **Skip**: no Task; named under Needs you |
-   | *(Tasks)* A quick follow-up left unticked in lean minutes the run ingests (`task: true`) | **Default**: created with the input's ingest, once per `q` id, as attended but with no question; counted on the Done line. The held-back ones go under Check. |
-   | An item on a Review row with item sections | **Default** only when its decision is explicit, exact, current, the base unchanged and `unattended_ok`; held items, `Request revision`, `base_changed` and an Accept all with an ineligible item **wait**, and revision text is never read (`review_revisions` is removed from the plan before `sync apply`) |
-   | A capture that repeats a source the brain has | **Default**: skipped, with "Skipped: same as <title>" on its row when the run publishes |
-   | The drop folder: not set, or a long file | **Skip** the folder, or the long file. An unset folder is a line on the report ("Drop folder not set: say where it is"), never work and never a reason for a Catch-up row: a brain that doesn't use one would otherwise report it on every run |
-   | The drop folder's other files, attachments, and a linked repo's files | **Default**: all of them, none kept as a document; a repo with more than 10 files is taken within the budget, and `repo record` waits until every listed file is in |
-   | A tracked-in-repo repo's task rollup | **Default**: rebuilt, and written with the publish; a failed fetch keeps the old one and goes under Check |
-   | Pending proposals in chat, and the identities question | **Skip**: left pending; asked at the next attended catch-up |
-   | *(Reports)* An Ask row | **Default**: a new report |
-   | *(Reports)* A Report row to refresh (Refresh asked, or a report whose fixes are all decided) | **Default**: refreshed, unless it has a What to fix waiting |
-   | *(Documents, Reports)* An `accepted_wording` item | **Default**: imported when `unattended_ok` (accepted at least 2 minutes before the run) and the re-read of its page (brain-sync "Accepted wording", step 5) finds it unchanged; otherwise it **waits** (`TOO_FRESH`, or `CHANGED_SINCE_PLAN`). The preview needs no yes: the user's acceptance is the decision. The report says an edit in the click's own minute cannot be detected (decision 0058) |
-   | *(Documents, Reports)* A `wording_waiting` row, a `NO_BASELINE` row, a refresh marked `wording_blocked` | **Skip** and name it (waiting rows under Needs you); nothing is imported, adopted or refreshed |
-   | *(Documents)* The Related knowledge proposal for an imported Document | **Default**: written (a proposal is an addition) |
-   | "Publish to Notion at the end?" | **Default** from `settings.publish`: `auto` publishes, `ask` publishes nothing |
-
-3. **Settle accepted wording, drop what belongs to a conflicted page, then apply only what was decided word for word.** First, for each `accepted_wording` item: import it only if `unattended_ok` is true **and** the re-read of its page (brain-sync "Accepted wording" step 5) finds it unchanged, adding `verified`; **any other item moves into `wording_held`** (`reason: "UNACCEPTED_DRAFT"`, `"accepted": true`), so it is neither imported nor published over, and goes on the Needs you line as waiting (`TOO_FRESH` or `CHANGED_SINCE_PLAN`). A `NO_BASELINE` row is left as it is (it needs an attended run). Then remove from `plan.json` every `document_requests`, `promote_requests`, `refresh_requests` and `report_fixes` item whose `page_id` is the `page_id` of a conflict: that row is skipped whole, so it makes no Document, promotion or refresh, and its box stays ticked for the next attended run. Then `sync apply --input plan.json --skip-conflicted`, without `--record-only`:
-
-   | In the plan | Unattended |
-   |---|---|
-   | A Review row set to Approve or Reject with What to fix empty | **Applied** |
-   | An approved Suggestion row that changes a Notion-owned field (Kind Notion Change) | **Applied**: its Notion write is carried out and settled (brain-sync step 6b) |
-   | A property the user changed in Notion (Key Facts, Role, Name, Summary, Why, Deadline, Area, Goal, Client, Org, People), Lifecycle, Status, Priority, Dates and the other fields theirs | **Applied** |
-   | A row the user created in Notion (area, goal, project, person, org) | **Applied**: an addition |
-   | Approve or Reject with What to fix, a Fix, a Fix with no text, a What to fix on a report | **Waits**: counted, and named ("1 Fix waiting for you") |
-   | An `ignored` item (`NOT_CORRECTABLE`, `NOT_A_REPORT`, `MODULE_OFF`, …) | Nothing is done, as in an attended run, and a change the user made that the brain can't take (`NOT_CORRECTABLE`) goes under **Check** with the same line brain-sync step 5 gives, so it doesn't disappear from the report |
-
-4. **The budget.** Take at most `settings.unattended.max_inputs` inputs (default 10), oldest first: each Reviewed meeting by its date, each Ready Inbox row (its attachments go with it) by when it was created, each drop-folder file by when it was modified, each changed repo file by its commit date. Skipped inputs don't count; failed ones do. An input the brain already has (`DUPLICATE_SOURCE`, for instance one an earlier run wrote but couldn't publish) is not an input again. The rest is `left`: name them ("4 more wait for the next run") and leave them as they are. Requests (Documents, promotions, refreshes, Ask rows, the backlog) aren't inputs.
-5. **Run the rest of the run, not the apply again.** The apply already happened in step 3 of this list (the plan is applied **once**; never apply it a second time). Resume at Run step 3.1b (Related knowledge for the Documents imported, using step 3's apply results), then Run steps 2 to 6 and step 4, with these changes: no chat decisions; the rows held in `wording_held`, the conflicted rows (`--skip-conflicted`) and the report fixes waiting stay held; a step that fails is logged and the run goes on with the next input; a lint error in a file this run wrote still stops the run. Publish only with `settings.publish: auto`, using `sync render --changed --plan plan.json --skip-conflicted`: a conflicted row and a report with a What to fix waiting come back in `skipped` and stay as they are. With `ask`, commit and push (per `settings.push`) and leave the publish to the next attended run. A push that fails ends the output with the backup line, as step 4 says (`Not backed up: <reason>. Say "fix my backup".`).
-6. **Report** in the usual three lines, and say the unattended facts: what is `left`, `waiting`, skipped and failed. Then:
-   - **Log it** (also when nothing was published): `brain log catch-up - mode=unattended inputs=<n> left=<n> skipped=<n> waiting=<n> failed=<n> report=<yes|no> notes_read=<n> seconds=<s>`, with `failures="<reason>; <reason>"` before `report` when a step failed (a few words each: "Notion login"). `inputs` counts the inputs taken in, failed ones included. Commit it: `log: catch up (unattended)`.
-   - **One Inbox row of Kind Catch-up, only with Reports on, `settings.publish: auto`, and something that needs the user or failed.** It is the run's history, not a report, so it stays in the Inbox (decision 0071; Kind Report before 0.9.1). Create it through the Notion tools in the publish step: Name `Catch-up <D Mon>: <n> in, <n> need you` (`, <n> failed` when one did), Kind Catch-up, Brain Status Done, no Brain ID, the report as its body. A run that went well and needs nothing writes no row. A Notion failure can't be reported in Notion; the log line still holds it.
-   - With Reports off, or `ask`, nothing else is written: what needs the user waits where they act on it, and the next attended catch-up opens with the summary of the scheduled runs.
+**Off the working branch: stop at once** (decision 0086 §2, spec/cli.md §6.1). The run's first command is `brain status`. When its `branch` has `on_working` `false` or `working` `null`, the run stops there and writes nothing anywhere; its last line of output is exactly the one the reference gives (`Not run: off-working-branch. …`).
 
 ## Run on a schedule
 
-When the user says "run catch-up every morning" (or "twice a day", "on weekdays"):
-
-1. **Ask what is missing, once:** the times; the days, if not every day; and the Claude model to pin, as a full id such as `claude-sonnet-5-5`. An alias such as `sonnet` is refused, because it moves under the schedule, and the skills are tested on Claude models only. Say what a run does: it takes at most 10 inputs, oldest first (`brain config set settings.unattended.max_inputs <n>` changes it), carries out the decisions they made, and leaves anything that needs their reading for their next "catch up".
-2. **Offer once what makes a run useful:**
-   - **Reports,** when the module is off: "Turn on Reports to get a row in the Inbox when a scheduled run needs you?" It follows notion/modules/reports.md, and only after a yes.
-   - **`settings.publish: auto`,** when it is `ask`: a scheduled run publishes nothing otherwise, and writes no Catch-up row. Set it with `brain config set settings.publish '"auto"'` only after a yes.
-   - **The tools it may use.** A scheduled `claude -p` can't ask permission, so it uses only what the brain's `.claude/settings.json` allows, and refuses the rest (which the run logs as a failure). Offer to add to `permissions.allow`: `Bash(brain:*)`, `Bash(git:*)`, `Read`, `Edit`, `Write`, and the Notion tools. Merge into the file as it is, keeping every other key; write it only after a yes.
-3. **Install it:** `brain schedule install catch-up --at 07:00 --days mon,tue,wed,thu,fri --model <id> --brain <brain> --json` (`--days` left out means every day; `--at` takes several times, `07:00,13:00`). On macOS it writes and loads a launchd agent, and says so; with `SCHEDULE_NOT_LOADED` in `warnings`, tell the user it is written but not loaded, and show launchctl's message. Elsewhere it writes nothing and returns cron lines: give them to the user to add with `crontab -e`. `CLAUDE_NOT_FOUND` means Claude Code isn't installed on `PATH`.
-4. **Say how to check and stop it:** `brain schedule list` shows it; after the first run, "catch up" opens with what the scheduled runs did; a run's output is in `~/Library/Logs/ultimate-brain/`. Installing again with other times replaces it; `brain schedule remove catch-up` stops it.
-
-**Other schedulers.** Any scheduler that runs `claude -p "catch up unattended" --model <id>` in the brain folder, signed in as the user and with their Notion connection, does the same job: an always-on agent such as Hermes can hold that command. Claude Code's cloud schedules don't qualify yet: they start from a fresh clone, with no drop folder, no linked repos and no local Notion login.
+When the user says "run catch-up every morning" (or "twice a day", "on weekdays"), read [references/schedule.md](references/schedule.md) and follow it: what to ask once (times, days, a full model id), what to offer, `brain schedule install`, and how to check and stop it. Other schedulers are there too.
