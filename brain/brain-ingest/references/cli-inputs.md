@@ -159,6 +159,15 @@ A Document is a `reference` note with an `origin` (references/extraction.md, "Do
       "dec-xe9x6apm": ["mtg-pcpyn31n"], "que-wtnyy4r6": ["mtg-pcpyn31n"], "que-zv7ckbtk": ["mtg-pcpyn31n"] } }
   ```
   `source` is the meeting id for minutes, else the source's id: the same value the batch's other proposals carry. `notes` lists every knowledge note `note new` created for this input (never the source), or is `[]` when it created none (a re-read). `note_passages` gives each listed note its passages, by the rules of `passages` above (for a selected input, the `src-…#¶n:…` of the paragraphs its body and facts draw from); no key for a note not in `notes`, and none at all with `notes: []`. The review_notes itself takes no `passages`: each folded change and link brings its own. The CLI writes the title ("From Acme launch review: 1 change, 6 new notes and 2 links"). A note can be in only one `review_notes`. The reply's `created` has one proposal for all of them; folded items are not listed separately.
+- **Unsure flags and repeats** (0.15.0, decision 0090 §6; spec/cli.md §5.6): the Review page lists them for the user and for Brain Assistant's Grill review, which asks about each flag first, and Approve leaves a flagged item Pending until its line says Accept. Write them when you judge them, never as decoration:
+  - `unsure` (a list of one-line strings) on a folded `update_fact`, `update_body`, `add_to_note` or `add_link` item, or on a note through `note_flags` (`{ "<note id>": { "unsure": [...] } }`, only notes of `notes`), when **two passages give different values** for what the item sets (a number, a date, a name, a status), when **you chose a value between readings** (a candidate count against a starting count, a suggestion against a decision), or when **you matched a person or project by name only**. Each flag names both passages, the reading you chose, and that the ingest judged it: `"¶1 lists eleven candidate depots and ¶4 says the pilot starts with nine: I chose 9 (the ingest's reading)."`
+  - `repeat` (one short key, the same string on each) on items that record the same thing: a decision written as a fact, a body addition and a new decision note gets `"repeat": "pilot starts with nine depots"` on all three (on a note through `note_flags`). The grill asks the user which to keep.
+  - The CLI adds one flag itself (two `update_fact` changes of one proposal with different values for the same field); don't write that one. Anything else stays unflagged: a page with no flag says "Nothing flagged".
+  ```json
+  { "kind": "update_fact", "target": "prj-…", "field": "pilot_depots", "after": "9", "source": "mtg-…", "passages": ["src-…#¶4:…"],
+    "unsure": ["¶1 lists eleven candidate depots and ¶4 says the pilot starts with nine: I chose 9 (the ingest's reading)."],
+    "repeat": "pilot starts with nine depots" }
+  ```
 - **`answer`** (decision 0041), on an open question the input answers:
   ```json
   { "kind": "answer", "title": "Who owns the mobile app: Carlos Ruiz", "target": "que-8n3v5x1d",

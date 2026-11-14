@@ -1,5 +1,7 @@
 # Review rows with item sections (decision 0055)
 
+**Two page formats.** A row published from 0.15.0 has a **format-2 page** (`notion_published["@review"].format` is `2`; decisions 0088 §2 and 0090; spec/capture-and-review.md §7.12): items found by a gray `ref it-…` line, their wording visible, and **Your call** as the submission. §6 below is how to read and apply it. A row published from 0.8.0 to 0.14.0 has a **format-1 page**, described in §1 to §5, and keeps those rules until it is done. Never decide the format from the page: the CLI reads it from the recorded `@review`.
+
 A Review row rendered since migration 0013 has one section per item, `## [a · it-9f2c1e44] Creates: …` or `Changes: …`, each with *Current*, a toggle **Proposed final wording**, a `Decision:` line and, for a requested revision, a `Revision request:` line. The user edits the wording, types a decision per item (`Accept`, `Reject`, `Defer`, `Request revision`) and clicks **Submit decisions** (or **Submit and accept all**). Contract: spec/capture-and-review.md §7, spec/cli.md §5.14.2, §5.14.3, §5.27. A row rendered before 0013 (the Proposed property, no sections) keeps the Approve / Reject / Fix rules of SKILL.md; never convert one.
 
 You apply **exactly what the user wrote and decided**. You never accept, reject or defer for them, never improve their wording, and never read an unsubmitted page as a decision.
@@ -57,3 +59,30 @@ The brain **never rewrites a whole Review body** after a submission.
 ## 5. Exclusion cleanup rows
 
 A Review row titled "Exclusion cleanup: …" decides what happens to notes that rest on content the user excluded: **Remove** (the Proposed text is the note without the excluded lines; edit it to correct instead), **Restore** (a paragraph is back in the input; the Proposed word is `Restore`), and **Keep or Remove** for a note that cannot be tied to a passage (the Proposed word is `Keep` or `Remove`; `Remove` is the default). `Defer` is not read on these items. Rejecting releases nothing: the notes stay restricted. Tasks created from excluded content are listed on the page; you never cancel or delete them.
+
+## 6. Format-2 pages (0.15.0; decisions 0088 §2 and 0090)
+
+The page: what the source brings and what to do at the top, `## Review summary`, then `## Changes to what you know`, `## New notes` and `## Links`, one `###` section per item with its visible wording (a new note's in a toggle **Read or edit the note**), a gray `ref it-…` line, `Decision:` and, for a revision, `Revision request:`; at the end the toggle heading `## For Brain Assistant (brain context)`. The user, alone or with Brain Assistant's Grill review, corrects wordings and types `Decision:` lines, then sets **Your call**. Headings are derived and never read: the CLI finds each item by its `ref` line.
+
+1. **Read.** Build each Pending row's snapshot as §1 says, with **Your call** and **What to fix** among its properties. The `review` object is the same (`decided`, `decided_at` and `accept_all` as they read; the CLI ignores them on this format). Read the whole body, the brain-context toggle included, with Notion's own escaping: the CLI undoes it (`\[¶4\]` reads as `[¶4]`), so never unescape anything yourself.
+2. **Plan and show.** `sync plan` gives, for a row whose Your call is set:
+   - **Approve** or **Reject:** one `review_decisions` entry with `call` (`approve`, `reject`). Each item's `Decision:` line is its decision; under Approve an item still on Pending is Accept, **except** a ⚠ fact change or an item with a ⚑ flag, which stays Pending (`review_held` `NEEDS_EXPLICIT_ACCEPT`: "b: ⚠ changes need Accept on their line"); under Reject an item still on Pending is Reject. `proposed` is the wording as it reads now, edited or not: an edited wording no longer blocks the row. An item may carry `agreed` (its `Agreed in review:` lines: the reason for a correction, kept with its decision in Git) and, for a link item, `values` (the people or aliases still on its lines). An entry with `items: []` is still a call to consume and clear.
+   - **New held reasons**, each named with what to do: `NEEDS_EXPLICIT_ACCEPT` (above), `UNKNOWN_MARKER` ("a [¶n] on b names no passage of this page: restore it or remove it"), `LINK_VALUE_UNKNOWN` ("c names someone the item didn't propose: editing never adds a person"), `VALUE_NOT_IN_PASSAGE` with its `detail` ("a: 9 isn't in ¶1; ¶4 says 9: change the marker to [¶4], or the value"). A held item stays Pending and the row needs the user again.
+   - **Request revision** (or Fix) with What to fix: `review_row_revisions` `{ proposal, page_id, instruction }`, and nothing else of the row is read. **Attended:** map the user's text to the items it names (by heading, letter-free: "the pilot figure", "Ana's alias"), and add to the plan, before `sync apply`, one `review_revisions` entry `{ proposal, page_id, item_id, instruction }` per item, `instruction` being the part of the text for that item. When the text names no item clearly, ask which before recording anything. **Unattended:** add nothing; the row stays as it is (0051).
+   - `REVISION_WITHOUT_TEXT` (a conflict): Request revision with What to fix empty. Say: "Say what to redraft in What to fix, or here."
+   - `EDITED_PROPOSED_NEEDS_SUBMIT` and `ROW_REVISION_NOT_SUPPORTED` never come from a format-2 row.
+
+   **Attended, Your call Approve or Reject is the user's submission:** show what each item will do, as §2 says (a statement, not a question), with the items Approve left and why, then verify and apply without a second yes:
+   ```
+   Applying your Approve on From Depot survey:
+   a · ⚠ Pilot depots on Depot pilot: 11 → 9 (your Accept; agreed: "the pilot starts with nine")
+   c · New decision: Start the pilot with nine depots, Reviewed
+   Left for you: b · ⚑ Start date (the brain is unsure: Accept on its line, or Reject)
+   ```
+   An unattended run applies a call only when `unattended_ok` is true (its `last_edited` at least 2 minutes old) and each item is exact, current and eligible, as §2 says.
+3. **Verify, apply, commit** as §3: re-read, plan again, set `verified`, `sync apply`. Then, attended, draft each recorded revision with `brain proposal revise` (§3 step 4): for a format-2 item, `previous` is the item's wording as the page shows it (its visible lines, or the text inside **Read or edit the note**), without its `Agreed in review:` lines.
+4. **Write back** as §4, with three differences:
+   - the render sends two brain-owned sections, `Review summary` and `For Brain Assistant (brain context)` (a toggle heading): replace each one's children by name, through the block API;
+   - an `item_updates` section is found **by its `ref it-…` line**, never by its heading: the part from the `###` heading above that line to the next heading is the section to compare and replace;
+   - instead of clearing Decided, clear **Your call** and **What to fix** on each row of `sync apply`'s `review_clear`, under the same guard (the page still shows what you read: the same `last_edited` you planned on, or only your own writes since). A row the run did not consume keeps its call.
+5. **Rebuilt pages.** The publish rebuilds a format-1 row nobody touched as a new format-2 page once (brain-sync, step 10). Nothing here changes for it: its proposal and item ids are the same.
