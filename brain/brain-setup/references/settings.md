@@ -11,7 +11,7 @@ What the user reads calls the remote **the backup** and uses no Git word (decisi
 | 1 | Brain folder | the folder of this brain (shown, not changed here) | shown |
 | 2 | Git identity | the current `user.name` and `user.email` in the brain folder; else the owner name from `brain.json` and an empty email, which the user must fill. Scope: all your repositories (global), or this repository only | required |
 | 3 | Backup | the current `origin` when there is one; else a new private GitHub repository named after the brain folder, created with `gh` (step 1 checked it is signed in) | required |
-| 4 | Drop folder | the current `Drop folder:` line; else `~/Documents/brain-dropbox/`, created | required |
+| 4 | Drop folder | the current `Drop folder:` line; else `brain status`'s `setup.drop_folder.proposed`, created: `~/Documents/brain-dropbox/`, or a folder named after this brain when another brain on the machine reads that one ("Item 4" below) | required |
 | 5 | Language notes are written in | the current `Language:` line; else the language the user writes to you in | required |
 | 6 | Modules | the brain's current `modules` (a new brain: Knowledge, Orgs, Documents, Reports, Tasks on; Planning off); Domains is decided by seeding | shown |
 | 7 | Publish | `settings.publish` (default `ask`) | shown |
@@ -70,6 +70,23 @@ Still to do after this screen:
 - An item the user can't leave empty (an email, a language) is asked for before the yes: "Item 2 needs your email."
 - MarkItDown `on` while it isn't installed: give its install command (`pipx install 'markitdown[all]'`, or `pip install 'markitdown[all]'`) and check `markitdown --version` again before applying.
 - Without Notion AI (SKILL.md), add under the screen what is lost, and leave the minutes prompt and Brain Assistant out of "Still to do".
+
+## Item 4: one drop folder per brain
+
+Two brains reading one drop folder take each other's files, so never propose a folder another brain on this machine reads (spec/setup.md §7 item 4). Read `brain status`'s `setup.drop_folder`:
+
+- **`proposed`** is the folder to show when the brain has no `Drop folder:` line. Show it as it is; never fall back to `~/Documents/brain-dropbox/` yourself.
+- **`default_read_by` set:** another brain reads `~/Documents/brain-dropbox/`, so `proposed` is named after this brain. Say why on the item's line, with the other brain's folder (`~` for the home folder):
+
+  ```text
+   4. Drop folder: ~/Documents/client-brain-dropbox/ (created; ~/Documents/brain-dropbox/ is read by your brain at ~/GitHub/brain)
+      Files you drop here are read by the next catch-up: documents, exports, notes.
+  ```
+
+- **`exists` true:** the folder is already there. Show `(already there: its files are read by the first catch-up)` instead of `(created)`.
+- **A change to a folder another brain reads** (a `folder` in `others`, compared after expanding `~`): don't apply it. Say "~/Documents/brain-dropbox/ is read by your brain at ~/GitHub/brain, so both brains would take each other's files. Choose another folder." and show the screen again with `proposed`. The same holds for "change my drop folder" later.
+
+The brains this machine knows are the default brain and each brain with a scheduled catch-up; `others` lists them. A brain known neither way can't be seen, which is why an existing folder is always named on the screen.
 
 ## Item 13: how the brain talks to you
 

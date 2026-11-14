@@ -74,7 +74,7 @@ On "set up my brain" (or "continue setup"):
 
 Early access (0.14.0) requires Notion AI; the prerequisites say so when the user answers no (references/prerequisites.md). This path is for 1.0, when Notion AI becomes optional. Before then, take it only when the user chooses it after hearing it is not yet supported for early access:
 
-- The minutes prompt (4a) and Brain Assistant (4b) are dropped from the required items, and the count becomes 7. Say on the settings screen what is lost: no structured minutes and no choice of what enters the brain from a meeting; no `/Today` or other Notion buttons that message Brain Assistant.
+- The minutes prompt (4a) and Brain Assistant (4b) are dropped from the required items, and the count becomes 7. Say on the settings screen what is lost: no structured minutes and no choice of what enters the brain from a meeting; no Brain Assistant skills such as Today, and no Notion buttons that message it.
 - Meetings come from any transcript or summary pasted onto a meeting page, and are ingested whole (no selection).
 - How-to questions go to the agent (the brain-howto skill).
 - Rewriting a pasted transcript into the minutes format is not offered.
