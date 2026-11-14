@@ -280,7 +280,7 @@ The brain still reads every input for decisions, questions and people, whether o
 | **Review with me** (a button on a Review row; or "Run Grill review" on it) | A review of that page with you, in rounds of questions with options; writes what you agreed into the page after your yes, never Your call |
 | "Run Check minutes" (on a meeting page) | Missing sections and names and numbers to confirm; fixes the text after you say yes |
 | "Run Prep" (on a meeting page) | Past meetings, open questions, tasks and recent decisions for that meeting |
-| "Run Weekly review" | What got done and decided, goal and project health, next week |
+| "Run Weekly review" | This week's weekly review: a short summary of what changed and your task analysis, then its decisions, a few questions at a time, each with a recommended answer. It writes into a Review page only after your yes, and tells you which Your call to set and which tasks to change: you set them. With no review this week, it says how to get one (say "weekly review" to your agent, or turn on the Monday schedule; with Reports off the review stays a file in your brain) |
 | "Run Plan check" | Projects without goals, goals without projects, overdue items |
 | "Run Tidy capture" (on a new capture in the Inbox; also the **Tidy capture** button) | A cleaner version of the capture; replaces the text after you say yes (the button carries the yes) |
 | "Run Clean email" (on a new capture holding a pasted email thread) | Each message under a heading of names and date, its own text word for word, a divider between messages, newest first; no addresses, signatures, disclaimers, quoted copies or meeting blocks; rewrites the page directly and asks only on a serious doubt |
@@ -361,6 +361,44 @@ Answer "yes 2, 3", "1a" for the value that holds, "later 4", "skip 5 because …
 - **"done"** ends the session: it publishes what changed and the "later" rows, and says what changed: "Done: 3 changed, 1 Review row, 1 skipped, 1 drafted."
 
 It runs only when you ask. When nothing needs tidying it says "Nothing to tidy." and writes nothing. Ultimate Assistant's sub-agent runs it too: `claude --agent ultimate-assistant`, then "tidy the brain".
+
+---
+
+## The weekly review
+
+Once a week, one short report on your work and your notes: what changed since the last review, where your tasks stand, and at most five decisions. Say "weekly review" to your agent, or have it run every Monday at 08:00 (below). It reads Tasks, Projects and Areas live from Notion and your brain's notes, and saves the review in your brain under `reports/`, one file per week:
+
+```text
+Week of 9 Nov 2026 · changes since Mon 2 Nov 08:04 · Notion read live
+Covered: 14 changes from 6 meetings and 3 sources. 2 more decisions wait in Review from earlier weeks.
+
+## What changed
+- **Decided:** launch the Harbor app in March, not January (Launch Harbor app in March, 4 Nov).
+- **Changed:** Quarry website's budget is 18k, was 12k (Quarry kickoff, 5 Nov) *(not reviewed)*.
+- **Next:** send the Quarry estimate (task, 13 Nov).
+
+## Task analysis
+- **Overdue:** "Send the logo proposals" (Harbor app), 8 days late.
+- **Stalled:** Pinecrest signage (project): nothing done or mentioned for 40 days.
+
+Order of attention:
+1. Send the logo proposals: the client meeting on Thursday depends on them.
+
+## What needs your decision
+1. Correction · Quarry budget 12k → 18k · 3 notes restate 12k → Review (2 of 3 shown)
+2. Overdue · "Send the logo proposals" · new date, Done or Won't Do → the task
+3. Stalled · Pinecrest signage · set On Hold? → Review
+
+5 more findings wait for next week. Say "weekly review more" in a session for the rest.
+```
+
+**It decides nothing.** Each decision is made where it lives: a **Review** row (set Your call, or ask Brain Assistant to "Run Weekly review" and decide with it), or the **task** itself in Notion (a new date, Done or Won't Do). The review applies nothing, even a change you already approved: your next "apply my reviews" or catch-up does that.
+
+**Five at most, and no nagging.** A week shows at most five decisions, five new Review items and five notes or tasks they would change, across your work and your notes, corrections first, then overdue and stalled work, then tidying. The rest waits for next week ("weekly review more" shows it now). A finding shown before comes back only when its evidence changed, it became overdue, it got much later, or it is a contradiction in a reviewed note that is still open. What you skipped or rejected stays skipped. A week with nothing new writes nothing at all: no empty page.
+
+**Corrections.** When you approve a corrected fact (a budget, a date, a renamed project), the next review finds the notes that still say the old value and proposes fixing them together, as one Review row whose changes you pick one by one. Meetings, decisions and sources are never changed: they are the record. A line it can't settle is named as needing clarification, not changed. "weekly review corrections" goes through every waiting check at once.
+
+**Review my week every Monday.** Say "review my week every Monday" and the agent sets it up: the time (Monday 08:00 unless you say otherwise), the Claude model (Sonnet unless you pick another), what a run may use, and once each, Reports and publish automatically. With **Reports** on, each week's review appears in Notion in Documents, with its decisions linked to their Review rows; with Reports off it stays a file in your brain, and your next session tells you it's ready: "This week's review is ready: 4 decisions (reports/2026-11-09-weekly-review.md)." A run is capped (3 USD on Sonnet), and if it runs out of time it says what it didn't check, and checks that first next week. Before the first run, open Claude Code in your brain folder once and accept its trust dialog. "Stop the weekly review" removes it.
 
 ---
 
@@ -461,6 +499,7 @@ Run these in Claude Code or Codex, from your brain's folder.
 | See what's overdue, stalled, missing a next step or misplaced, and decide what to do | "review my projects", "what's stalled in Clients?", then "yes 1, 2b", "propose 5", "skip 4 because …", "done" (or `claude --agent ultimate-assistant`) |
 | Get what's on your mind into tasks, projects and captures | tell Ultimate Assistant in a few sentences, then "yes to all" |
 | Find contradictions, out-of-date facts, duplicate notes and recurring themes, and decide what to do | "tidy the brain", "any duplicates?", then "yes 2", "1a", "later 4", "skip 5 because …", "done" |
+| Get one short review of your week: what changed, your tasks, at most five decisions | "weekly review"; "weekly review more" for the rest; "weekly review corrections"; "review my week every Monday", "stop the weekly review" |
 | Ask how the system works | "how do I …?", "why didn't … ?" (or ask Brain Assistant in Notion) |
 | Change how the agent talks to you | "talk to me more simply", "shorter answers", "more detail", "get to the point", "go back to normal" |
 | Change the Notion structure (a property, an option, a view) | "add a property to Projects …". Structure is changed in the product first, then in Notion |

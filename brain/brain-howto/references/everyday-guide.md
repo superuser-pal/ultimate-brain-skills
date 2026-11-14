@@ -78,7 +78,7 @@ For a prompt about one page, open or reference that page so the assistant knows 
 | **Grill review** | A Review row from a meeting, email or document | Click **Review with me**, or **"Run Grill review"** on the row. It asks what the page can't settle, three to five questions at a time with a recommended option, shows what it will write and writes after your yes. You set **Your call**. |
 | **Prep** | With a meeting page referenced | **"Run Prep"** gathers relevant meetings, questions, tasks and decisions before the meeting. |
 | **Check minutes** | A meeting page before it is Reviewed | **"Run Check minutes"** flags missing information and details to confirm. It fixes the text after your confirmation. |
-| **Weekly review** | Brain Assistant chat | **"Run Weekly review"** summarises the past week, project and goal health, and the coming week. |
+| **Weekly review** | Brain Assistant chat | **"Run Weekly review"** opens this week's weekly review, summarises it, and walks its decisions with you a few questions at a time. You set Your call and change the tasks. With no review this week, it says how to get one. |
 | **Plan check** | Brain Assistant chat | **"Run Plan check"** finds gaps across Areas, goals and projects. It suggests fixes for you to consider. |
 | **Tidy capture** | A **New** Inbox capture | **"Run Tidy capture"** proposes clearer wording and waits for confirmation. The **Tidy capture** button authorises the rewrite immediately. |
 | **Voice summary** | A **New** Inbox capture with a **Transcript** toggle | Say **“Summarize this voice note.”** Confirm the summary, check what should enter the brain, then set **Ready**. |
@@ -88,7 +88,7 @@ For a prompt about one page, open or reference that page so the assistant knows 
 
 **Meeting-summary prompt:** this is separate from the twelve skills. Keep the transcript on the meeting page: a recorded meeting's is in the meeting-notes block's Transcript, and one you paste goes in the page body. Open the Notion AI chat on that page, paste the minutes prompt followed by the line **“Write the minutes on this page, below the transcript, and nothing else.”**, and send. Don't run it from Notion AI's settings: there it can replace the transcript. If the transcript is gone, put it back above the minutes (Notion's version history, or paste it again): without it the brain can't read the meeting. Then run **Check minutes**, correct the result and mark the meeting **Reviewed**. If you cannot find the prompt, ask your agent **“Give me the minutes prompt.”** It is supplied with Ultimate Brain as `notion/minutes-format.md`; do not assume it is inside the meeting template.
 
-The Notion AI **Weekly review** is an on-demand summary of Notion pages. Scheduling catch-up is a separate operation. Clicking **Refresh report** uses Notion pages; asking your agent to refresh a report uses the brain's canonical notes.
+The weekly review itself is written by your agent ("weekly review", or every Monday on a schedule); Brain Assistant's **Weekly review** opens it in Notion. Scheduling catch-up is a separate operation. Clicking **Refresh report** uses Notion pages; asking your agent to refresh a report uses the brain's canonical notes.
 
 ## Review meetings and proposals
 
@@ -106,6 +106,7 @@ The Notion AI **Weekly review** is an on-demand summary of Notion pages. Schedul
 |---|---|
 | Schedule processing | **“Run catch-up every morning.”** |
 | Check or stop the schedule | **“What is scheduled?”** / **“Stop the scheduled catch-up.”** |
+| Review your week | **“Weekly review.”** / **“Review my week every Monday.”** |
 | Check optional capabilities | **“Which modules do I have?”** |
 | Enable a capability | **“Turn on documents.”** / **“Turn on reports.”** |
 | Connect a work folder to Notion | From that folder: **“Connect this work to Notion.”** |

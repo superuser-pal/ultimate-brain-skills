@@ -63,7 +63,7 @@ The pass is done when every input that is waiting has been found and each of its
 
 ## 2. One batch of questions
 
-When `unattended.catch_up` in `brain status` isn't null, open with the scheduled runs since the last attended one, as one line: "Since last time: 4 scheduled runs, 6 inputs in, 1 skipped, 1 Fix waiting, 1 failed: Notion login". Say "Backlog growing: run more often or raise the budget" too when `unattended.backlog` is true. Then ask once, in one message, numbered and grouped by input, each with the answer you will use if the user says "go" (the **default**):
+When `unattended.catch_up` in `brain status` isn't null, open with the scheduled runs since the last attended one, as one line: "Since last time: 4 scheduled runs, 6 inputs in, 1 skipped, 1 Fix waiting, 1 failed: Notion login". Say "Backlog growing: run more often or raise the budget" too when `unattended.backlog` is true. When `unattended.weekly` in `brain status` isn't null, add the weekly review's line (brain-weekly-review, "The opening line"): `This week's review is ready: <n> decisions (<report>).` when its `report` is this week's, and `Last weekly run failed: <reason>.` or `Last weekly run did not finish (started <D Mon HH:MM>).` when they apply. Then ask once, in one message, numbered and grouped by input, each with the answer you will use if the user says "go" (the **default**):
 - sync conflicts (`BOTH_CHANGED`, `MISSING_REQUIRED`, `UNRESOLVED_RELATION`, …) and your corrections, as brain-sync step 5 shows them;
 - each What to fix you read, as "Acme sync: 'all except b' → approve the rest, b waits in a row of its own" or "Acme sync: Fix 'a: March' → launch date 2027-03";
 - each meeting's and input's pre-check blockers;

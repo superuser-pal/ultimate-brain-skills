@@ -11,7 +11,7 @@ Answer how-to questions about the system from [references/guide.md](references/g
 
 ## Procedure
 
-1. **Read the guide section** that matches the question. Its headings: The Spaces · The meeting flow · Deciding in Review · Correcting what came in (a meeting, a capture, a report; refreshing a report) · What you can edit · Adding things · Review your work (Ultimate Assistant) · Tidy the brain · Run catch-up on a schedule · Projects in other folders (linked repos, connected work, adoption) · How the brain talks to you (the response style) · Where your work sits (the structure list in AGENTS.md, briefs, tasks) · What to say to your agent · When something looks wrong.
+1. **Read the guide section** that matches the question. Its headings: The Spaces · The meeting flow · Deciding in Review · Correcting what came in (a meeting, a capture, a report; refreshing a report) · What you can edit · Adding things · Review your work (Ultimate Assistant) · Tidy the brain · The weekly review · Run catch-up on a schedule · Projects in other folders (linked repos, connected work, adoption) · How the brain talks to you (the response style) · Where your work sits (the structure list in AGENTS.md, briefs, tasks) · What to say to your agent · When something looks wrong.
 
 2. **If the question is about something that happened** ("why didn't…", "where did … go", "is my … set up"), check the live state before answering:
    - `brain status --brain . --json` (or without `--brain` in a linked repo). It reports pending proposals, Notion databases configured or missing, stale views, and the last log line.
@@ -33,6 +33,10 @@ When the question is about the shape of the user's work (what's stalled, overdue
 ## Tidy the brain
 
 When the question is about the notes themselves (two notes that disagree, a fact that's out of date, two notes for one person, something the meetings keep discussing), answer from the guide's "Tidy the brain" and offer to run the `brain-reflect` skill. In short: "tidy the brain" shows up to 10 findings, most serious first (contradictions, stale facts, duplicates, rules worth adding to a project or Area, recurring themes with no note), each with a recommendation. It changes nothing without the user's yes in the chat: "yes 2" applies it, a contradiction first asks which value holds ("1a", or "1: 2027-03"), "later 4" writes a Review row, "skip 5 because …" hides it until new evidence comes in (a skipped merge stays skipped). It runs only when asked. Ultimate Assistant's sub-agent runs it too, so "tidy the brain" works in the same chat as "review my projects".
+
+## The weekly review
+
+When the question is about the weekly review (what it shows, why a finding didn't come back, why a week had no review, how to put it on a schedule), answer from the guide's "The weekly review" and offer to run the `brain-weekly-review` skill. In short: "weekly review" writes one short report a week in `reports/` (What changed, Task analysis, at most five decisions), each decision made where it lives: a Review row, or the task in Notion. It applies and decides nothing, and a quiet week writes nothing. "weekly review more" shows what waited, "weekly review corrections" goes through the notes that still say a corrected value, and "review my week every Monday" sets the Monday 08:00 schedule, offering Reports once so each review appears in Notion.
 
 ## Teaching mode
 
