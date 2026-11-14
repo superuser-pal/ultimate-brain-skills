@@ -11,7 +11,7 @@ The CLI does the deterministic half: `brain weekly plan` finds the candidates, `
 
 Run every CLI command as `brain <command> --brain <brain> --json`. Exit 1 means some items need attention; read them. Exit 2 or 4 means your command or input was wrong: fix it. Exit 3 or 5 means stop and report. Exit 10: report a bug. If `brain` is not found (`command not found`), install it with `npm install -g ultimate-brain`, then retry.
 
-**Tools.** A scheduled run may use only `brain`, `git`, `date` and `jq` in the shell, the file tools (Read, Edit, Write) and the Notion tools; anything else is refused. So, attended or not: no `mktemp`, no pipes into other programs, no heredocs. **Working files** (the inputs you pass to `--input`) go in the folder of `weekly_snapshot` from `brain status`, named after it: for `/Users/sam/.ultimate-brain/weekly/brain-1a2b3c4d.json`, write `brain-1a2b3c4d.judged.json`, `brain-1a2b3c4d.proposal.json`, `brain-1a2b3c4d.record.json` beside it, with the Write tool, overwriting them each run. Never write them in the brain.
+**Tools.** A scheduled run may use only `brain`, `git`, `date` and `jq` in the shell, the file tools (Read, Edit, Write) and the Notion tools; anything else is refused. So, attended or not: no `mktemp`, no pipes into other programs, no heredocs. **Working files** (the inputs you pass to `--input`) go in the folder of `weekly_snapshot` from `brain status`, named after it: for `/Users/sam/.ultimate-brain/weekly/brain-1a2b3c4d.json`, write `brain-1a2b3c4d.judged.json`, `brain-1a2b3c4d.proposal.json`, `brain-1a2b3c4d.record.json` beside it, with the Write tool, overwriting them each run, and change one with the Edit or Write tool (never `sed`). Never write them in the brain.
 
 ## Which run this is
 
@@ -53,7 +53,7 @@ Publish only when `notion.configured` holds the databases written to, the run re
 | off | the new Review rows and a theme's draft only. The report stays a file in the brain, never published, and the next attended session's opening line points to it |
 
 1. **Rows first:** `brain sync render --ids <the new proposal ids and a theme's Document id, comma-separated>`, write each item through the Notion tools as brain-sync's Push steps 10 and 11 say (a Review row's body on create, once), then `brain sync record`, so the proposals have their pages.
-2. **Then the report** (Reports on): `brain sync render --ids <the report's id>`. Its body now links each decision to its Review row. Write it as brain-sync's Push step 10 says for a report's body (on its Documents row; a rerun updates the same row), read it back once, and `brain sync record` with its `@notion_body`.
+2. **Then the report** (Reports on): `brain sync render --ids <the report's id>`. Its body now links each decision to its Review row. Write it as brain-sync's Push step 10 says for a report's body (on its Documents row; a rerun updates the same row), then `brain sync record` with the item's `published` as render gave it. Don't read it back: a weekly review is never imported, so it needs no `@notion_body`.
 3. **Log and commit:** `brain log publish - pages=<n>`, then commit the paths `sync record` wrote and the log file: `publish: weekly review <week>`.
 
 A write that fails is logged as a failure (`Notion write`) and left out of the record; the next publish sends it again. Never say a page was written when it wasn't. A weekly run writes nothing else in Notion: no task, no property of a project or an Area, no Your call.
