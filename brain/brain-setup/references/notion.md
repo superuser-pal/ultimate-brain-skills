@@ -42,14 +42,25 @@ A row the user renamed, so its title no longer starts with `Example · `, is the
 
 Notion AI writes each meeting's minutes with this prompt; the brain reads that shape (decisions 0055, 0067, 0079).
 
-1. **Walk through.** When `TEMPLATE.md` says the Meetings template already carries the minutes prompt, skip to the check. Otherwise give the user the prompt's text (the `text` block of `<product.path>/notion/minutes-format.md`) in the chat, ready to copy, and where it goes, as `<product.path>/notion/pasting-the-minutes-prompt.md` says (wherever the user keeps the meeting-summary prompt for Notion AI on Meetings). Wait for "done".
-2. **The sample.** Give the user the sample meeting below, exactly as written, and ask them to create a new page in **Meetings** titled `Setup check: delete me`, paste the sample in, and run the prompt on it. Never write the sample from the user's own material.
+**Where it runs** (`<product.path>/notion/pasting-the-minutes-prompt.md`, spec/capture-and-review.md §3.4): in the **Notion AI chat on the meeting page**, never from Notion AI's settings. The transcript stays on the page: in the meeting-notes block's Transcript when Notion recorded the meeting, or in the page body when it was pasted. The prompt is always followed by this line:
+
+```text
+Write the minutes on this page, below the transcript, and nothing else.
+```
+
+1. **Walk through.** When `TEMPLATE.md` says the Meetings template already carries the minutes prompt, skip to the check. Otherwise give the user the prompt's text (the `text` block of `<product.path>/notion/minutes-format.md`) in the chat, ready to copy, and say that they should keep it handy: it runs on each meeting page, as above. Don't wait here; the sample comes next.
+2. **The sample.** Give the user the sample meeting below, exactly as written. Ask them to create a new page in **Meetings** titled `Setup check: delete me` and paste the sample into its body. Then they open the Notion AI chat on that page, paste the prompt followed by the line above, and send. Wait for "done". Never write the sample from the user's own material.
 3. **Read the page** through the MCP and check its shape against the prompt you gave:
    - **The lean shape** (the prompt has a **For the brain** toggle): **In one line**; **Quick follow-ups**, each with a `q` id; **Tasks for the brain**, each with its item id; one block per subject with its `s` id; and the collapsed **For the brain** toggle holding each subject's `Selection:` line and the id → quote list.
    - **The shape before it** (no toggle): the Attendees and Projects lines; one `## [sN] <Subject>` section per subject, each with the line `Selection: Use in brain`; every item on a line of its own with its `[sN.iM]` id and a quote.
    - **Either shape:** the two subjects of the sample come out as two subjects; the owner's commitment is under Tasks (or Quick follow-ups), and the decision under Decisions (or as a `Decided:` line); every quote occurs word for word in the sample.
-4. **Pass:** log `step=minutes-prompt result=done`, commit. **Fail:** log `result=failed reason=shape-wrong`, name what is missing ("no `Selection:` line under subject 2", "the quote in [s1.i2] isn't in the sample"), say the likely cause (the prompt pasted only in part, or in the wrong place), and offer to check again once they've fixed it.
-5. **Either way:** the test page is never set to Reviewed, so no catch-up reads it. Ask the user to delete it.
+4. **The transcript is still on the page.** Every line of the sample is on the page word for word (spacing aside), outside the minutes and the For the brain toggle: in the body above the minutes, or in the meeting-notes block's Transcript. When the page has the minutes but not the sample, Notion AI replaced the transcript. That fails with `reason=transcript-missing`, whatever the shape. Say:
+
+   > Notion AI replaced the transcript. Put it back on the page above the minutes: restore an earlier version from Notion's version history (••• at the top right), or paste the sample again. Keep the minutes. Next time, run the prompt in the Notion AI chat on the page and add: Write the minutes on this page, below the transcript, and nothing else.
+
+   Add any shape problem from step 3 to the same message.
+5. **Pass** (the shape and the transcript): log `step=minutes-prompt result=done`, commit. **Fail:** log `result=failed` with `reason=transcript-missing` (step 4) or else `reason=shape-wrong`. A page with no minutes at all is `shape-wrong`. For `shape-wrong`, name what is missing ("no `Selection:` line under subject 2", "the quote in [s1.i2] isn't in the sample") and say the likely cause: the prompt was pasted only in part, or run outside the page's Notion AI chat. Either way, offer to check again once they've fixed it.
+6. **Either way:** the test page is never set to Reviewed, so no catch-up reads it. Ask the user to delete it.
 
 ### The sample meeting
 
