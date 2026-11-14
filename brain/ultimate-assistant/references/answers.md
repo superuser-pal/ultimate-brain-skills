@@ -28,6 +28,7 @@ After each change, confirm it in one line, quoting values as written: `1: due da
 | `archive_area` | Areas · Archived | Notion | `notion_change`, `areas`, `archived` |
 | `move_project` | the project's `area` | brain | `set_field`, `field: area` |
 | `set_area_domain` | the Area's `domain` | brain | `set_field`, `field: domain` |
+| `move_note` | the `area` of a decision, question, Document or source | brain | `set_field`, `field: area`, one per note ("Moving notes to another Area" below) |
 | `merge_projects` | the duplicate folded into the survivor | brain | `merge`: `target` = `value.target` (the duplicate), `merge_into` = `value.merge_into` (the survivor) |
 | `add_task` | a new Task | Notion | none: placed like a ramble's task (ramble.md), with the project of `value.project` |
 
@@ -63,6 +64,29 @@ A task move whose new page doesn't exist yet (a survivor or an Area never publis
 - already `approved` or `edited` (a `notion_change` waiting for its write): replay its recorded decision as session step 3 does; nothing is re-decided.
 
 If that proposal has a Review row, step 3's publish (for a Notion-owned change, the next render) updates the row's State, so it doesn't stay Pending.
+
+## Moving notes to another Area
+
+The user asks for it ("move the pricing notes to Go-to-market", often right after an ingest and a new Area); no finding recommends it (decision 0092).
+
+1. **Find the notes and the Area.** `brain query --candidates "<the words>" --types decision,question,reference,source` for the notes, `--types area` for the Area, as for any value. "The notes from the pricing memo" are the decisions, questions and Documents whose `sources` name that source, and the source itself. None or several matches for a name: ask, as for any value.
+2. **Show one preview of every move,** numbered after the last number shown, one line each, then ask once:
+
+   ```text
+   18. Offer three pricing tiers (decision, draft): Product → Go-to-market
+   19. Tiered pricing (Document, draft): Product → Go-to-market
+   20. Pricing memo (source, with its whole Document): Product → Go-to-market
+   Not moved: Should the annual discount be 15%? takes its Area from its project Pricing launch: move the project instead?
+   Answer "yes to all", "yes 18, 20" or "all but 19".
+   ```
+
+   - **A source and its whole Document are one line.** Naming either moves both: the CLI moves the other with it. A `part` or `learned` Document of that source is its own line, only when the user named it.
+   - **A decision or question with projects** is not listed as a move: its Area comes from its project. Name the project on a `Not moved:` line and offer `move_project` for it, which is its own yes.
+   - Draft notes move like reviewed ones and stay drafts in Review.
+3. **On the yes, apply them together.** One `brain proposal new` with one `set_field` per note said yes to (`target`, `field: area`, `after` = the Area, no `finding`, `why` = the user's words, `source` = `agent:ultimate-assistant/<session id>`, `passages` as for any `set_field`; no `area`: the CLI puts each row in the note's own Area). Then one `brain apply` with every decision, and the brain-owned steps of "A yes: apply it now" step 3 once for them all: `brain index`, `brain views`, `brain lint`, one commit (`assistant: move <n> notes to <Area>`), one render of every changed note, one `sync record`, one commit. Skipped `NO_CHANGE`: already there, say so. `INPUT_INVALID` naming a project: put it on the `Not moved:` line.
+4. **Confirm in one line:** `Moved <n> notes to <Area>.`, then any note closed `STALE_PROPOSAL` (it changed since the preview) or refused, by name. A draft decision or question has no page yet and a decision's Area in Notion comes from its projects, so the move shows in the Area's brief and, for a Document, in its Area; an Inbox row keeps the Area it has.
+
+Moves the user doesn't decide in chat ("propose them") are Suggestion rows, as for any change.
 
 ## "propose N": a Review row
 
