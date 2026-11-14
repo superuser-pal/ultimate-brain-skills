@@ -245,7 +245,7 @@ The brain still reads every input for decisions, questions and people, whether o
 | A file from your phone | Attach it to a **Quick capture** (or to the meeting page), with Project set if you know it. To keep the file itself as a Document, click **Keep as document** (and write in **Only keep** if you want just a part). The row is Ready; the next catch-up reads the file with the row. Files on project and area pages are not read |
 | A repo's knowledge (decisions, docs, changelog) | "link the repo at ~/code/acme-api". The agent proposes a link kit (what to read and never read, where the repo's tasks live, its Area and Project) and writes it into the repo only after your yes ("Projects in other folders" below). Each catch-up then reads the files changed since the last one; the first time, it asks which to take. Apart from the kit, the brain never writes to the repo |
 | A question for a full report | **Ask the brain** on Home: type the question as the Name ("Where do we stand with the Acme launch?"). The next catch-up answers with a report in **Documents**, linked from yours, and on the project's or area's page under **Reports**. To bring it up to date later, click **Refresh report** on it ("Correcting what came in"). Needs the Reports module (and Documents) |
-| An email, chat thread or note | Paste it into a **Quick capture** (keep who sent it and when). For a thread, run **`/Clean email`** on the page: Brain Assistant gives each message a heading with names and date ("Tomás Vidal → Lucía Fernández · 3 Dec 2026"), its own text word for word below it, and a divider before the next, newest first. It drops addresses, signatures, disclaimers, quoted copies and Teams, Zoom or Meet blocks, and rewrites the page right away (the page history keeps the original), asking first only when something is truly unclear. Then set the row to **Ready** and "catch up". Or paste it straight to your agent: "ingest this email" |
+| An email, chat thread or note | Paste it into a **Quick capture** (keep who sent it and when). For a thread, ask Brain Assistant to **Run Clean email** on the page: Brain Assistant gives each message a heading with names and date ("Tomás Vidal → Lucía Fernández · 3 Dec 2026"), its own text word for word below it, and a divider before the next, newest first. It drops addresses, signatures, disclaimers, quoted copies and Teams, Zoom or Meet blocks, and rewrites the page right away (the page history keeps the original), asking first only when something is truly unclear. Then set the row to **Ready** and "catch up". Or paste it straight to your agent: "ingest this email" |
 | A task | Add it in Tasks. Action items from meetings, and your own from documents, emails and captures, are created for you |
 
 **Tasks:**
@@ -258,18 +258,18 @@ The brain still reads every input for decisions, questions and people, whether o
 
 ## Ask Brain Assistant in Notion
 
-**Brain Assistant** is a Notion AI agent that reads Ultimate Brain and answers. It never changes your knowledge. Open its chat (Agents → Brain Assistant, or @mention it on a page) and type a skill or a question:
+**Brain Assistant** is a Notion AI agent that reads Ultimate Brain and answers. It never changes your knowledge. Open its chat (Agents → Brain Assistant, or @mention it on a page) and ask for a skill by its name, or ask a question. Brain Assistant doesn't run a skill typed as a `/` command: say "Run Today", not `/Today`. To point at a skill's page instead, paste its link (open it from your space's Skills database, ••• → Copy link); don't pick it from the `@` picker, which can offer another space's page of the same name.
 
-| Type | You get |
+| Ask | You get |
 |---|---|
-| `/Today` | What's due today, today's meetings, and what needs your decision |
-| `/Review queue` | Each pending change explained, without deciding for you |
-| `/Check minutes` (on a meeting page) | Missing sections and names and numbers to confirm; fixes the text after you say yes |
-| `/Prep` (on a meeting page) | Past meetings, open questions, tasks and recent decisions for that meeting |
-| `/Weekly review` | What got done and decided, goal and project health, next week |
-| `/Plan check` | Projects without goals, goals without projects, overdue items |
-| `/Tidy capture` (on a new capture in the Inbox; also the **Tidy capture** button) | A cleaner version of the capture; replaces the text after you say yes (the button carries the yes) |
-| `/Clean email` (on a new capture holding a pasted email thread) | Each message under a heading of names and date, its own text word for word, a divider between messages, newest first; no addresses, signatures, disclaimers, quoted copies or meeting blocks; rewrites the page directly and asks only on a serious doubt |
+| "Run Today" | What's due today, today's meetings, and what needs your decision |
+| "Run Review queue" | Each pending change explained, without deciding for you |
+| "Run Check minutes" (on a meeting page) | Missing sections and names and numbers to confirm; fixes the text after you say yes |
+| "Run Prep" (on a meeting page) | Past meetings, open questions, tasks and recent decisions for that meeting |
+| "Run Weekly review" | What got done and decided, goal and project health, next week |
+| "Run Plan check" | Projects without goals, goals without projects, overdue items |
+| "Run Tidy capture" (on a new capture in the Inbox; also the **Tidy capture** button) | A cleaner version of the capture; replaces the text after you say yes (the button carries the yes) |
+| "Run Clean email" (on a new capture holding a pasted email thread) | Each message under a heading of names and date, its own text word for word, a divider between messages, newest first; no addresses, signatures, disclaimers, quoted copies or meeting blocks; rewrites the page directly and asks only on a serious doubt |
 | **Write up** and **Refresh report** (buttons, not commands) | Click them on a Document or a report; see the buttons table above |
 | "how do I …?" | An answer from this guide |
 
