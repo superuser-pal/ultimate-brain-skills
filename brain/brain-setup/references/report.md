@@ -1,6 +1,6 @@
 # The setup report
 
-At the end of setup, and whenever the user asks "show my setup report", write the report, show it **whole**, then ask: "Send this to the product as a `beta-setup` issue, to help fix setup? Nothing else is sent." It is filed **only after a yes**. There is no telemetry: nothing is sent any other way.
+At the end of setup, and whenever the user asks "show my setup report", write the report, show it **whole**, then ask: "Send this to the product as a `beta-setup` issue, to help fix setup? The issue is public and appears under your GitHub name. Nothing else is sent." It is filed **only after a yes**. There is no telemetry: nothing is sent any other way.
 
 ## What it holds
 
