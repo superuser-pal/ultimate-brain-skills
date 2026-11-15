@@ -1,6 +1,6 @@
 # Contributing
 
-This repository holds the skills of [Ultimate Brain](https://github.com/superuser-pal/ultimate-brain). Its issue tracker is not used: everything goes through the product's.
+This repository holds the skills of [Ultimate Brain](https://github.com/superuser-pal/ultimate-brain). Reports and questions go to the product's issue tracker. The only issues opened here are the automatic ones of the upstream sync.
 
 ## Where each request goes
 
