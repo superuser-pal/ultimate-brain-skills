@@ -13,6 +13,7 @@ The path says which is which. Upstream content stays at upstream's paths, and up
 | `schemas/` | A copy of Ultimate Brain's `spec/schemas/skills-snapshot.schema.json` |
 | `.github/` | This fork's workflows and PR template. Upstream's `.github/` is never merged in, so upstream workflows don't run here |
 | `NOTICE.md`, `BRAIN-SKILLS.md`, `upstream.json`, `snapshot.config.json`, `.gitattributes` | This file, how the operational skills are written and released ([BRAIN-SKILLS.md](BRAIN-SKILLS.md)), the recorded upstream base, the next snapshot's CLI range and linked-repo skills, and byte-exact checkouts |
+| `README.md`, `CONTRIBUTING.md` | This repository's own, at upstream's paths (Ultimate Brain decision 0095): what the repository is, how the skills tie to the product, and where reports go. Upstream's versions are in [mattpocock/skills](https://github.com/mattpocock/skills); an upstream-sync conflict on either file is resolved by keeping this repository's |
 | The last paragraph of `LICENSE` | The licence line for these additions. The rest of `LICENSE` is upstream's, verbatim |
 | `third-party/humanizer/` | humanizer, a general skill copied unchanged from [blader/humanizer](https://github.com/blader/humanizer) under the MIT licence (Copyright (c) 2025 Siqi Chen), kept verbatim in its folder's `LICENSE`. Its `ORIGIN.md` records the upstream commit and the files copied; only `ORIGIN.md` is local |
 
