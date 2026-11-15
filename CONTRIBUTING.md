@@ -1,25 +1,17 @@
 # Contributing
 
-Every issue is judged against the bar in [`SCOPE.md`](./SCOPE.md). Read it first.
+This repository holds the skills of [Ultimate Brain](https://github.com/superuser-pal/ultimate-brain). Its issue tracker is not used: everything goes through the product's.
 
 ## Where each request goes
 
 | You have | Go to |
 | --- | --- |
-| A bug in a skill | [Bug issue](https://github.com/mattpocock/skills/issues/new?template=bug.yml) |
-| A change to an existing skill | [Idea or feedback issue](https://github.com/mattpocock/skills/issues/new?template=idea.yml) |
-| A question, or "how do I...?" | [Discussions: Q&A](https://github.com/mattpocock/skills/discussions/categories/q-a) |
-| An idea for a new skill, or a skill to donate | [Discussions: Ideas](https://github.com/mattpocock/skills/discussions/categories/ideas) |
-| Support for another harness or issue tracker | [Discussions: Ideas](https://github.com/mattpocock/skills/discussions/categories/ideas), after you read [`.out-of-scope/`](./.out-of-scope) |
+| A bug, a confusing step or a question about a `brain-*` skill or Ultimate Assistant | [An issue on the Ultimate Brain repository](https://github.com/superuser-pal/ultimate-brain/issues/new/choose) |
+| A security problem | Ultimate Brain's [SECURITY.md](https://github.com/superuser-pal/ultimate-brain/blob/main/SECURITY.md) |
+| A bug or an idea for a general skill under `skills/` | [mattpocock/skills](https://github.com/mattpocock/skills), where those skills are maintained. They are carried here unchanged |
 
-Pull requests are open to collaborators only, so describe the fix in an issue instead.
+Issues are public and appear under your GitHub name. Never paste notes, client names, Notion links, ids, emails or tokens.
 
-## Issues written with AI
+## Changes
 
-Agents are welcome to help, but you post the issue, so you own it:
-
-- **One problem per issue.** Several findings from one session are several issues, or none.
-- **Short.** If it does not fit on one screen, cut it.
-- **Repro first.** The steps that show the problem come before any analysis.
-- **No pasted specs.** No full proposals, plans, or rewritten `SKILL.md` files. Describe the problem; the fix is ours to design.
-- **Not your project's issues.** If your agent files the specs or tickets for your own project here, it has the wrong repo. Run `/setup-matt-pocock-skills` in your project.
+Pull requests are made by the maintainers, each for a task of the Ultimate Brain build plan. How a skill change is written, checked and released is in [BRAIN-SKILLS.md](BRAIN-SKILLS.md); which files are this repository's and which are upstream's is in [NOTICE.md](NOTICE.md).
