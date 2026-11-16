@@ -8,7 +8,7 @@ The `brain` command does the exact work: it reads and writes notes, checks them,
 
 ## You don't install anything from here
 
-To use Ultimate Brain, follow its [Get started](https://github.com/superuser-pal/ultimate-brain#get-started). The `ultimate-brain` package ships a released copy of these skills and writes them into your brain folder, for Claude Code and for Codex. `brain upgrade` brings a newer copy when you update the package.
+**Setting up a brain? You don't need to clone this repository.** To use Ultimate Brain, follow its [Get started](https://github.com/superuser-pal/ultimate-brain#get-started). The `ultimate-brain` package ships a released copy of these skills and writes them into your brain folder, for Claude Code and for Codex. `brain upgrade` brings a newer copy when you update the package.
 
 ## The skills
 
