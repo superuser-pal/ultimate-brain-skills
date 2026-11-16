@@ -43,7 +43,7 @@ Part 1 of 2: Pilot rollout
 
 **A source with one subject** is one part, shown without "Part 1 of 1": its view, what it adds, its questions if any, then `Accept?`.
 
-**Before the first part,** for a selected capture, one line names what the selection leaves out: `Left out (Meeting only): Small talk, s3.i2.` When the selection preview raised a blocker or a repair (references/selection.md §3), it is settled before the parts.
+**Before the first part,** for a selected capture, one line names what the selection leaves out: `Left out (Meeting only): Small talk, s3.i2.` When the selection preview raised a blocker or a repair (references/selection.md §3), it is settled before the parts. For a checked row ([checked.md](checked.md)), one line names what the user's version changed: `Ops plan (changed), checked by you: Dropped Hiring, Appendix A; depot count 9 → 11.` Its items cite the row, never the original.
 
 **The quick follow-ups that become Tasks** and the questions tracked by `Track: Waiting On —` are named once, after the last part: `2 quick follow-ups become tasks: …` and `1 question tracked as a Waiting On task: …`. The yes to the last part creates them; to keep a follow-up out, the user ticks or deletes it on the page (references/selection.md §4).
 

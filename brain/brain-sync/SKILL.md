@@ -27,7 +27,7 @@ Run CLI commands as `brain <command> --brain <brain> --json`. Database ids come 
    | Orgs | Orgs is on |
    | Documents (learned Documents included: there is no Concepts database since 0.9.1) | Documents is on |
    | Goals, Key Results | Planning is on |
-   | Tasks | Tasks is on: only the tracked tasks, by id (below), never a query of the database |
+   | Tasks | Tasks is on: the tracked tasks, by id (below); and *(Documents)*, when `notion.tasks.properties.document_asked` is mapped, the tasks whose Document asked box is ticked (one query filtered on it). Nothing else of the database |
    | Review, Decisions, Questions | never: retired in 0.16.0 (decisions 0096, 0099). Only the 0.16.0 Notion migration reads them, once ([references/review-transition.md](references/review-transition.md)); a plain plan ignores their rows |
 
    **Tracked tasks** *(Tasks; decision 0101 §6)*: run `brain sync tracked`. For each entry, read its task **page by its id** (`page_id`, never a query, so a page in the trash is still found), and pass one `tasks` row (references/formats.md):
@@ -35,7 +35,9 @@ Run CLI commands as `brain <command> --brain <brain> --json`. Database ids come 
    - a page in the trash: the same, with `"gone": true`;
    - a page Notion can't find (deleted for good, or no longer shared with the integration; the brain can't tell which): `"unreadable": true`, `last_edited: null`, empty `properties`. Never pass it as `gone`.
 
-   A read that fails for another reason (a timeout, an expired login) passes no row for that page. Nothing else of a task is read here.
+   A read that fails for another reason (a timeout, an expired login) passes no row for that page.
+
+   **Tasks to keep as documents** *(Tasks, Documents; decision 0100)*: with `notion.tasks.properties.document_asked` mapped (not `""`), query the Tasks data source for the rows whose Document asked box is ticked, and pass each with its title, Document asked, Project and Area under their mapped names (references/formats.md). A task that is also tracked is passed once, with the properties of both. Its body is read only when `sync plan` lists it in `task_documents`, by brain-ingest references/task-document.md. Nothing else of a task is read here.
 
    **Example rows** (decision 0084): leave out of the snapshot every row whose title starts with `Example · ` (the word `Example`, a space, the middle dot `·`, a space, matched exactly): the Notion template's invented rows, which setup removes when it connects the brain. Left out, such a row is never imported, corrected or matched, and nothing in the brain is made from it. Leaving it out is not skipping a database. Name how many once in the report: "2 example rows left out: delete them in Notion, or say "set up my brain" to remove them".
 
@@ -58,7 +60,7 @@ Run CLI commands as `brain <command> --brain <brain> --json`. Database ids come 
    - **Refreshed Notion fields** (`updates`): count only.
    - **Your edits** (`corrections`, `withdrawn`): count only here: "2 edits in Notion to ask about". The apply writes each as a pending correction; nothing changes in the brain until the user says yes (step 6a). A `withdrawn` one (set back in Notion, or the brain's value changed) is closed: count it.
    - *(Tasks)* **Finished tasks** (`tracked_tasks`): count only: "1 tracked question's task is Done". Each becomes a question for the session (step 6a).
-   - **Documents** (`document_requests`): "Acme brief: keep as document (whole)". An item with `existing` is already done: "Acme brief: already kept, I'll clear the box".
+   - **Documents** (`document_requests`): "Acme brief: keep as document (whole)", or with `only_keep` "Acme brief: a changed version of the budget section, for you to check" (brain-ingest references/checked.md). An item with `existing` is already done: "Acme brief: already kept, I'll clear the box". *(Tasks)* `task_documents`: "Check go-live with hosting: keep the task as a document" (brain-ingest references/task-document.md). Both are the brain-catch-up skill's work (step 3.5): run it, or leave them for the next catch-up and say so.
    - **Reports** (`refresh_requests`, `report_fixes`): "Acme launch report: refresh asked", "Acme launch report: 'Lucía left Acme in June'".
    - **Conflicts**, one line each with what the user can do:
      - `BOTH_CHANGED`: you and the brain both changed a value. Show both and ask which to keep.

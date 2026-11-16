@@ -49,13 +49,40 @@ A document, a web page, then a pasted email:
 - **`digest`** (in `frontmatter`; every kind except minutes, captures and attachments, added with `summary`; decision 0043): the key points by section and the figures and dates as stated, in Markdown. It is the body of the Inbox row.
 - **Never send `notion_text`, `notion_parts`, `notion_text_requested` or `keep`:** they are retired (decision 0049) and the CLI refuses them (`INPUT_INVALID`). A whole text to read in Notion is a `whole` Document (§2, "Documents").
 - **A linked repo's file** (decision 0042) adds `"repo": "<name>", "repo_path": "decisions/0041-review.md", "commit": "<the listing's to, 40 hex>"` to a `document` with a `file:` key, `file_name` = the path's last segment and `converter: verbatim` for a text file.
-- **`only_keep`** (decision 0049; any kind but `minutes` and `capture`, attached files included): what the user asked to keep as a Document, as written (`"only_keep": "just the requirements"`), from the row's Only keep, the drop folder's "only …" or the user's words. Leave it out when the whole input is kept, or none of it. An attached file takes its row's Only keep.
+- **`only_keep`** (decision 0049; any kind but `minutes` and `capture`, attached files included): what the user asked to keep as a Document, as written (`"only_keep": "just the requirements"`), from the row's Only keep, the drop folder's "only …" or the user's words. Leave it out when the whole input is kept, or none of it. An attached file takes its row's Only keep. Since 0.16.0 the part itself becomes a checked row, not a Document ([checked.md](checked.md)): the source records `only_keep` and is written alone.
 - **`area`** and **`projects`** (decision 0050): the Area and Project the user set on the Inbox row (or the meeting), as brain ids. Each must be an existing area or project, else the CLI refuses the batch (`UNKNOWN_ID`). Leave them out when the row has none.
 - **`replaces`** (decision 0045): on a re-read or a new version, the `src-` id of the version it follows. The CLI then dedupes it by content only, and refuses an id that isn't a source or that another source already replaces (`INPUT_INVALID`).
 - **A file attached in Notion** adds `"attached_to": "<the parent's src- id>"` to a `document` with a `file:` key, and has no `digest`. The parent must exist already or come earlier in the same batch.
 - **Title:** `<title> (<kind>)`; for a web page, `<title>` is the page's own title. **`file_date`:** the text's own date (a document's date, a web page's stated publication or update date, an email's sent date); for a capture, the row's Created date; else today.
 - **Dates in the notes:** a new note's timeline `from` is the date the text gives, else the source's `file_date`; `learned` is always today (the day the brain learned it).
 - **Duplicates:** the CLI also skips a source whose `file:` key, or whose `capture` row, was already ingested, even if the text differs.
+
+**A checked row** (decision 0098 §4 and §5; [checked.md](checked.md)), when it is taken in on "go" or Ready:
+
+```json
+{ "type": "source", "title": "Ops plan (changed)", "file_date": "2026-12-08",
+  "frontmatter": { "source_key": "notion:c3000000-0000-4000-8000-000000000009", "kind": "document",
+                   "checked_from": "src-4m9q2x7c",
+                   "changes": ["Dropped: Hiring (section 3)", "Dropped: Appendix A (budget)", "Altered: depot count 9 → 11"],
+                   "notion": "c3000000-0000-4000-8000-000000000009", "origin_edited": "2026-12-08T09:12:00Z",
+                   "projects": ["prj-9x4t1b7e"], "summary": "The pilot section of the ops plan, with 11 depots." },
+  "body": "<the row's page body, as it is now>" }
+```
+
+- `source_key` and `notion` name the row's page; `kind` is the original's (`document`, `email`, `chat` or `note`); `checked_from` is the original's source id; `changes` is What changed, one line each, without a first `File:` line. No `only_keep`, no `digest`, no `file_name`.
+- Read again after an edit, it adds `replaces` = the latest version with that key; the same text is `DUPLICATE_SOURCE`.
+
+**A task page** (decision 0100; [task-document.md](task-document.md)):
+
+```json
+{ "type": "source", "title": "Check go-live with hosting", "file_date": "2026-12-08",
+  "frontmatter": { "source_key": "notion:d4000000-0000-4000-8000-000000000004", "kind": "task",
+                   "origin_edited": "2026-12-08T10:00:00Z", "projects": ["prj-9x4t1b7e"],
+                   "summary": "Findings on whether hosting allows a go-live by the end of March." },
+  "body": "<the task page's body, word for word>" }
+```
+
+- No `notion`, `digest`, `only_keep`, `attached_to`, `extract` or `checked_from`: the CLI refuses them on a task source.
 
 ## 2. The new-notes batch
 
@@ -102,17 +129,17 @@ A Document is a `reference` note with an `origin` (references/extraction.md, "Do
   "frontmatter": { "origin": "whole", "summary": "Acme's brief for the new website, as sent.",
                    "area": "area-2m7c4h8n", "projects": ["prj-9x4t1b7e"], "sources": ["src-5t8n2v6q"] },
   "body": "<the source's body, byte for byte>" }
-{ "type": "reference", "id": "ref-4k8m2q7w", "title": "Acme website: requirements",
-  "frontmatter": { "origin": "part", "summary": "The requirements from Acme's website brief.", "projects": ["prj-9x4t1b7e"],
-                   "area": "area-2m7c4h8n", "sources": ["src-5t8n2v6q"] },
-  "body": "## Requirements\n\n- Login with email\n- Launch in 2027-02\n" }
+{ "type": "reference", "id": "ref-4k8m2q7w", "title": "Check go-live with hosting",
+  "frontmatter": { "origin": "whole", "summary": "Findings on the go-live date, kept from the task.", "projects": ["prj-9x4t1b7e"],
+                   "question": "que-5b8n2k4w", "sources": ["src-7c2m9q4x"] },
+  "body": "<the task source's body, byte for byte>" }
 { "type": "reference", "id": "ref-9w3c7n2t", "title": "Use Supabase for auth",
   "frontmatter": { "origin": "promoted", "promoted_from": "dec-3f7k9m2q", "summary": "Acme moves auth from Firebase to Supabase.",
                    "projects": ["prj-9x4t1b7e"], "sources": ["mtg-8c4n2p7w"] },
   "body": "Acme moves auth from Firebase to Supabase.\n\n## Decision\nUse Supabase for auth.\n" }
 ```
 
-- **`origin` is required.** `whole`: `sources` is exactly that one `src-` id and the body is its body byte for byte, or the CLI refuses it; the CLI writes it as `reviewed`, and a second one of the same source comes back in `skipped` as `ALREADY_KEPT` (fine). `part`: a draft that goes in the input's `review_notes` like any new note. `learned`: what the brain learned (extraction.md "Learned Documents"), a draft in `review_notes`; `sources` may be left out, but give them. `promoted`: `promoted_from` names an existing decision that has no promoted Document yet; it takes that note's lifecycle; `sources` may be left out.
+- **`origin` is required.** `whole`: `sources` is exactly that one `src-` id and the body is its body byte for byte, or the CLI refuses it; the CLI writes it as `reviewed`, and a second one of the same source comes back in `skipped` as `ALREADY_KEPT` (fine). `part` is refused since 0.16.0: a part is a checked row ([checked.md](checked.md)); a `part` Document written before stays as it is. `question` (the second example) only on a `whole` Document of a `task` source: the question the task tracks. `learned`: what the brain learned (extraction.md "Learned Documents"), a draft in `review_notes`; `sources` may be left out, but give them. `promoted`: `promoted_from` names an existing decision that has no promoted Document yet; it takes that note's lifecycle; `sources` may be left out.
 - Leave `whole` and `promoted` Documents out of `review_notes`: they need no yes (a `whole` one is the input's own text, a `promoted` one is asked for in the session).
 
 ## 3. The proposals batch
@@ -131,6 +158,7 @@ A Document is a `reference` note with an `origin` (references/extraction.md, "Do
 - **`passages`** on every item (spec/eligibility.md §9.1; the CLI refuses an item without them, `INPUT_INVALID` at `/proposals/<i>/passages`): the passages the change rests on, a non-empty list, each once. Everything the change draws from counts: its value, its wording, its framing and `^[inferred]` lines, and the line that names a person for a link; every `^[src-…#¶n:…]` reference in its `content`, `answer` or `note.body` must be in the list.
   - **A selected input** (an extract, references/selection.md): the passage reference `src-…#¶n:<passage_hash>` of each paragraph it draws from, the hash from the extract's `passages`. A paragraph the extract doesn't hold is excluded: no change rests on it.
   - **An input with no paragraph ids** (minutes ingested whole, a document, a URL, a pasted text): the input itself, the same value as `source` (`"passages": ["mtg-pcpyn31n"]`, or the `src-` id). Add an owner ruling's source id when the change rests on the ruling too.
+  - **A checked row** ([checked.md](checked.md)): the checked source, never its original. Once a checked source exists, an item that cites the original as `source` or in `passages` is refused (`CHECKED_ORIGINAL`): cite the checked source.
   - A change resting on a note the brain already has (a learned Document's own text) adds that note's id.
 
   A passage that is no longer live gets the item skipped as `SOURCE_EXCLUDED` (SKILL.md step 8). Never pad the list to look supported, and never leave out a passage the change draws from to get past the check: a change that restates an excluded paragraph is not written at all.
@@ -146,6 +174,13 @@ A Document is a `reference` note with an `origin` (references/extraction.md, "Do
 - **`title`** reads as the question the session asks: `<subject> <field>: <old> → <new>`.
 - **Other kinds** (spec/schema.md §11):
   - `add_to_note`: `target`, `content`. A link in `content` is relative to the target note's folder.
+  - **From the brain** (decision 0100 §3; [task-document.md](task-document.md)): an `add_to_note` with `"section": "from_the_brain"`, on a `whole` Document kept from a task. `content` is one or more lines `- <text> ([<title>](<relative link>))`, each link to an existing knowledge note other than the target, and every cited note's id is in `passages`. It is never folded into a `review_notes`; lines already in the section are dropped, and an item left with none is skipped as `ALREADY_ADDED`:
+    ```json
+    { "kind": "add_to_note", "section": "from_the_brain", "title": "Check go-live with hosting: from the brain",
+      "target": "ref-4k8m2q7w", "source": "src-7c2m9q4x", "passages": ["dec-3f7k9m2q"],
+      "content": "- The site goes live on 4 March in three regions ([Go-live date](../decisions/2026-11-02-go-live-date.md))",
+      "why": "What the brain holds on the go-live date." }
+    ```
   - `update_body` (decisions 0045, 0049): `target` = a Document (`reference` note) whose `origin` isn't `promoted`, `content` = its whole new body, every unchanged line copied exactly. The CLI stores the old body's hash, so a body changed meanwhile is caught as stale, and refuses a `content` equal to the body (`NO_CHANGE`).
   - `contradiction`: `target`, `field`, `after` (the target must have a current value).
   - `supersede`: `target` = the new note, `supersedes` = the old one.

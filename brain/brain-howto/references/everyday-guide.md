@@ -35,7 +35,9 @@ Ready and Reviewed make inputs available for processing. Processing happens when
 | Follow up an open question | **“Track the … question.”** It becomes a task with Kind Question, on the Tasks page. |
 | Bring Notion edits into the brain and publish changes | **“Sync with Notion.”** Your edits to the brain's values are asked before they go in. |
 | Get or update a report | **“Report on …”** / **“Refresh the … report.”** |
-| Keep a readable document | **“Keep this as a document.”** / **“Only keep the budget section as a document.”** / **“Promote the decision on … to a document.”** |
+| Keep a readable document | **“Keep this as a document.”** / **“Only keep the budget section as a document.”** / **“Promote the decision on … to a document.”** A part comes back to your Inbox to check first. |
+| Change a document before it goes in | **“Take in this PDF, but keep only the pilot section.”** It writes the changed version to your Inbox, Brain Status New. Check or edit it there, then say **“Go”**, or set it **Ready**. |
+| Keep a task's page as a document | **“Keep the … task as a document.”** It then asks what to add **From the brain**. |
 | Find overdue or stalled work | **“Review my projects.”** / **“What's stalled in …?”** |
 | Find conflicting or outdated knowledge | **“Tidy the brain.”** |
 | Save a lasting lesson or preference | **“Remember this: …”** Review the proposed memory before saving. |
@@ -53,7 +55,8 @@ Ready and Reviewed make inputs available for processing. Processing happens when
 | **New project** | Home | Creates a project as **Planned**. Fill in its details, then say **“Sync with Notion”** to bring it into the brain. |
 | **Ask the brain** | Home | Creates a report request. Type your question as its name, then say **“Catch up.”** Requires Reports and Documents. |
 | **Tidy capture** | A **New** Inbox capture | Notion AI immediately cleans the wording. Check the result, set **Ready**, then say **“Catch up.”** |
-| **Keep as document** | An Inbox item | Requests a readable Document and sets the item to **Ready**. Fill in **Only keep** for a specific section, then say **“Catch up.”** |
+| **Keep as document** | An Inbox item | Requests a readable Document and sets the item to **Ready**. Fill in **Only keep** for a specific section, then say **“Catch up.”** With Only keep, that section first comes back as a changed version for you to check. |
+| **Keep as document** | A task | Keeps the task's page as a Document at the next **“Catch up,”** then asks what to add **From the brain**. Requires Documents. |
 | **Write up** | A promoted Document | Notion AI develops the page using linked brain pages. Review and edit it, then click **Accept**. On later runs, copy the wording you want from **Proposed revision** into the document body, delete that toggle, then click **Accept**. |
 | **Refresh report** | A report in Documents | Notion AI adds a proposed refresh in a toggle. Review it, replace the report text if you agree, delete the toggle, then click **Accept**. |
 | **Accept** | A Document or report | Marks the current wording for the next **“Catch up.”** Your click authorises that exact wording; if the page changes afterward, accept the final version again. |
@@ -95,6 +98,8 @@ The weekly review itself is written by your agent ("weekly review", or every Mon
 
 **A question you follow up as a task:** when its task is **Done**, **Won't Do** or deleted, the brain asks whether the question is answered: say the answer, drop the question, or keep it open.
 
+**A document you want changed before it goes in** (only one section, a figure corrected): ask your agent, and it writes the changed version to your Inbox (Kind Changed, Brain Status New), listing what it left out or altered. Nothing goes in yet. Check or edit it, then say **“Go”** or set it **Ready**. What goes in cites your version; the original stays linked. Meetings and captures keep their own checks.
+
 ## Occasional operations
 
 | I want to… | Say to your agent… |
@@ -122,6 +127,7 @@ Scheduled catch-up needs the configured computer and agent available. It decides
 | You corrected an already processed meeting | Set it back to **Reviewed**, then say **“Catch up.”** |
 | Something waits for your decision | Say **“What needs my decision?”** |
 | A button request is still waiting | Say **“Catch up”**; check whether its module is enabled. |
+| A changed version sits as **New** | It waits for your check: say **“Go,”** or set it **Ready**. |
 
 Put your own project notes in **My notes**. The brain refreshes generated sections such as **Brief** and **Decision log**.
 

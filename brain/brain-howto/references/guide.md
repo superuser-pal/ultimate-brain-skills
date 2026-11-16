@@ -151,7 +151,7 @@ Hover over a property name to see its owner. Each description starts with "Owner
 
 | Owner | Examples | What happens when you edit it |
 |---|---|---|
-| **You** | Status, Priority, Dates, Lifecycle, Archived, a report's What to fix, Brain Status on meetings, Project, Area, Kind and Only keep on an Inbox row, the buttons and the boxes they tick (Document asked; Refresh asked, ticked by hand), Accepted and Accepted at (set by the Accept button) | Your value stands. The brain reads it but never overwrites it; it unticks a button's box and clears a report's What to fix once it has acted on them, and sets a row it took in to Done. It fills Kind only when you left it empty |
+| **You** | Status, Priority, Dates, Lifecycle, Archived, a report's What to fix, Brain Status on meetings, Project, Area, Kind and Only keep on an Inbox row, the text of a changed version (Kind Changed) before it goes in, the buttons and the boxes they tick (Document asked; Refresh asked, ticked by hand), Accepted and Accepted at (set by the Accept button) | Your value stands. The brain reads it but never overwrites it; it unticks a button's box and clears a report's What to fix once it has acted on them, and sets a row it took in to Done. It fills Kind only when you left it empty |
 | **Brain** | Summary, Role, Client, Key Facts, Why, Assessment | The next sync reads your edit as a **correction** and your agent asks you before it goes in (the brain can't tell your edit from one made by Notion AI or another tool). Once accepted, names, summaries and relations change in place and a key fact gets a dated history entry; turned down, the brain's value goes back. Judgments such as Assessment can't be edited: tell your agent |
 | **System** | Brain ID, Last Synced, Ingested At | Don't edit. The brain uses them to match records |
 
@@ -182,11 +182,14 @@ Every Inbox row moves through **Brain Status**: **New → Ready → Done**.
 - **Ready:** the brain takes it in at the next "catch up". **Quick capture** creates its row as Ready.
 - **Done:** the brain took it in, or skipped it and says why in Summary ("Skipped: same as Acme requirements"). Rows the brain creates for documents, emails and web pages start as Done.
 
+A **changed version** (Kind Changed) is the one row the brain creates as **New**: a document you asked to change before it goes in, waiting for your check ("Changing a document before it goes in" below).
+
 **Buttons** ask the brain for something. Each ticks a box on the same row, which reads as "waiting for the brain"; the next "catch up" acts on it and unticks it.
 
 | Button | On | Ticks | The brain then |
 |---|---|---|---|
-| **Keep as document** | Inbox rows | Document asked (and sets the row to Ready) | Keeps the row's file, or its text when it has no file, as a **Document**: the whole of it, or only what you wrote in **Only keep** ("just the requirements table") |
+| **Keep as document** | Inbox rows | Document asked (and sets the row to Ready) | Keeps the row's file, or its text when it has no file, as a **Document**, whole. With **Only keep** filled ("just the requirements table"), it first writes that part as a changed version for you to check, and only that part goes in |
+| **Keep as document** | Tasks | Document asked | Keeps the task's page as a **Document**, word for word, linked to its project or area and to the question it tracks, then asks you what to add **From the brain** |
 | **Refresh report** | Reports (Documents) | nothing (it sends a message to Brain Assistant) | Proposes a refreshed version in a toggle, based on the brain's Notion pages; you accept it with **Accept** |
 | **Tidy capture** | Inbox rows of Kind Capture, Brain Status New | nothing (it sends a message to Brain Assistant) | Rewrites the capture's text as clear sentences, keeping every name, number, date and quote; the row stays New, and you set Ready afterwards |
 | **Write up** | Documents (promoted ones) | nothing (it sends a message to Brain Assistant) | Develops the page into Purpose, Main content, Open questions and Sources, from the brain pages it links; a second click keeps your edits and adds a "Proposed revision" toggle |
@@ -194,11 +197,27 @@ Every Inbox row moves through **Brain Status**: **New → Ready → Done**.
 
 **Documents** (the Documents module). A Document is a page you read, linked to its source, project and area:
 - **the whole input:** the text exactly as it came in. It needs no review and is Reviewed straight away;
-- **a part** (Only keep set, or "also keep the budget from the Acme doc"): what you asked for, as a list or a table. It waits for your yes in the chat, like a new note, and gets its page when you accept it;
+- **a changed version you checked** (Only keep set, or "keep only the budget from the Acme doc"): the part you asked for, first written to your Inbox for you to check; once you say *go* or set it Ready, its text goes in whole, word for word, and is Reviewed;
+- **a task** you kept (Keep as document on the task, or "keep the go-live task as a document"): the task's page, word for word, with a **From the brain** section at the end holding only the lines you said yes to;
 - **learned:** an idea, method or definition the brain learned from what it read (a concept before 0.9.1). It waits for your yes in the chat, like a new note, and gets its page when you accept it;
 - **promoted** from a decision: say "promote the decision on … to a document" to your agent. It starts from the note, then you write in it.
 
 The brain still reads every input for decisions, questions and people, whether or not you keep it as a Document. A new version of the file later proposes only the lines that changed.
+
+---
+
+## Changing a document before it goes in
+
+Meetings have Check minutes and captures have Tidy capture. A document (a file, an email, a web page, a pasted text) gets its check this way: ask your agent to change it before it goes in.
+
+- **Ask in the chat:** "take in ops-plan.pdf, but keep only the pilot section, and the depot count is 11, not 9". Or click **Keep as document** with **Only keep** filled.
+- **The brain takes nothing in yet.** It keeps the original as a source and writes the changed text to a new Inbox row, **Ops plan (changed)**, Brain Status New. Its **What changed** lists what was left out or altered (`Dropped: Hiring (section 3)`, `Altered: depot count 9 → 11`), and **Changed from** links the original's row.
+- **Check it in Notion,** and edit its text if you want. It is your version.
+- **Then say "go"** in the chat: the brain takes in the row as it is now, one subject at a time, as for any input. Or set the row **Ready**: the next catch-up takes it in, and a scheduled one leaves its notes Draft and its questions for your next session (Ready approves the text, not the notes).
+- **What goes in cites your version.** The original stays linked, so everything can be traced back, and it is never taken in on its own. To take in the whole original after all, say so: the brain moves the changed row to the trash and takes in the original.
+- **Changed your mind?** Delete the row; nothing else changes. Until you check it, the catch-up reminds you: "1 changed document to check".
+
+**Keeping a task as a document.** What you gathered on a task (the research for it, the answer to the question it tracks) can become a Document: click **Keep as document** on the task, or say "keep the go-live task as a document". The task's page is kept word for word, linked to its project or area, the question it tracks and the task. Then the brain offers what it already holds on the subject ("From the brain, add to its end? a) The site goes live on 4 March … b) …"), and adds only the lines you say yes to, in a **From the brain** section at the end. Your text above it never changes. A scheduled run keeps the task and leaves the From the brain question for your next session. Kept again after you edit the page, it asks before replacing the Document. Needs the Documents module.
 
 ---
 
@@ -209,9 +228,9 @@ The brain still reads every input for decisions, questions and people, whether o
 | A quick thought, link or idea | **Quick capture** on Home. It lands in the Inbox (Home → What's on today? → Inbox) as **Ready**. Set its **Project** if you know it, so the agent doesn't ask. A row you create by hand starts as **New**: set it to Ready when it's ready. Then "catch up" (or "process my inbox") |
 | A meeting | **New meeting** on Home, or let Notion AI create it when it starts taking notes |
 | A project, area, goal, person or org | Create the row in Notion (**New project** on Home for projects). The next sync imports it into the brain. Or ask the agent for a new project: it writes the note and the publish creates the page from the Projects template |
-| A document (PDF, Word, PowerPoint, Excel, saved HTML page, image) | Put it in your drop folder and tell your agent "process my drop folder". It lists the files and asks once which to take, and, with Documents on, whether to **keep each as a document**: "no" (the default: the brain only reads it), "all", or "only the requirements" ("The Inbox and its buttons"). A new version of a document later proposes only the lines that changed. Then, each ingested file moves to `processed/` inside the folder, so what's left at the top is what the brain hasn't read yet. Or name one file: "ingest this PDF: ~/Documents/brain-dropbox/proposal.pdf". Word, PowerPoint, Excel and HTML files need MarkItDown installed once: `pipx install 'markitdown[all]'` |
+| A document (PDF, Word, PowerPoint, Excel, saved HTML page, image) | Put it in your drop folder and tell your agent "process my drop folder". It lists the files and asks once which to take, and, with Documents on, whether to **keep each as a document**: "no" (the default: the brain only reads it), "all", or "only the requirements" (only that part goes in, after you check it: "Changing a document before it goes in"). A new version of a document later proposes only the lines that changed. Then, each ingested file moves to `processed/` inside the folder, so what's left at the top is what the brain hasn't read yet. Or name one file: "ingest this PDF: ~/Documents/brain-dropbox/proposal.pdf". Word, PowerPoint, Excel and HTML files need MarkItDown installed once: `pipx install 'markitdown[all]'` |
 | A web page | Give your agent the link: "ingest this page: https://…". For a page behind a login, save it as a PDF in your drop folder instead |
-| A file from your phone | Attach it to a **Quick capture** (or to the meeting page), with Project set if you know it. To keep the file itself as a Document, click **Keep as document** (and write in **Only keep** if you want just a part). The row is Ready; the next catch-up reads the file with the row. Files on project and area pages are not read |
+| A file from your phone | Attach it to a **Quick capture** (or to the meeting page), with Project set if you know it. To keep the file itself as a Document, click **Keep as document** (and write in **Only keep** if you want just a part: that part comes back as a changed version for you to check first). The row is Ready; the next catch-up reads the file with the row. Files on project and area pages are not read |
 | A repo's knowledge (decisions, docs, changelog) | "link the repo at ~/code/acme-api". The agent proposes a link kit (what to read and never read, where the repo's tasks live, its Area and Project) and writes it into the repo only after your yes ("Projects in other folders" below). Each catch-up then reads the files changed since the last one; the first time, it asks which to take. Apart from the kit, the brain never writes to the repo |
 | A question for a full report | **Ask the brain** on Home: type the question as the Name ("Where do we stand with the Acme launch?"). The next catch-up answers with a report in **Documents**, linked from yours, and on the project's or area's page under **Reports**. To bring it up to date later, click **Refresh report** on it ("Correcting what came in"). Needs the Reports module (and Documents) |
 | An email, chat thread or note | Paste it into a **Quick capture** (keep who sent it and when). For a thread, ask Brain Assistant to **Run Clean email** on the page: Brain Assistant gives each message a heading with names and date ("Tomás Vidal → Lucía Fernández · 3 Dec 2026"), its own text word for word below it, and a divider before the next, newest first. It drops addresses, signatures, disclaimers, quoted copies and Teams, Zoom or Meet blocks, and rewrites the page right away (the page history keeps the original), asking first only when something is truly unclear. Then set the row to **Ready** and "catch up". Or paste it straight to your agent: "ingest this email" |
@@ -444,7 +463,9 @@ Run these in Claude Code or Codex, from your brain's folder.
 | Bring Notion edits and new rows into the brain, and publish its changes | "sync with Notion" |
 | Ask what the brain knows | "what did we decide about …?", "who is …?", "when is the … launch?" |
 | Get a report on a subject: where it stands, a timeline, decisions, open questions, people and gaps | "report on the Acme launch". It includes notes you haven't reviewed, marked *(not reviewed)*, and is published to Documents as a report. "refresh the Acme launch report" rewrites it as of today |
-| Keep a document, or part of one, as a page | "keep the Acme brief as a document", "also keep the budget from the Acme doc" (or click **Keep as document** on its Inbox row) |
+| Keep a document, or part of one, as a page | "keep the Acme brief as a document", "keep only the budget from the Acme doc" (or click **Keep as document** on its Inbox row). A part is written to your Inbox to check first |
+| Change a document before it goes in | "take in this PDF, but keep only the pilot section", "drop the appendix", "the depot count is 11, not 9"; then check the changed version in your Inbox and say "go" |
+| Keep a task's page as a document | "keep the go-live task as a document" (or click **Keep as document** on the task) |
 | Turn a decision into a page you write in | "promote Use Supabase for auth to a document" |
 | Turn a module on or off | "turn on documents", "turn planning off", "which modules do I have?" |
 | Read a repo into the brain | "link the repo at <path>"; "what is linked?", "check my linked repos", "show the repo's tasks", "change what the brain reads in <repo>", "unlink <repo>" |
@@ -483,6 +504,8 @@ Run these in Claude Code or Codex, from your brain's folder.
 | You want to see what the brain made from a document | Every input has a row in Knowledge → Inbox → What came in?, and on its project's page | Open the row: the body has the digest, and Documents and People list what it produced; its decisions and questions show in the project's Brief |
 | A Brief says nothing is accepted yet | Its notes are still Draft | "what needs my decision" |
 | A document's row shows only the digest | Inbox rows get a digest; the whole text lives in a Document | Click **Keep as document** on the row, then "catch up" |
+| A changed version (Kind Changed) is still New | It waits for your check | Check its text, then say "go", or set it **Ready** for the next catch-up |
+| A document's row was set Ready again but not taken in | Its changed version is waiting for your check | Say "go" on the changed version, or "take in the whole original instead" |
 | A capture is Done but produced nothing | It repeats a source the brain already has; its Summary says "Skipped: same as …" | Nothing, or say "ingest it anyway" if it adds something |
 | A button's box stays ticked | No catch-up has run since, or the module is off | "catch up"; if the report says the module is off, "turn on documents" (or reports) |
 | Goals, Tasks or Documents aren't updated any more | Their module is off | "which modules do I have?", then "turn on …" |
