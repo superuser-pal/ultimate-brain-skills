@@ -56,4 +56,4 @@ When a read fails (the MCP is missing or not logged in, or any query above fails
 { "as_of": "2026-11-06T10:00:00Z", "notion": "unreachable", "repos": [] }
 ```
 
-with the repos of step 4 as usual. The whole session is then **brain only**: the report's second line says so, statuses come from the brain's dated `notion_fields`, the signals that need Notion aren't computed, and no change to a Notion-owned field is offered. Brain-owned changes and Review rows are still offered; their publish waits for the next run that reaches Notion (answers.md, "Brain only").
+with the repos of step 4 as usual. The whole session is then **brain only**: the report's second line says so, statuses come from the brain's dated `notion_fields`, the signals that need Notion aren't computed, and no change to a Notion-owned field is offered. Brain-owned changes and "propose" are still offered; their publish waits for the next run that reaches Notion (answers.md, "Brain only").
