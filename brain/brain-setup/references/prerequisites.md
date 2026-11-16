@@ -26,7 +26,7 @@ Before we start, here is what your machine has:
 ✓ MarkItDown
 ? Notion AI: asked below
 
-Does your Notion plan include Notion AI? And Custom Agents (Business or Enterprise plans)?
+Does your Notion plan include Notion AI? And Custom Agents (Business or Enterprise, with Notion credits)?
 ```
 
 ## What the answers decide

@@ -13,7 +13,7 @@ What the user reads calls the remote **the backup** and uses no Git word (decisi
 | 3 | Backup | the current `origin` when there is one; else a new private GitHub repository named after the brain folder, created with `gh` (step 1 checked it is signed in) | required |
 | 4 | Drop folder | the current `Drop folder:` line; else `brain status`'s `setup.drop_folder.proposed`, created: `~/Documents/brain-dropbox/`, or a folder named after this brain when another brain on the machine reads that one ("Item 4" below) | required |
 | 5 | Language notes are written in | the current `Language:` line; else the language the user writes to you in | required |
-| 6 | Modules | the brain's current `modules` (a new brain: Knowledge, Orgs, Documents, Reports, Tasks on; Planning off); Domains is decided by seeding | shown |
+| 6 | Modules | the brain's current `modules` (a new brain: Orgs, Documents, Reports, Tasks on; Planning off); Domains is decided by seeding | shown |
 | 7 | Publish | `settings.publish` (default `ask`) | shown |
 | 8 | Back up after each run | `settings.push` (default `auto`, shown as `on`; `remind` is shown as `remind me`) | shown |
 | 9 | Opening recall in linked repos | `settings.recall` (default `off`) | shown |
@@ -37,7 +37,7 @@ Your brain's settings. Say "keep these", or change any line ("drop folder ~/Inbo
     Files you drop here are read by the next catch-up: documents, exports, notes.
  5. Language of your notes: English
     The brain writes its notes in this language, whatever the language of the source.
- 6. Modules: Knowledge, Orgs, Documents, Reports, Tasks on · Planning off · Domains: decided when we seed your work
+ 6. Modules: Orgs, Documents, Reports, Tasks on · Planning off · Domains: decided when we seed your work
     Which parts of your Notion space the brain uses; you can change this any time.
  7. Publish: ask
     Ask before the brain publishes to Notion, or publish after each run (auto).

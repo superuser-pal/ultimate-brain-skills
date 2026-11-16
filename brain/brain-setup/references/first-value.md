@@ -10,7 +10,7 @@ Setup ends with four checks on the user's own seeded material (decision 0078 §5
 
 - `pass`: the check passed, and the user confirmed what only they can judge.
 - `fail`: it ran and something was wrong. Name what ("this task is someone else's commitment", "the person appears twice").
-- `unsuitable`: the material can't show it: no seeded document holds a commitment of the owner, there is no main project to report on, a document's Review row holds no item to accept, or no useful question can be answered from the accepted item. Say why. **Never invent** a commitment, a proposal, a Review item or an answer to pass a check.
+- `unsuitable`: the material can't show it: no seeded document holds a commitment of the owner, there is no main project to report on, a document's parts held no item to accept, or no useful question can be answered from the accepted item. Say why. **Never invent** a commitment, a proposal, a Review item or an answer to pass a check.
 - `skip`: `tasks` only, with the Tasks module off. Show it as `skipped (Tasks off)`, never as a pass.
 - Not run in this attempt (the user stopped first): left out of the log line.
 
@@ -26,15 +26,15 @@ Read the latest `first-value` attempt: `setup.first_value` in `brain status` (`a
 
 Say in one line which checks are kept and which run: "Kept from last time: tasks, report. Checking now: organised, answer."
 
-### Before the checks: the seeded documents' Review rows
+### Before the checks: the seeded documents' parts
 
-The seeded documents left one Review row per file (seeding.md, "Key documents"). The `answer` check needs one item from them accepted, so ask now, when a check that needs them is to run: "Your documents left <n> rows in Review. Open Review in Notion, approve or reject what's there (accept at least one item you'd want the brain to know), then say "done"." Then carry out what the user decided with the brain-apply skill (or brain-catch-up). With no seeded document, offer to take one now (seeding.md, "Key documents"); without one, `tasks` and `answer` are `unsuitable` (no document). A document taken in this step goes through the ingest as usual, with its own publish question (`settings.publish`); it writes no new `seeding` line, so the checks already passed are kept. The same offer applies when the seeded documents' rows were decided with nothing accepted: the `answer` check needs another document, or the user's yes to an item they rejected, taken again as a new input.
+Each seeded document was taken in part by part, in the session (seeding.md, "Key documents"; brain-ingest references/parts.md). The `answer` check needs one item from them accepted. When the user left a document's parts for later, ask them now, when a check that needs them is to run, as brain-apply asks a source's waiting notes ("From <document>: <subject> (3 notes, 1 addition): accept all, all except …, or reject?"), and apply the answer. With no seeded document, offer to take one now (seeding.md, "Key documents"); without one, `tasks` and `answer` are `unsuitable` (no document). A document taken in this step goes through the ingest as usual, with its own publish question (`settings.publish`); it writes no new `seeding` line, so the checks already passed are kept. The same offer applies when the seeded documents' parts were answered with nothing accepted: the `answer` check needs another document, or the user's yes to an item they rejected, taken again as a new input.
 
 ### The four checks
 
 1. **Correct tasks** (`tasks`, Tasks on). Show the tasks the ingest created from one seeded document, each with its Project and Due. Ask: "Are these exactly your own commitments in <document>, with the right project and due date, and none of someone else's?" Yes: `pass`. No: `fail`, and name what was wrong (a missing task, someone else's task, a wrong project or date). No seeded document holds a commitment of the owner: `unsuitable`, and the smallest next action is to drop a document that holds one of their commitments. With Tasks off: `skip`.
 2. **A report** (`report`). Ask the user to say "report on <main project>" (the brain-query skill, report mode), or run it with their yes. It passes when the report landed in Documents, linked from the project, citing a seeded document; else `fail`, naming which of the three is missing. No main project: `unsuitable`.
-3. **The information organised** (`organised`). List each note the seeding and the documents' Review wrote, under its Area and Project:
+3. **The information organised** (`organised`). List each note the seeding and the documents' parts wrote, under its Area and Project:
 
    ```text
    Clients
@@ -46,7 +46,7 @@ The seeded documents left one Review row per file (seeding.md, "Key documents").
    ```
 
    People have an Org and no Area, so they are listed by Org (no Org: `no org`). Ask: "Is each where you expect it, and is anyone listed twice?" Yes: `pass`. No: `fail`, naming what was misplaced or duplicated.
-4. **A cited answer** (`answer`). Name the item the user accepted from a seeded document's Review row and applied. Ask: "Ask me one question about it that you'd really ask." Answer with the brain-query skill, showing the answer and the source passage it cites. It passes when the answer rests on the applied item and cites the seeded document, and the user confirms the answer is useful and the passage supports it; else `fail`, naming which. No item accepted from a seeded document, or no useful question can be answered from it: `unsuitable`.
+4. **A cited answer** (`answer`). Name the item the user accepted from a seeded document's parts and applied. Ask: "Ask me one question about it that you'd really ask." Answer with the brain-query skill, showing the answer and the source passage it cites. It passes when the answer rests on the applied item and cites the seeded document, and the user confirms the answer is useful and the passage supports it; else `fail`, naming which. No item accepted from a seeded document, or no useful question can be answered from it: `unsuitable`.
 
 A published report that cites a document does not show by itself that an answer is useful and supported: that is the fourth check's job.
 
@@ -60,7 +60,7 @@ When the attempt's checks are done, or the user stops, write one line with each 
   ```text
   First value isn't there yet:
   - organised: Robin Vale appears twice. Next: say "merge the two Robin Vale notes".
-  - answer: no item from your documents was accepted in Review. Next: accept one item in Review.
+  - answer: no item from your documents was accepted. Next: say "what needs my decision" and accept one.
   Say "set up my brain" when that's done: I'll check only these two again.
   ```
 
