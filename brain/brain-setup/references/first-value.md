@@ -72,6 +72,8 @@ When the attempt's checks are done, or the user stops, write one line with each 
 
 Offered only once first value passes (decision 0078 §2).
 
+**On Windows** (decision 0097), `brain schedule` isn't available: don't ask. Say "Scheduled runs need macOS, so on Windows ask me for a catch-up or the weekly review when you want one.", then `brain config set settings.schedule '"off"'`, log `step=schedule result=declined reason=schedule-unsupported`, commit, and go on to the setup report.
+
 Ask: "Catch-up can run on its own at set times, taking in only what you've marked ready. Turn it on? (You can change this any time.)"
 
 - **On:** run the brain-catch-up skill's "Run on a schedule" (its times, days, model and allow list). When `brain schedule install` succeeds: `brain config set settings.schedule '"on"'`, log `step=schedule result=done`, commit. When it fails: say why, leave `settings.schedule` as it was, log nothing, and offer to try again or choose off.

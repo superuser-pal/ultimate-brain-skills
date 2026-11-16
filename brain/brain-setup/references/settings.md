@@ -17,9 +17,9 @@ What the user reads calls the remote **the backup** and uses no Git word (decisi
 | 7 | Publish | `settings.publish` (default `ask`) | shown |
 | 8 | Back up after each run | `settings.push` (default `auto`, shown as `on`; `remind` is shown as `remind me`) | shown |
 | 9 | Opening recall in linked repos | `settings.recall` (default `off`) | shown |
-| 10 | MarkItDown | `settings.markitdown` when set; else `on` when `markitdown --version` works, else `off` | optional |
+| 10 | MarkItDown | `on`: step 1 checked it is installed | required for early access: shown, not changed |
 | 11 | GitHub CLI (`gh`) | `on`: step 1 checked it is signed in | required for early access: shown, not changed |
-| 12 | Scheduled catch-up | asked after the first-value check (step 8) | optional |
+| 12 | Scheduled catch-up | asked after the first-value check (step 8); on Windows, not available ("Item 12 on Windows" below) | optional |
 | 13 | How the brain talks to you | the current `settings.style` (below); absent: Standard | optional |
 
 ## The screen
@@ -45,8 +45,8 @@ Your brain's settings. Say "keep these", or change any line ("drop folder ~/Inbo
     Back up your brain after each run, or remind you to.
  9. Opening recall in linked repos: off
     Agents in your linked repos load what the brain remembers about them when a session opens.
-10. MarkItDown: off (not installed)
-    Turns PDFs, Word files and slides into exact text, so quotes are exact; off, the agent reads files itself.
+10. MarkItDown: on
+    Turns PDFs, Word files and slides into exact text, so quotes are exact.
 11. GitHub CLI (gh): on
     Creates your backup, checks it stays private, and files your setup report for you.
 12. Scheduled catch-up: asked after your first check
@@ -67,8 +67,9 @@ Still to do after this screen:
 - Show where the brain lives: the folder, and the backup once there is one (`Backup: the private GitHub repository you already have`, when `origin` is set). Item 3 never offers another Git host in early access.
 - Item 8 is changed with the words shown ("back up: remind me", "back up: on"); the setting keeps its values `auto` and `remind`.
 - Item 11 is not a choice in early access: asked to turn it off, say "Early access needs the GitHub CLI: it keeps your backup working." and write nothing.
+- Item 10 is not a choice in early access either: asked to turn it off, say "Early access needs MarkItDown: it keeps quotes from your documents exact." and write nothing.
+- **Item 12 on Windows:** `brain schedule` runs on macOS only, so on Windows the screen shows `12. Scheduled catch-up: not available on Windows` with the line "Ask for a catch-up or the weekly review when you want one.", and step 8 isn't asked (references/first-value.md, "Step 8").
 - An item the user can't leave empty (an email, a language) is asked for before the yes: "Item 2 needs your email."
-- MarkItDown `on` while it isn't installed: give its install command (`pipx install 'markitdown[all]'`, or `pip install 'markitdown[all]'`) and check `markitdown --version` again before applying.
 - Without Notion AI (SKILL.md), add under the screen what is lost, and leave the minutes prompt and Brain Assistant out of "Still to do".
 
 ## Item 4: one drop folder per brain
@@ -139,7 +140,7 @@ In this order; a failure stops the step with its fix, and logs `step=settings re
    - **The privacy check,** before anything more is pushed: `gh repo view --json isPrivate` must say `true`. `false`: reason `remote-public`; say "Your backup is a public repository. Make it private? I'll run `gh repo edit --visibility private --accept-visibility-change-consequences`." On a yes, run it and check again; on a no, stop at step 2. An `origin` that `gh` can't read (another host, no access): reason `remote-failed`, and stop: another host is 1.0's path.
 3. **The drop folder:** create it (`mkdir -p`, with `~` expanded).
 4. **The two `AGENTS.md` lines** (below).
-5. **Settings:** `brain config set settings.<key> '"<value>"'` for `publish`, `push`, `recall`, `markitdown` and `gh` (always `on`), each one the screen shows, whether changed or not, so the choice is recorded, then `brain config set settings.style '<value>'` for item 13 ("Item 13" above), which also writes the style block in `AGENTS.md`. `settings.schedule` waits for step 8.
+5. **Settings:** `brain config set settings.<key> '"<value>"'` for `publish`, `push` and `recall`, and `markitdown` and `gh` (both always `on`), each one the screen shows, whether changed or not, so the choice is recorded, then `brain config set settings.style '<value>'` for item 13 ("Item 13" above), which also writes the style block in `AGENTS.md`. `settings.schedule` waits for step 8.
 6. **Modules:** `brain modules on|off <module>` for each change.
 7. **Check** with `brain status`: `checks` `git_identity`, `remote`, `drop_folder` and `language` must pass. One that doesn't is fixed now.
 8. **Log, commit and push:** commit `rules: drop folder and language` for the `AGENTS.md` lines, on their own (with the style block too when step 5 changed it: `rules: drop folder, language and response style`); log `step=settings result=done`; commit `setup: settings` with `brain.json` and the `setup` log lines not yet committed (`started`, `prerequisites`, this one); then `git push -u origin <working branch>`, which creates `origin/<working branch>`, and after it succeeds `git remote set-head origin <working branch>`, so `brain status` finds the working branch from `origin/HEAD` from then on (it writes only in `.git`). A failed push is reported with [backup.md](backup.md)'s words ("Not backed up: <reason>. Say "fix my backup".") and reason `push-failed`; setup goes on.
@@ -160,4 +161,4 @@ Decision 0086 §3 keeps these steps written for 1.0, whose opening grill decides
 
 ## Changing one setting later
 
-Asked outside the screen ("turn on markitdown", "back up: remind me", "change my drop folder"): apply that item alone as above (its install check first), commit `setup: <item>`, and say what it changes. An optional item set to `off` is never asked again; this is how the user changes it. "Turn off gh" is answered as item 11 says, and nothing is written.
+Asked outside the screen ("back up: remind me", "change my drop folder"): apply that item alone as above, commit `setup: <item>`, and say what it changes. An optional item set to `off` is never asked again; this is how the user changes it. "Turn off gh" and "turn off markitdown" are answered as items 10 and 11 say, and nothing is written.

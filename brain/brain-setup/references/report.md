@@ -12,7 +12,7 @@ CLI 0.14.0 · skills ultimate-brain-skills 1.4.0 · agent Claude Code · platfor
 Notion AI: yes · Custom Agents: yes · modules: knowledge, orgs, documents, reports, tasks
 Time: 52 min (first setup line to the last)
 1 prerequisites: done
-2 settings: done (markitdown off, gh on)
+2 settings: done (markitdown on, gh on)
 3 notion-mcp: failed once (notion-unreachable), then done
 4 connect: done (template 0024, 15 examples removed)
 4a minutes-prompt: failed once (shape-wrong), then done
@@ -50,6 +50,8 @@ The `reason=` of a `result=failed` line:
 | Code | When |
 |---|---|
 | `missing-prerequisite` | Node, Git or the agent is missing (step 1) |
+| `markitdown-missing` | `markitdown --version` fails (step 1; decision 0097) |
+| `schedule-unsupported` | step 8 on Windows, on a `result=declined` line (decision 0097) |
 | `gh-missing` | `gh` is not installed: `gh --version` fails (step 1) |
 | `gh-signed-out` | `gh` is not signed in to github.com: `gh auth status --hostname github.com` fails (step 1) |
 | `notion-ai-missing` | the plan has no Notion AI and the user didn't choose the path without it (step 1) |
