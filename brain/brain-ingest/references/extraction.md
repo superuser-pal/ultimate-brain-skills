@@ -15,7 +15,7 @@ An area note may hold a `track` list: 1 to 8 short lowercase phrases naming the 
 
 - **Which list:** the `track` of the Area the input is placed in: its project's `area`, or the Area the user or the row named. An input placed in several Areas uses each one's list for the items about it. A Domain or project has no list of its own.
 - **How it is used:** when you choose what to extract within the budget ("Earn every note", below), favour the items that match a tracked kind: when the budget forces a choice, a tracked kind goes first, and a fact of a tracked kind (a budget, a deadline) is kept as a fact on its subject rather than left in the body. The generic kinds still apply; the list adds weight, it never removes one.
-- **What it never changes:** the note types, the decision gate (a tracked kind still passes it to become a decision), Review, and the owner's tasks. It is not published to Notion and needs no question.
+- **What it never changes:** the note types, the decision gate (a tracked kind still passes it to become a decision), what the user is asked, and the owner's tasks. It is not published to Notion and needs no question.
 
 ## What each part of the minutes becomes
 
@@ -38,7 +38,7 @@ An area note may hold a `track` list: 1 to 8 short lowercase phrases naming the 
 | An idea, method or definition the input explains ("how the blue-green deploy works") | A **learned Document** ("Learned Documents" below) when it is worth reading again beyond this input | `note new` |
 | Something that contradicts a loaded note | `contradiction` (both claims kept until the user decides) | `proposal new` |
 | A standing requirement of the client ("Acme's legal team requires EU data residency") | `add_to_note` on the org, besides any decision that cites it | `proposal new` |
-| An answer to an existing open question | `answer` on the question (decision 0041): the answer in one sentence, the line as `why`, and `answer_note` = the decision or note that answers it, when there is one. Approved, it closes the question and sets its Status to Answered in Notion | `proposal new` |
+| An answer to an existing open question | `answer` on the question (decision 0041): the answer in one sentence, the line as `why`, and `answer_note` = the decision or note that answers it, when there is one. Asked in its part; accepted, it closes the question, which leaves the Brief. A tracked question also asks to set its task Done (track.md) | `proposal new` |
 | A person working on an existing project they're not listed on (new or existing person) | `add_link` on the project, `field: people` | `proposal new` |
 
 ## Questions or commitments (decision 0071)
@@ -47,8 +47,8 @@ Read each line for what it says, never for the heading it sits under (one except
 
 | The line | Becomes |
 |---|---|
-| Something a later document, meeting or answer can settle: "Is the Q3 budget confirmed?", "Who owns the mobile app?" | a **question** note, when it matters beyond the input |
-| A risk or concern: "the vendor may miss the deadline" | a question note with `kind: risk` |
+| Something a later document, meeting or answer can settle: "Is the Q3 budget confirmed?", "Who owns the mobile app?" | a **question** note, when it matters beyond the input; also a task only when its line carries `Track: Waiting On —` or the user says "track it" ([track.md](track.md)) |
+| A risk or concern: "the vendor may miss the deadline" | a question note with `kind: risk`; also a task only in the same two ways |
 | The owner's own explicit to-do: "I'll send Globex the revised quote", "can you send me the plan by Friday?" asked of the owner | a **task** (Tasks module on); with Tasks off, a line in the meeting's `## Action items` (or the report's list for another source). **Never a question** |
 | Someone else's commitment: "Dana will share the contract" | a line in `## Action items` (`action — Dana — due`). A **Waiting On** task only when the item carries `Track: Waiting On —` (selection.md §6); never add the token. **Never a question** |
 | An ambiguous owner, "needs clarification", or a tentative idea: "we could try a pilot", "should we check the invoice?" with no one taking it on | **nothing**: no task, no question. Name it under the report's Check |
@@ -71,7 +71,7 @@ Minutes follow the table above. For other sources (references/sources.md) there 
 What the brain learned from an input, an idea, a method or a definition, is a **learned Document**: a `reference` note with `origin: learned` (there is no `concept` type since 0.9.1; `note new` refuses it).
 - `title`: the idea's name ("Blue-green deploys"); `frontmatter`: `origin: learned`, `summary` (one line: what it is), `sources: [<the input's source or meeting id>]`, and `area`, `projects` or `tags` from what it is about;
 - body: the explanation in your own words, short, every figure and name as stated; `^[inferred]` on what the input implies but doesn't say;
-- it is a draft like any new note: it goes in the input's `review_notes`. It is written whether or not the Documents module is on: with it off, it stays in Git and in `brain query`, unpublished;
+- it is a draft like any new note: it goes in its part's `review_notes`. It is written whether or not the Documents module is on: with it off, it stays in Git and in `brain query`, unpublished;
 - one per idea: an idea the brain already has a learned Document for (search `brain query --candidates "<the idea>" --types reference`, and read the candidate with `brain query --read`) gets an `add_to_note` (or `update_body`) on it, never a second one;
 - never for something the user asked to keep (that is `whole` or `part`, below), nor for a decision, a question or a fact.
 
@@ -81,18 +81,18 @@ A Document is a `reference` note shown in Notion's Documents database: something
 
 - **`whole`:** the input is to be kept and **Only keep is empty** (Document asked on its Inbox row, "all" in the drop folder's question, "keep the Acme brief as a document" in chat). One Document per source, its body the source's body **byte for byte** (the CLI checks the hash): copy the source's body, never retype or tidy it. For an input of this run, that is the body you snapshot; for a source already in the brain, the `body` `brain query --read <src-id>` returns, never its file. A source the read withholds, or returns with `restricted: true`, is not kept now: name it under Needs you.
   - `title`: the input's title without the kind ("Acme website brief"), `frontmatter`: `origin: whole`, `summary` (one line: what the file is), `sources: [<that one source id>]`, and `area` and `projects` from the row or the project the input is about;
-  - it needs **no Review**: the CLI writes it as `reviewed`, and it never goes in `review_notes`;
+  - it needs **no yes**: the CLI writes it as `reviewed`, and it never goes in `review_notes`;
   - an Inbox row **with files attached** keeps each **file**, not the capture's text: one `whole` Document per attached source (`attached_to` = the row's source);
   - a second `whole` of the same source is skipped as `ALREADY_KEPT`: fine.
 - **`part`:** Only keep names something ("the requirements table and the deadlines"; or "also keep the budget from the Acme doc" in chat, from the source the brain already has). One Document holding only that:
   - `title`: what it is, named for its subject: "Acme website: requirements", "Globex: price list";
   - `frontmatter`: `origin: part`, `summary` (one line: what it holds and from which document, without a version or date, so a new version doesn't make it stale), `sources: [<the source id>]`, and `area` and `projects`;
   - body: the kept content, as a Markdown list or table, in the document's order and wording; every figure, date and name exactly as stated. No commentary, no links of your own;
-  - it is a draft like any new note: it goes in the input's `review_notes` (for a request on a source already in the brain, a new `review_notes` with that source).
-- **`promoted`:** Promote asked on a decision (a `promote_requests` item; decisions only since 0.9.1, decision 0071). One Document seeded from the note, linked to it. Read the note with `brain query --read <dec-id>` and copy only what it returned: promote it only when it comes back with `restricted: false`. A note withheld, or returned with `restricted: true` (part of it is excluded, so its title, summary or a line is missing), is not promoted now: name it under Needs you ("Use Supabase for auth can't become a Document while part of it waits for cleanup"; by its `cite` label when the read gave no title), and leave Promote asked ticked so a later run promotes it once the cleanup is done. Never take its text from its file or its Notion page:
+  - it is a draft like any new note: it goes in its part's `review_notes` (for a request on a source already in the brain, a new `review_notes` with that source and its subject).
+- **`promoted`:** the user asks in the session to promote a decision to a document ("promote the decision on … to a document", decision 0099 §9; decisions only since 0.9.1, decision 0071), and says yes to the one you found. One Document seeded from the note, linked to it. Read the note with `brain query --read <dec-id>` and copy only what it returned: promote it only when it comes back with `restricted: false`. A note withheld, or returned with `restricted: true` (part of it is excluded, so its title, summary or a line is missing), is not promoted now: say so ("Use Supabase for auth can't become a Document while part of it waits for cleanup"; by its `cite` label when the read gave no title), and the user asks again once the cleanup is done. Never take its text from its file or its Notion page:
   - `title`: the note's title, `frontmatter`: `origin: promoted`, `promoted_from: <the note id>`, `summary` = the note's summary, and the note's `area`, `projects` and `sources` copied;
   - body: the note's summary, a blank line, then the note's body;
-  - the CLI gives it the note's lifecycle, and it needs no Review. From then on **its body is the user's**: never propose an `update_body` on it.
+  - the CLI gives it the note's lifecycle, and it needs no other yes. From then on **its body is the user's**: never propose an `update_body` on it.
 
 The source records what the user asked to keep in `only_keep` (cli-inputs.md §1b), so a new version knows it.
 
@@ -105,7 +105,7 @@ A corrected input read again (a meeting set back to Reviewed, an Inbox row set b
   - a changed value (a date, an amount, a name, a role) held as a fact → `update_fact` on that note, `before` = the old value, `after` = the new, `why` = the new line ("launch in February" → "launch in March": `launch_date` 2027-02 → 2027-03);
   - a changed statement in a note's text ("in a transition period" → "done with the transition period") → one `add_to_note` worded as the correction, naming what it replaces: "Correction (fixed minutes, 2026-10-27): the team is done with the transition period; the earlier minutes said it was still in it." No proposal kind rewrites a note's body (only a Document's `update_body`), so also name the note under Check with the old wording: "Acme sync's text still says 'in a transition period'; the correction is added below it";
 - a new line that passes the rules above → a new note or a change, as in a first ingest. For a meeting, a new decision or question is a `new_item` (the meeting note already exists);
-- a removed or reversed line that a note rests on (a decision the minutes no longer record, a misheard name) → never archive or rewrite that note yourself. Name it under the report's Check, with what to do ("Use Firebase for auth rests on a line the corrected minutes removed: reject it in Review if it's still pending, or say 'archive it'").
+- a removed or reversed line that a note rests on (a decision the minutes no longer record, a misheard name) → never archive or rewrite that note yourself. Name it under the report's Check, with what to do ("Use Firebase for auth rests on a line the corrected minutes removed: reject it when it is asked, if it still waits, or say 'archive it'").
 - the meeting note's own text (its summary and body) still says what the first version said: when a change touches it, add one `add_to_note` on the meeting ("Corrected minutes: the launch moves to March 2027, not February"), and name under Check any `summary` the change makes stale (a project's, the meeting's): no proposal kind rewrites a summary;
 - an action item only when its line changed (a new owner or date): it becomes a task as in a first ingest. Unchanged ones already are tasks, and the report doesn't list them again;
 - **a line the brain already holds as a question** (a question note raised in this meeting, or citing this input, that says the same thing; open, answered or dropped; find it with `brain query --candidates "<the line>" --types question` and read it with `brain query --read`) is never turned into a task, even when it now reads as the owner's to-do: only the to-do tidy converts it ([todo-tidy.md](todo-tidy.md)). A line the user **rewrote** into a to-do is a changed line: it gets its task once, unless the question it replaces was dropped with a `task` (that task stands); name the old question under Check: "<question> is now your task: say 'drop it'" (the tidy's Drop);
@@ -134,7 +134,7 @@ Answers that only fix the input (a date, attendees, which spellings are one pers
 
 - **"(tentative)" does not lower a decision below the gate.** It only sets `assessment: provisional`. A tentative launch date passes the gate; a tentative routine ("send drafts on Fridays") does not, because routines never do.
 - **A decision that changes a fact gets both:** the decision note and an `update_fact` for the fact ("launch on 15 Feb 2027" → `launch_date` 2027-02 → 2027-02-15).
-- **An assignment that answers an open question** ("Carlos owns the mobile app") is an `answer` on the question. It gets a decision note only if it passes the gate on its own; then that note is the `answer_note`. Approving the row marks the question Answered in Notion; you never set Status yourself.
+- **An assignment that answers an open question** ("Carlos owns the mobile app") is an `answer` on the question. It gets a decision note only if it passes the gate on its own; then that note is the `answer_note`. The user's yes to it closes the question; a tracked question's task is set Done only on that yes (track.md).
 - **`deciders`** only when the minutes say who decided; otherwise leave it out.
 - **An approval of a new value** ("budget raised to 110000 EUR, approved by Carlos") is a fact change (`update_fact`), not a decision, unless alternatives were weighed or it commits to something hard to reverse.
 

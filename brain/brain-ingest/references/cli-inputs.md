@@ -113,7 +113,7 @@ A Document is a `reference` note with an `origin` (references/extraction.md, "Do
 ```
 
 - **`origin` is required.** `whole`: `sources` is exactly that one `src-` id and the body is its body byte for byte, or the CLI refuses it; the CLI writes it as `reviewed`, and a second one of the same source comes back in `skipped` as `ALREADY_KEPT` (fine). `part`: a draft that goes in the input's `review_notes` like any new note. `learned`: what the brain learned (extraction.md "Learned Documents"), a draft in `review_notes`; `sources` may be left out, but give them. `promoted`: `promoted_from` names an existing decision that has no promoted Document yet; it takes that note's lifecycle; `sources` may be left out.
-- Leave `whole` and `promoted` Documents out of `review_notes`: they need no Review.
+- Leave `whole` and `promoted` Documents out of `review_notes`: they need no yes (a `whole` one is the input's own text, a `promoted` one is asked for in the session).
 
 ## 3. The proposals batch
 
@@ -136,14 +136,14 @@ A Document is a `reference` note with an `origin` (references/extraction.md, "Do
   A passage that is no longer live gets the item skipped as `SOURCE_EXCLUDED` (SKILL.md step 8). Never pad the list to look supported, and never leave out a passage the change draws from to get past the check: a change that restates an excluded paragraph is not written at all.
 
 - **Don't send `before`;** the CLI fills it from the current fact. **`from`** (only `update_fact` and `contradiction` have one): leave it out for a meeting (the CLI uses the meeting's date). For any other source, send it: the date the text gives for the change ("approved on 5 December 2026" → `2026-12-05`), else the source's `file_date`; otherwise the CLI would use today.
-- **`add_link`** (decision 0028) adds one value to a list of an existing note. Send one item per link, each with its own `title` and `why`: the CLI groups the items with the same `target` and `source` into one proposal, one Review row (decision 0037), and writes the group's title itself:
+- **`add_link`** (decision 0028) adds one value to a list of an existing note. Send one item per link, each with its own `title` and `why`: inside a part, the CLI folds it into the part's `review_notes`, where the links of one `target` and `field` are one item, decided whole ("People on Acme website: + Lucía, + Tomás"); outside one, it groups the items with the same `target` and `source` into one proposal (decision 0037) and writes the group's title itself:
   ```json
   { "kind": "add_link", "title": "Acme website: add Lucía Fernández to People", "target": "prj-9x4t1b7e", "field": "people",
     "after": "per-zzvs98vn", "why": "Lucía Fernández (Acme, marketing lead)", "source": "mtg-pcpyn31n", "passages": ["mtg-pcpyn31n"] }
   ```
   `field` is one of `aliases`, `tags`, `projects`, `people`, `attendees`, `deciders`. A value that is already listed is skipped as `ALREADY_LINKED`.
 - **`why`** is the sentence from the minutes, verbatim: a sentence of an included paragraph, never of an excluded one (SKILL.md, "The writing rule").
-- **`title`** reads as a Review row: `<subject> <field>: <old> → <new>`.
+- **`title`** reads as the question the session asks: `<subject> <field>: <old> → <new>`.
 - **Other kinds** (spec/schema.md §11):
   - `add_to_note`: `target`, `content`. A link in `content` is relative to the target note's folder.
   - `update_body` (decisions 0045, 0049): `target` = a Document (`reference` note) whose `origin` isn't `promoted`, `content` = its whole new body, every unchanged line copied exactly. The CLI stores the old body's hash, so a body changed meanwhile is caught as stale, and refuses a `content` equal to the body (`NO_CHANGE`).
@@ -151,18 +151,18 @@ A Document is a `reference` note with an `origin` (references/extraction.md, "Do
   - `supersede`: `target` = the new note, `supersedes` = the old one.
   - `merge`: `target` = the duplicate, `merge_into` = the survivor.
   - `new_item`: `note`, a `note new` item without `id`, for a decision or question of a meeting that already existed.
-- **`review_notes`** (decisions 0041, 0043, 0045): one per input, in the same batch as its `add_link`, `update_fact`, `update_body` and `add_to_note` items, which the CLI folds into it as lettered items (changes first, then notes, then links):
+- **`review_notes`** (decisions 0041, 0096, 0098): one per part, with the part's `subject` (a note id, or a plain name of at most 80 characters), in the same batch as the part's `add_link` and `add_to_note` items and its `update_fact` items for a fact the note doesn't have yet, each carrying the same `source` and `subject`; the CLI folds them into it as lettered items (changes first, then notes, then links). An `update_fact` for a fact the note already holds, and an `update_body`, are never folded: each is its own proposal, asked in its part. An item that could fold but whose `subject` has no `review_notes` in the batch, while its `source` has one, is refused (`INPUT_INVALID`):
   ```json
-  { "kind": "review_notes", "source": "mtg-pcpyn31n",
+  { "kind": "review_notes", "source": "mtg-pcpyn31n", "subject": "prj-9x4t1b7e",
     "notes": ["mtg-pcpyn31n", "per-zzvs98vn", "dec-axker49q", "dec-xe9x6apm", "que-wtnyy4r6", "que-zv7ckbtk"],
     "note_passages": { "mtg-pcpyn31n": ["mtg-pcpyn31n"], "per-zzvs98vn": ["mtg-pcpyn31n"], "dec-axker49q": ["mtg-pcpyn31n"],
       "dec-xe9x6apm": ["mtg-pcpyn31n"], "que-wtnyy4r6": ["mtg-pcpyn31n"], "que-zv7ckbtk": ["mtg-pcpyn31n"] } }
   ```
-  `source` is the meeting id for minutes, else the source's id: the same value the batch's other proposals carry. `notes` lists every knowledge note `note new` created for this input (never the source), or is `[]` when it created none (a re-read). `note_passages` gives each listed note its passages, by the rules of `passages` above (for a selected input, the `src-…#¶n:…` of the paragraphs its body and facts draw from); no key for a note not in `notes`, and none at all with `notes: []`. The review_notes itself takes no `passages`: each folded change and link brings its own. The CLI writes the title ("From Acme launch review: 1 change, 6 new notes and 2 links"). A note can be in only one `review_notes`. The reply's `created` has one proposal for all of them; folded items are not listed separately.
-- **Unsure flags and repeats** (0.15.0, decision 0090 §6; spec/cli.md §5.6): the Review page lists them for the user and for Brain Assistant's Grill review, which asks about each flag first, and Approve leaves a flagged item Pending until its line says Accept. Write them when you judge them, never as decoration:
-  - `unsure` (a list of one-line strings) on a folded `update_fact`, `update_body`, `add_to_note` or `add_link` item, or on a note through `note_flags` (`{ "<note id>": { "unsure": [...] } }`, only notes of `notes`), when **two passages give different values** for what the item sets (a number, a date, a name, a status), when **you chose a value between readings** (a candidate count against a starting count, a suggestion against a decision), or when **you matched a person or project by name only**. Each flag names both passages, the reading you chose, and that the ingest judged it: `"¶1 lists eleven candidate depots and ¶4 says the pilot starts with nine: I chose 9 (the ingest's reading)."`
-  - `repeat` (one short key, the same string on each) on items that record the same thing: a decision written as a fact, a body addition and a new decision note gets `"repeat": "pilot starts with nine depots"` on all three (on a note through `note_flags`). The grill asks the user which to keep.
-  - The CLI adds one flag itself (two `update_fact` changes of one proposal with different values for the same field); don't write that one. Anything else stays unflagged: a page with no flag says "Nothing flagged".
+  `source` is the meeting id for minutes, else the source's id: the same value the batch's other proposals carry. `notes` lists every knowledge note `note new` created for this part (never the source), or is `[]` when it created none (a re-read, or a part with only additions). `note_passages` gives each listed note its passages, by the rules of `passages` above (for a selected input, the `src-…#¶n:…` of the paragraphs its body and facts draw from); no key for a note not in `notes`, and none at all with `notes: []`. The review_notes itself takes no `passages`: each folded change and link brings its own. The CLI writes the title ("From Acme launch review, Acme website: 1 change, 6 new notes and 2 links"). A note can be in only one `review_notes`. The reply's `created` has one proposal per part, its `input_indexes` naming the items it holds.
+- **Unsure flags and repeats** (decision 0090 §6, kept by 0096; spec/cli.md §5.6): each flagged item is asked in its part before the part's yes (references/parts.md), and the yes doesn't cover one the user turned down or left for later. Write them when you judge them, never as decoration:
+  - `unsure` (a list of one-line strings) on a folded `update_fact`, `add_to_note` or `add_link` item, or on a note through `note_flags` (`{ "<note id>": { "unsure": [...] } }`, only notes of `notes`), when **two passages give different values** for what the item sets (a number, a date, a name, a status), when **you chose a value between readings** (a candidate count against a starting count, a suggestion against a decision), or when **you matched a person or project by name only**. Each flag names both passages, the reading you chose, and that the ingest judged it: `"¶1 lists eleven candidate depots and ¶4 says the pilot starts with nine: I chose 9 (the ingest's reading)."`
+  - `repeat` (one short key, the same string on each) on items that record the same thing: a decision written as a fact, a body addition and a new decision note gets `"repeat": "pilot starts with nine depots"` on all three (on a note through `note_flags`). The part asks the user which to keep.
+  - Anything else stays unflagged.
   ```json
   { "kind": "update_fact", "target": "prj-…", "field": "pilot_depots", "after": "9", "source": "mtg-…", "passages": ["src-…#¶4:…"],
     "unsure": ["¶1 lists eleven candidate depots and ¶4 says the pilot starts with nine: I chose 9 (the ingest's reading)."],

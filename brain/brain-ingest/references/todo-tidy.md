@@ -1,15 +1,16 @@
-# The to-do tidy (decision 0071)
+# The to-do tidy (decisions 0071, 0099)
 
-Before 0.9.1 the ingest sometimes filed a to-do as an open question. This one-off step finds those questions and, **after the user's yes for each**, turns the owner's into tasks and drops the rest. Run it when the user asks ("turn my to-do questions into tasks", "clean up my open questions"), in a chat with the user. Never in a catch-up, a schedule or any unattended run. The contract is spec/capture-and-review.md §6.2; the command is `brain question drop` (spec/cli.md §5.30).
+Before 0.9.1 the ingest sometimes filed a to-do as an open question. This one-off step finds those questions and, **after the user's yes for each**, turns the owner's into tasks and drops the rest; then it offers each real open question as a task that follows it up (Track), one at a time. Run it when the user asks ("turn my to-do questions into tasks", "clean up my open questions"), in a chat with the user, and offer it once after the 0.16.0 Notion migration archives the Questions database: the open questions no longer have a list of their own in Notion, so each one the user follows up becomes a task now (`Your open questions now live in the Briefs. Go through them and make a task of the ones you follow up?`). Never in a catch-up, a schedule or any unattended run. The contract is spec/capture-and-review.md §6.2; the command is `brain question drop` (spec/cli.md §5.30).
 
 ## 1. Find the candidates
 
-Run `brain status` (the owner name, whether the Tasks module is on and Notion is configured), then take the ids of the question notes from `brain index --json` (`notes` of `type: question`, lifecycle other than `archived`: ids only, an administrative listing) and read them with `brain query --read <id>,<id>,… --json`, at most 20 ids a call. Everything below comes from what the read returned, never from a question's file: a question it withholds, or returns in its awaiting-cleanup form (`title` `null`; part of it is excluded), is not a candidate. A candidate is a question with `kind: question` (never a risk), a lifecycle other than `archived`, no `answer`, no `dropped`, and Notion Status Open or none (`notion_fields.status`). Use each one's title, summary and body, and the line of its meeting (`raised_in`) or source it came from, read the same way.
+Run `brain status` (the owner name, whether the Tasks module is on and Notion is configured), then take the ids of the question notes from `brain index --json` (`notes` of `type: question`, lifecycle other than `archived`: ids only, an administrative listing) and read them with `brain query --read <id>,<id>,… --json`, at most 20 ids a call. Everything below comes from what the read returned, never from a question's file: a question it withholds, or returns in its awaiting-cleanup form (`title` `null`; part of it is excluded), is not a candidate. A candidate is a question with `kind: question` (never a risk), a lifecycle other than `archived`, no `answer`, no `dropped` and no `task` (not tracked yet). Use each one's title, summary and body, and the line of its meeting (`raised_in`) or source it came from, read the same way.
 
 Classify each with [extraction.md](extraction.md), "Questions or commitments":
 - **the owner's explicit to-do** ("Send the deck to the board?", "I'll draft the onboarding checklist") → **Convert**: a task, then the question dropped with it. With the Tasks module off, or no Tasks database, or a question with neither `raised_in` nor a non-minutes source, offer **Drop** instead and say why ("Tasks is off: it stays in the meeting's text"). The same for a question from a selected capture whose line you can't tie to one item (step 3);
 - **someone else's commitment** ("Will Dana share the contract?") → **Drop**, with no task. Never a Waiting On task: only the `Track: Waiting On —` token on a meeting item makes one (decision 0055);
-- anything a later document or meeting can still answer, an ambiguous owner, a tentative idea → **not listed**. When in doubt, leave it out.
+- **a real question** (anything a later document or meeting can still answer) → **Track**, offered one at a time after the list (step 3b). With the Tasks module off, none is offered;
+- an ambiguous owner, a tentative idea → **not listed**. When in doubt, leave it out.
 
 Nothing found: say so in one line and stop.
 
@@ -39,18 +40,29 @@ For each **Drop**: `brain question drop` with `{ "items": [ { "id": "<que-id>" }
 
 If a step fails, stop that item and say which step failed. A task created and recorded but not dropped is safe to finish: run step 4 again (a repeated drop is `unchanged`). Never create a second task for an item whose page id is already in the meeting's `tasks` from this run.
 
-Never delete a question, never set its Status or Lifecycle yourself, and never edit its file: `question drop` archives it, records `dropped` and the task, and the publish sends Lifecycle Archived and Status **Dropped** once.
+Never delete a question, never set its Lifecycle yourself, and never edit its file: `question drop` archives it and records `dropped` and the task; it leaves the Brief at the next publish.
+
+## 3b. Track, one question at a time
+
+After the Convert and Drop items, offer each real question as a task, one at a time, oldest first, with its project:
+
+```
+"Can the site go live by the end of March?" (Website refresh). Track it as a task?
+  a) find it out yourself (To Do)  b) you asked someone: who? (Waiting On)  c) no, leave it in the Brief
+```
+
+a or b tracks it as [track.md](track.md) says (steps 3 and 4), with the owner the user names for b. c leaves it open, in the Brief. "Stop" ends the offers; the rest stay as they are. Count the tracked ones.
 
 ## 4. Finish
 
-Run `brain index`, `brain views`, `brain lint`; stop on a lint error in a file this run wrote. `brain log tidy-questions - converted=<n> dropped=<n>`, then commit in the brain repo: `tidy: <n> to-do questions converted, <n> dropped`. Publish (`brain sync render --changed` → MCP → `brain sync record`, references/notion.md), commit `publish: to-do tidy`, and push per `settings.push` (the brain's AGENTS.md, "Write path"), never off the working branch. The report then ends with the backup line (brain-setup references/backup.md, "The report's last line"): none after a push that succeeded; `<n> changes not backed up yet (Back up after each run: remind me).` with `remind`; `Not backed up: <reason>. Say "fix my backup".` when the push failed or wasn't made.
+Run `brain index`, `brain views`, `brain lint`; stop on a lint error in a file this run wrote. `brain log tidy-questions - converted=<n> dropped=<n>`, then commit in the brain repo: `tidy: <n> to-do questions converted, <n> dropped, <n> tracked`. Publish (`brain sync render --changed` → MCP → `brain sync record`, references/notion.md), commit `publish: to-do tidy`, and push per `settings.push` (the brain's AGENTS.md, "Write path"), never off the working branch. The report then ends with the backup line (brain-setup references/backup.md, "The report's last line"): none after a push that succeeded; `<n> changes not backed up yet (Back up after each run: remind me).` with `remind`; `Not backed up: <reason>. Say "fix my backup".` when the push failed or wasn't made.
 
-Report in three lines (SKILL.md step 12):
+Report in three lines (SKILL.md step 13):
 
 ```
-Done: 2 to-do questions turned into tasks · 1 dropped
+Done: 2 to-do questions turned into tasks · 1 dropped · 3 questions tracked
 Needs you: nothing
-Next: nothing; the tasks are in Notion
+Next: nothing; the tasks are in Notion (Tasks → Questions)
 ```
 
 A dropped question is never listed again, and no later re-read of its meeting turns its line into a task (extraction.md, "Re-reads").
