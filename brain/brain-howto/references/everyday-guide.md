@@ -6,9 +6,9 @@ Capture information, remember decisions and keep track of your work. Use ordinar
 
 | Place | Use it for |
 |---|---|
-| **Notion** | Capture ideas, read your knowledge, manage tasks and review proposed changes. |
-| **Brain Assistant in Notion AI** | Prepare for meetings, explain proposals, clean captures and help write documents. |
-| **Your agent in Claude Code or Codex** | Bring information into the brain, apply your decisions, answer questions and maintain the system. |
+| **Notion** | Capture ideas, read your knowledge and manage tasks. |
+| **Brain Assistant in Notion AI** | Prepare for meetings, check minutes, clean captures and help write documents. Needs Business (or Enterprise) with Notion credits. |
+| **Your agent in Claude Code or Codex** | Bring information into the brain, ask you what it needs decided, answer questions and maintain the system. Every decision is made here. |
 
 Open your agent in your brain's folder for the requests below. Connected work folders also support the actions configured for them. Features depend on your installed version and enabled modules; ask **“Which modules do I have?”** if something is missing.
 
@@ -16,26 +16,26 @@ Open your agent in your brain's folder for the requests below. Connected work fo
 
 1. **Capture:** add an idea, document or meeting in Notion.
 2. **Check:** correct meeting minutes and mark them **Reviewed**. Mark captures **Ready** when you want them processed.
-3. **Process:** tell your agent **“Catch up.”**
-4. **Review:** open **Review → Needs my decision** and decide which proposals to accept.
-5. **Apply:** submit your decisions, then tell your agent **“Apply my reviews”** or **“Catch up”** again.
-6. **Ask:** use your brain when you need context: **“What did we decide about …?”**
+3. **Process:** tell your agent **“Catch up.”** For each input it shows what came in, one subject at a time: what the brain already has, what is added, its questions, then **“accept?”**. Answer in the chat. Nothing goes in until you answer.
+4. **Decide:** at the end it asks what is still waiting, at most five questions at a time, most important first. Say **“more”** for the next ones, or **“enough”** to stop.
+5. **Ask:** use your brain when you need context: **“What did we decide about …?”**
 
-Ready and Reviewed make inputs available for processing. Processing happens when an agent runs, on request or through a configured schedule. Marking a meeting Reviewed confirms its minutes; reviewing the resulting knowledge is a separate step.
+Ready and Reviewed make inputs available for processing. Processing happens when an agent runs, on request or through a configured schedule. Marking a meeting Reviewed confirms its minutes; accepting what it adds to the brain happens in the chat. A scheduled run takes inputs in without you and leaves its questions for your next session.
 
 ## What to say to your agent
 
 | I want to… | Say… |
 |---|---|
-| Process everything waiting | **“Catch up.”** It asks its questions together before processing. |
+| Process everything waiting | **“Catch up.”** It asks what blocks first, then each input's subjects, then what is waiting. |
 | Ask about existing knowledge | **“What did we decide about …, and why?”** Answers include sources. |
 | Process reviewed meetings | **“Ingest my reviewed meetings.”** |
 | Process captures or dropped files | **“Process my inbox.”** / **“Process my drop folder.”** |
 | Add a file, web page or email | **“Ingest this PDF: <path>”** / **“Ingest this page: <url>”** / **“Ingest this email”**, then paste it. |
-| Apply decisions made in Review | **“Apply my reviews.”** |
-| Bring Notion edits into the brain and publish changes | **“Sync with Notion.”** |
+| Decide what the brain is waiting for | **“What needs my decision?”** Your edits in Notion to the brain's values come first, as one question. |
+| Follow up an open question | **“Track the … question.”** It becomes a task with Kind Question, on the Tasks page. |
+| Bring Notion edits into the brain and publish changes | **“Sync with Notion.”** Your edits to the brain's values are asked before they go in. |
 | Get or update a report | **“Report on …”** / **“Refresh the … report.”** |
-| Keep a readable document | **“Keep this as a document.”** / **“Only keep the budget section as a document.”** |
+| Keep a readable document | **“Keep this as a document.”** / **“Only keep the budget section as a document.”** / **“Promote the decision on … to a document.”** |
 | Find overdue or stalled work | **“Review my projects.”** / **“What's stalled in …?”** |
 | Find conflicting or outdated knowledge | **“Tidy the brain.”** |
 | Save a lasting lesson or preference | **“Remember this: …”** Review the proposed memory before saving. |
@@ -54,14 +54,11 @@ Ready and Reviewed make inputs available for processing. Processing happens when
 | **Ask the brain** | Home | Creates a report request. Type your question as its name, then say **“Catch up.”** Requires Reports and Documents. |
 | **Tidy capture** | A **New** Inbox capture | Notion AI immediately cleans the wording. Check the result, set **Ready**, then say **“Catch up.”** |
 | **Keep as document** | An Inbox item | Requests a readable Document and sets the item to **Ready**. Fill in **Only keep** for a specific section, then say **“Catch up.”** |
-| **Promote to document** | A Decision | Requests an editable Document based on the decision. Say **“Catch up”** to create it. |
 | **Write up** | A promoted Document | Notion AI develops the page using linked brain pages. Review and edit it, then click **Accept**. On later runs, copy the wording you want from **Proposed revision** into the document body, delete that toggle, then click **Accept**. |
 | **Refresh report** | A report in Documents | Notion AI adds a proposed refresh in a toggle. Review it, replace the report text if you agree, delete the toggle, then click **Accept**. |
 | **Accept** | A Document or report | Marks the current wording for the next **“Catch up.”** Your click authorises that exact wording; if the page changes afterward, accept the final version again. |
-| **Review with me** | A Review row from a meeting, email or document | Brain Assistant goes through the page with you in rounds of questions, then writes what you agreed after your yes. Then set **Your call** and say **“Apply my reviews.”** |
-| **Submit decisions** | An older Review page you already started (under **Show all properties**) | Submits your individual decisions. Say **“Apply my reviews”** afterward. |
 
-The Notion AI buttons need Brain Assistant configured. Document and report buttons also depend on their modules being enabled. **Only keep** limits the document you preserve; it does not exclude the rest of an input from knowledge processing. Use the selection controls below for exclusions.
+The Notion AI buttons message Brain Assistant, so they need it configured, and Business (or Enterprise) with Notion credits. Document and report buttons also depend on their modules being enabled. **Only keep** limits the document you preserve; it does not exclude the rest of an input from knowledge processing. Use the selection controls below for exclusions.
 
 ## Notion AI prompts
 
@@ -73,12 +70,10 @@ For a prompt about one page, open or reference that page so the assistant knows 
 
 | Prompt | Where to use it | How to run it and what it does |
 |---|---|---|
-| **Today** | Brain Assistant chat | **"Run Today"** shows due tasks, today's meetings and pending decisions. |
-| **Review queue** | Brain Assistant chat | **"Run Review queue"** explains pending proposals and their sources. You make the decisions. |
-| **Grill review** | A Review row from a meeting, email or document | Click **Review with me**, or **"Run Grill review"** on the row. It asks what the page can't settle, three to five questions at a time with a recommended option, shows what it will write and writes after your yes. You set **Your call**. |
+| **Today** | Brain Assistant chat | **"Run Today"** shows due tasks and today's meetings. |
 | **Prep** | With a meeting page referenced | **"Run Prep"** gathers relevant meetings, questions, tasks and decisions before the meeting. |
 | **Check minutes** | A meeting page before it is Reviewed | **"Run Check minutes"** flags missing information and details to confirm. It fixes the text after your confirmation. |
-| **Weekly review** | Brain Assistant chat | **"Run Weekly review"** opens this week's weekly review, summarises it, and walks its decisions with you a few questions at a time. You set Your call and change the tasks. With no review this week, it says how to get one. |
+| **Weekly review** | Brain Assistant chat | **"Run Weekly review"** opens this week's review (the Inbox row **Week of …**), summarises it and explains its items. It decides nothing: you change the tasks in Notion and decide the rest with your agent (**“What needs my decision?”**). With no review this week, it says how to get one. |
 | **Plan check** | Brain Assistant chat | **"Run Plan check"** finds gaps across Areas, goals and projects. It suggests fixes for you to consider. |
 | **Tidy capture** | A **New** Inbox capture | **"Run Tidy capture"** proposes clearer wording and waits for confirmation. The **Tidy capture** button authorises the rewrite immediately. |
 | **Voice summary** | A **New** Inbox capture with a **Transcript** toggle | Say **“Summarize this voice note.”** Confirm the summary, check what should enter the brain, then set **Ready**. |
@@ -86,19 +81,19 @@ For a prompt about one page, open or reference that page so the assistant knows 
 | **Write up** | A promoted Document | Click the **Write up** button. Review and edit the result before clicking **Accept**. |
 | **Refresh report** | A report in Documents | Click **Refresh report**. Review its proposed text before replacing the current report and clicking **Accept**. |
 
-**Meeting-summary prompt:** this is separate from the twelve skills. Keep the transcript on the meeting page: a recorded meeting's is in the meeting-notes block's Transcript, and one you paste goes in the page body. Open the Notion AI chat on that page, paste the minutes prompt followed by the line **“Write the minutes on this page, below the transcript, and nothing else.”**, and send. Don't run it from Notion AI's settings: there it can replace the transcript. If the transcript is gone, put it back above the minutes (Notion's version history, or paste it again): without it the brain can't read the meeting. Then run **Check minutes**, correct the result and mark the meeting **Reviewed**. If you cannot find the prompt, ask your agent **“Give me the minutes prompt.”** It is supplied with Ultimate Brain as `notion/minutes-format.md`; do not assume it is inside the meeting template.
+**Meeting-summary prompt:** this is separate from Brain Assistant's skills. Keep the transcript on the meeting page: a recorded meeting's is in the meeting-notes block's Transcript, and one you paste goes in the page body. Open the Notion AI chat on that page, paste the minutes prompt followed by the line **“Write the minutes on this page, below the transcript, and nothing else.”**, and send. Don't run it from Notion AI's settings: there it can replace the transcript. If the transcript is gone, put it back above the minutes (Notion's version history, or paste it again): without it the brain can't read the meeting. Then run **Check minutes**, correct the result and mark the meeting **Reviewed**. Don't let Notion AI or a notetaker create Tasks from the meeting: the brain creates them, once, when it takes the meeting in. A notetaker (Granola, Fireflies) that writes to Notion: turn off its own export of tasks to the brain's Tasks database. If you cannot find the prompt, ask your agent **“Give me the minutes prompt.”** It is supplied with Ultimate Brain as `notion/minutes-format.md`; do not assume it is inside the meeting template.
 
-The weekly review itself is written by your agent ("weekly review", or every Monday on a schedule); Brain Assistant's **Weekly review** opens it in Notion. Scheduling catch-up is a separate operation. Clicking **Refresh report** uses Notion pages; asking your agent to refresh a report uses the brain's canonical notes.
+The weekly review itself is written by your agent ("weekly review", or every Monday on a schedule) and appears as an Inbox row; Brain Assistant's **Weekly review** reads it with you in Notion. Scheduling catch-up is a separate operation. Clicking **Refresh report** uses Notion pages; asking your agent to refresh a report uses the brain's canonical notes.
 
-## Review meetings and proposals
+## Check meetings, then decide in the chat
 
-**For meetings:** the minutes start with **In one line**, your **Quick follow-ups** and the **Tasks for the brain**, then a few lines per subject; a collapsed **For the brain** toggle at the end holds the selection lines and the quotes behind each line. Check names, dates, figures, attendees, project and commitments before marking **Reviewed**. Tick the follow-ups you've done before **Reviewed**: each one still unticked becomes a Task with no due date; tick or delete one to keep it out. To leave a subject out of the brain, open **For the brain** and change its selection line to **`Selection: Meeting only`**. To leave out one item, write **`Meeting only:`** at the start of its quote line there, never on the summary line, where it blocks the meeting. Minutes written with an earlier prompt are read as before (**`Meeting only:`** goes at the start of the item), and their follow-ups never become Tasks. Check the actual Task's status in Notion after processing.
+**For meetings:** the minutes start with **In one line**, your **Quick follow-ups** and the **Tasks for the brain**, then a few lines per subject; a collapsed **For the brain** toggle at the end holds the selection lines and the quotes behind each line. Check names, dates, figures, attendees, project and commitments before marking **Reviewed**. Tick the follow-ups you've done before **Reviewed**: each one still unticked becomes a Task with no due date; tick or delete one to keep it out. To leave a subject out of the brain, open **For the brain** and change its selection line to **`Selection: Meeting only`**. To leave out one item, write **`Meeting only:`** at the start of its quote line there, never on the summary line, where it blocks the meeting. Minutes written with an earlier prompt are read as before (**`Meeting only:`** goes at the start of the item), and their follow-ups never become Tasks. Check the actual Task's status in Notion after processing. To follow up a question or risk from the meeting as a task, write **`Track: Waiting On —`** at the start of its line.
 
-**Each Review row's Status says where to decide it:** **Needs you · decide in the page** or **Needs you · set Your call**. **Submitted: waiting for the brain** means your part is done.
+**Deciding** happens in your agent's chat, never in Notion. When you **Catch up**, each input is shown one subject at a time: a short view of what the brain has, what is added (`+` lines), the questions (each with options and a recommendation), then **“accept?”**. Answer **yes**, **“all except …”**, **no**, **later**, **“enough”** (the rest waits) or **“stop”** (nothing written; the input stays as it is). What you leave for later, and what a scheduled run brought in, waits for **“What needs my decision?”**: at most five questions a round, your edits in Notion to the brain's values first, as one question.
 
-**For Review pages from a meeting, email or document** (decide in the page): read it, or click **Review with me**. Correct a wording where it stands; type **Accept**, **Reject** or **Defer** on an item's **`Decision:`** line if you want. Then set **Your call**: **Approve** accepts what's still Pending except ⚠ and ⚑ items (they need **Accept** on their line), **Request revision** redrafts what **What to fix** says, **Reject** leaves the notes as they are. Then say **“Apply my reviews.”** An older page you had started keeps **Submit decisions**, under **Show all properties**.
+**Your edits in Notion** to a value the brain owns (a Summary, a Role, a Key Fact) are asked before they go in, because the brain can't tell your edit from one made by Notion AI or another tool. Until you answer, the brain leaves your edit as it is in Notion.
 
-**For Conflict, Answer and Suggestion rows, and older Review rows** (set Your call): use **Your call → Approve, Reject or Fix**. Explain a Fix in **What to fix**, then say **“Apply my reviews.”**
+**A question you follow up as a task:** when its task is **Done**, **Won't Do** or deleted, the brain asks whether the question is answered: say the answer, drop the question, or keep it open.
 
 ## Occasional operations
 
@@ -116,7 +111,7 @@ The weekly review itself is written by your agent ("weekly review", or every Mon
 | Check or change the Notion structure | **“Check my Notion space.”** / **“Add a property to Projects …”** The agent follows the product's design process. |
 | Get help updating | **“Help me update Ultimate Brain and upgrade my brain.”** |
 
-Scheduled catch-up needs the configured computer and agent available. It may leave questions or corrections for your next attended session.
+Scheduled catch-up needs the configured computer and agent available. It decides nothing: it leaves its questions, and your edits from Notion, for your next attended session.
 
 ## When something seems stuck
 
@@ -125,7 +120,7 @@ Scheduled catch-up needs the configured computer and agent available. It may lea
 | A capture was ignored | Check that it is **Ready**, then say **“Catch up.”** |
 | A meeting was ignored | Check that it is **Reviewed**, then say **“Catch up.”** |
 | You corrected an already processed meeting | Set it back to **Reviewed**, then say **“Catch up.”** |
-| You decided a proposal but nothing changed | Submit the decisions where required, then say **“Apply my reviews.”** |
+| Something waits for your decision | Say **“What needs my decision?”** |
 | A button request is still waiting | Say **“Catch up”**; check whether its module is enabled. |
 
 Put your own project notes in **My notes**. The brain refreshes generated sections such as **Brief** and **Decision log**.
@@ -134,4 +129,4 @@ For more detail, open **How it works** in Notion, read the [full guide](guide.md
 
 ## Skill names, if you need them
 
-You can use the phrases above without naming a skill. For reference: **brain-catch-up** processes waiting work; **brain-ingest** takes in inputs; **brain-apply** applies your decisions; **brain-sync** synchronises with Notion; **brain-query** answers questions, writes reports and handles memory; **ultimate-assistant** reviews work; **brain-reflect** tidies knowledge; **brain-howto** explains the system; **brain-connect-notion** connects Notion and manages modules; **brain-repos** connects repositories; **brain-workflow** tracks work; **brain-workflow-adopt** imports existing plans; **brain-notion-change** checks or changes the Notion structure.
+You can use the phrases above without naming a skill. For reference: **brain-catch-up** processes waiting work; **brain-ingest** takes in inputs; **brain-apply** asks what needs your decision and applies your answers; **brain-sync** synchronises with Notion; **brain-query** answers questions, writes reports and handles memory; **ultimate-assistant** reviews work; **brain-reflect** tidies knowledge; **brain-howto** explains the system; **brain-connect-notion** connects Notion and manages modules; **brain-repos** connects repositories; **brain-workflow** tracks work; **brain-workflow-adopt** imports existing plans; **brain-notion-change** checks or changes the Notion structure.

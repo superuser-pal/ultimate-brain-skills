@@ -7,11 +7,11 @@ description: Explain how the user's second brain works and teach them to use it,
 
 For a quick reference to daily actions, Notion buttons or Notion AI prompts, read [Everyday Guide](references/everyday-guide.md). Use the full guide below for detailed how-to questions.
 
-Answer how-to questions about the system from [references/guide.md](references/guide.md), the user guide. It is the single source of truth for how the user works with the brain: the Spaces, the meeting flow, Review, ownership, what to say to the agent, and fixes for common surprises. **Read-only:** this skill explains; it never changes the brain or Notion.
+Answer how-to questions about the system from [references/guide.md](references/guide.md), the user guide. It is the single source of truth for how the user works with the brain: the Spaces, the meeting flow, deciding in the chat, ownership, what to say to the agent, and fixes for common surprises. **Read-only:** this skill explains; it never changes the brain or Notion.
 
 ## Procedure
 
-1. **Read the guide section** that matches the question. Its headings: The Spaces · The meeting flow · Deciding in Review · Correcting what came in (a meeting, a capture, a report; refreshing a report) · What you can edit · Adding things · Review your work (Ultimate Assistant) · Tidy the brain · The weekly review · Run catch-up on a schedule · Projects in other folders (linked repos, connected work, adoption) · How the brain talks to you (the response style) · Where your work sits (the structure list in AGENTS.md, briefs, tasks) · What to say to your agent · When something looks wrong.
+1. **Read the guide section** that matches the question. Its headings: The Spaces · The meeting flow · Choosing what enters the brain · Deciding in the chat · Correcting what came in (a meeting, a capture, a report; refreshing a report) · What you can edit · Adding things · Review your work (Ultimate Assistant) · Tidy the brain · The weekly review · Run catch-up on a schedule · Projects in other folders (linked repos, connected work, adoption) · How the brain talks to you (the response style) · Where your work sits (the structure list in AGENTS.md, briefs, tasks) · What to say to your agent · When something looks wrong.
 
 2. **If the question is about something that happened** ("why didn't…", "where did … go", "is my … set up"), check the live state before answering:
    - `brain status --brain . --json` (or without `--brain` in a linked repo). It reports pending proposals, Notion databases configured or missing, stale views, and the last log line.
@@ -36,15 +36,15 @@ When the question is about the notes themselves (two notes that disagree, a fact
 
 ## The weekly review
 
-When the question is about the weekly review (what it shows, why a finding didn't come back, why a week had no review, how to put it on a schedule), answer from the guide's "The weekly review" and offer to run the `brain-weekly-review` skill. In short: "weekly review" writes one short report a week in `reports/` (What changed, Task analysis, at most five decisions), each decision made where it lives: a Review row, or the task in Notion. It applies and decides nothing, and a quiet week writes nothing. "weekly review more" shows what waited, "weekly review corrections" goes through the notes that still say a corrected value, and "review my week every Monday" sets the Monday 08:00 schedule, offering Reports once so each review appears in Notion.
+When the question is about the weekly review (what it shows, why a finding didn't come back, why a week had no review, how to put it on a schedule), answer from the guide's "The weekly review" and offer to run the `brain-weekly-review` skill. In short: "weekly review" writes one short report a week in `reports/` (What changed, Task analysis, at most five decisions), published as the week's Inbox row; a proposal is decided in the session ("what needs my decision"), a task item on the task in Notion. It applies and decides nothing, and a quiet week writes nothing. "weekly review more" shows what waited, "weekly review corrections" goes through the notes that still say a corrected value, and "review my week every Monday" sets the Monday 08:00 schedule, offering Reports once so each review appears in Notion.
 
 ## Teaching mode
 
-When the user asks for a tour or is new, walk through the guide in this order: the three parts, Home, the meeting flow, Review, what you can edit. Stop after each part and ask whether to continue.
+When the user asks for a tour or is new, walk through the guide in this order: the three parts, Home, the meeting flow, deciding in the chat, what you can edit. Stop after each part and ask whether to continue.
 
 ## Example (synthetic Acme brain)
 
-**Question:** *"I marked the Acme weekly as reviewed yesterday but nothing showed up in Review. Why?"*
+**Question:** *"I marked the Acme weekly as reviewed yesterday but nothing showed up in the brain. Why?"*
 
 `brain status` shows the last log line is from three days ago, so no ingest has run since. The answer:
 
