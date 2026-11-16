@@ -53,6 +53,12 @@ A copy of the inputs in spec/cli.md §5.14, so the skill works from inside a bra
   *(Tasks)* A tracked task, one per entry of `brain sync tracked`, read by its page id (SKILL.md step 2): the mapped title and status properties under their Notion names, and `status_group` (`todo`, `in_progress`, `complete` for a Notion Status property; `null` for a select). A page in the trash adds `"gone": true`. A page Notion can't find is `"unreadable": true` with `last_edited: null` and no properties, never `gone`. A finished one (Done, Won't Do, gone, unreadable) becomes a `tracked_tasks` item `{ "question", "page_id", "page_title"?, "state", "status", "observed_at" }`, which `sync apply` writes as a pending `tracked_task`.
 
   ```json
+  { "database": "tasks", "page_id": "d4000000-0000-4000-8000-000000000004", "last_edited": "2026-12-05T08:15:00Z",
+    "properties": { "Name": "Check go-live with hosting", "Document asked": true, "Project": ["b2000000-0000-4000-8000-000000000001"], "Area": [] } }
+  ```
+  *(Tasks, Documents)* A task whose Document asked box is ticked (decision 0100), with `notion.tasks.properties.document_asked` mapped: its title, Document asked, Project and Area under their mapped names. A task that is also tracked is one row with the properties of both. It becomes a `task_documents` item `{ "page_id", "title", "projects", "area", "question", "source", "existing" }`; with Documents off it is `ignored`, `MODULE_OFF`.
+
+  ```json
   { "database": "documents", "page_id": "6a7b8c9d-0e1f-4a2b-8c3d-4e5f6a7b8c9d", "last_edited": "2026-12-10T10:00:00Z",
     "properties": { "Brain ID": "ref-5k8m2q7w" },
     "wording": { "accepted": true, "accepted_at": "2026-12-10T10:00:00Z", "page_edited_at": "2026-12-10T10:00:00Z",
