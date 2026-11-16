@@ -1,6 +1,6 @@
 ---
 name: brain-apply
-description: Ask the user, in this chat, what the brain is waiting for them to decide, and apply their answers. Lists the waiting proposals, asks them in rounds of at most five, most consequential first, with options and a recommended answer: changed facts and decisions, your edits to brain values made in Notion (one listed question), merges, answers to open questions, a tracked question whose task is finished, then each source's notes and additions as one question per source. Applies what the user says, then rebuilds and publishes. Use when the user says "what needs my decision", "apply my decisions", "approve the launch change", "more", or at the end of a catch-up.
+description: Ask the user, in this chat, what the brain is waiting for them to decide, and apply their answers. Lists the waiting proposals, asks them in rounds of at most five, most consequential first, with options and a recommended answer (changed facts and decisions, your edits to brain values made in Notion (one listed question), merges, answers to open questions, a tracked question whose task is finished, then each source's notes and additions as one question per source). Applies what the user says, then rebuilds and publishes. Use when the user says "what needs my decision", "apply my decisions", "approve the launch change", "more", or at the end of a catch-up.
 ---
 
 # Decide in the session
