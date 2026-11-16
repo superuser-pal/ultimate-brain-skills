@@ -1,6 +1,6 @@
 ---
 name: brain-ingest
-description: Ingest into the brain reviewed meeting minutes from Notion or a file, documents (PDF, Word, PowerPoint, Excel, HTML, images), web pages by URL, pasted emails, chat threads and notes, the Notion Inbox, files attached in Notion, and the changed files of a linked repo. Snapshots each input, matches it against what the brain knows, shows what came in part by part, one part per subject (what the brain has, what is added, its questions, its yes), and writes only after the parts are answered (new notes, changes, answers to open questions, kept documents, and the owner's action items as Notion tasks). Tracks a question or risk as a task on "track it". Use when the user says "ingest my meetings", "process the reviewed minutes", "ingest this PDF", "ingest this page <url>", "ingest this email", "process my inbox", "process my drop folder", "track it", "turn my to-do questions into tasks", "promote the decision on … to a document", or after marking meetings Reviewed.
+description: Ingest into the brain reviewed meeting minutes, documents (PDF, Word, PowerPoint, Excel, HTML, images), web pages, pasted emails, chats and notes, the Notion Inbox, files attached in Notion, and a linked repo's changed files. Matches each input against what the brain knows, shows it part by part, one part per subject (what the brain has, what is added, its questions, its yes), and writes only after the parts are answered. Writes a document the user wants changed first to the Inbox as a changed version to check, and takes it in on "go"; keeps a task's page as a document; tracks a question or risk as a task. Use when the user says "ingest my meetings", "process the reviewed minutes", "ingest this PDF", "ingest this page <url>", "ingest this email", "process my inbox", "process my drop folder", "keep only the … section", "go", "keep the … task as a document", "track it", "turn my to-do questions into tasks", "promote the decision on … to a document", or after marking meetings Reviewed.
 ---
 
 # Ingest into the brain
@@ -38,6 +38,14 @@ When a meeting's summary or a capture has subjects and item ids (escaped or not,
 
 - **"Turn my to-do questions into tasks"** (or "clean up my open questions"), and the one-time offer after the 0.16.0 migration: follow [references/todo-tidy.md](references/todo-tidy.md) instead of the procedure below. It is attended only: never part of a catch-up or an unattended run.
 - **"Track it"** about an open question or risk, and the token `Track: Waiting On —` on a question or risk line: [references/track.md](references/track.md). A question becomes a task only then.
+
+## A changed document, checked before it goes in (decision 0098 §4 to §7)
+
+When the user wants a document changed before it goes in ("keep only the requirements, as a spec", "drop the appendix", "the depot count is 11, not 9"), or Keep as document has Only keep filled, take nothing in: record the original as a source, write the changed text to a new Inbox row for the user to check, and take that row in when they say **"go"** or set it Ready. Follow [references/checked.md](references/checked.md). Minutes and captures keep their own checks (Check minutes, Tidy capture).
+
+## Keep a task as a document (decision 0100)
+
+*(Documents)* "Keep the go-live task as a document", and the Keep as document button on a task: the task page becomes a source and a `whole` Document, then one From the brain question. Follow [references/task-document.md](references/task-document.md).
 
 ## Promote to document (decision 0099 §9)
 
@@ -135,7 +143,7 @@ A meeting's Tasks are created once, by its ingest, from the meeting's own items 
     Next: say "what needs my decision"
     ```
     - **Done:** counts only, and only the ones that aren't zero: what went in ("Added to 3 notes", "Linked 2" when it helps), the tasks created.
-    - **Needs you:** everything waiting on the user, separated by `·`: the decisions still waiting (a part or a question left for later, everything an unattended run wrote), what was skipped or failed and why in a few words, lint errors that were there before the run, an instruction found in a source and ignored, action items with no task. `Needs you: nothing` when there is none.
+    - **Needs you:** everything waiting on the user, separated by `·`: the decisions still waiting (a part or a question left for later, everything an unattended run wrote), a changed version waiting for the user's check ("1 changed document to check: say *go*, or set it Ready"), what was skipped or failed and why in a few words, lint errors that were there before the run, an instruction found in a source and ignored, action items with no task. `Needs you: nothing` when there is none.
     - **Next:** one action, or one question. With decisions waiting: "say *what needs my decision*". Without Notion, add connecting it ("connect the brain to Notion"), after which a sync publishes everything.
 
     **Below the three lines, only what the parts didn't already show** (decision 0037): an unattended run lists, per input, what came in (every new project, decision, open question and risk, every changed fact old → new, new people with their role, each Document with what it keeps; for a re-read, "Acme sync, read again: 1 change (launch 2027-02 → 2027-03)"); an attended run, which showed all of it in the parts, gives only **Check**: every assumption the user should verify (a date taken from today or from a month only, a fact marked ambiguous, a name left unlinked, a part of a document not analysed), and the **action items** that didn't become tasks. For selected input, also what references/selection.md lists under Report.
