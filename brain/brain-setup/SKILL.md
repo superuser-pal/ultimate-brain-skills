@@ -85,7 +85,7 @@ Early access (0.14.0) requires Notion AI; the prerequisites say so when the user
 - **"Show my setup report":** [references/report.md](references/report.md), at any point, also while first value is unresolved. Showing or filing it marks nothing done and unlocks nothing.
 - **"Check the report again"** (or any first-value check): run that check (references/first-value.md) and log a new attempt.
 - **"Check the minutes prompt again"** or **"check Brain Assistant again":** run that check (references/notion.md) and log it again, whatever was recorded.
-- **"Turn on markitdown"**, **"back up: remind me"**, **"change my drop folder":** the settings screen's item, applied alone (references/settings.md, "Changing one setting later"). **"Turn off gh"** or **"turn off markitdown"**: early access needs it (references/settings.md, items 10 and 11); nothing is written.
+- **"Back up: remind me"**, **"change my drop folder":** the settings screen's item, applied alone (references/settings.md, "Changing one setting later"). **"Turn off gh"** or **"turn off markitdown"**: early access needs it (references/settings.md, items 10 and 11); nothing is written.
 - **"Fix my backup"**, at any point, also after setup: [references/backup.md](references/backup.md). It is not a setup step and writes no `setup` line.
 - **"Talk to me more simply"**, **"shorter answers"**, **"go back to normal"** (any request about how the brain talks): [references/settings.md](references/settings.md), "Changing the response style". It is not a setup step and works before, during or after setup.
 - **Something setup doesn't cover** (a catch-up, a question to the brain): say setup is paused at its step, and hand over to the skill for it.

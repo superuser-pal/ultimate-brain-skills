@@ -161,4 +161,4 @@ Decision 0086 §3 keeps these steps written for 1.0, whose opening grill decides
 
 ## Changing one setting later
 
-Asked outside the screen ("turn on markitdown", "back up: remind me", "change my drop folder"): apply that item alone as above (its install check first), commit `setup: <item>`, and say what it changes. An optional item set to `off` is never asked again; this is how the user changes it. "Turn off gh" is answered as item 11 says, and nothing is written.
+Asked outside the screen ("back up: remind me", "change my drop folder"): apply that item alone as above, commit `setup: <item>`, and say what it changes. An optional item set to `off` is never asked again; this is how the user changes it. "Turn off gh" and "turn off markitdown" are answered as items 10 and 11 say, and nothing is written.
