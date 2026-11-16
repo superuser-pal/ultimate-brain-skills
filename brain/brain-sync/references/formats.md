@@ -22,14 +22,8 @@ A copy of the inputs in spec/cli.md §5.14, so the skill works from inside a bra
 }
 ```
 
-- `database`: the `brain.json` key: `domains`, `areas`, `goals`, `key_results`, `projects`, `people`, `orgs`, `decisions`, `questions`, `documents`, `review` or `inbox` (never `concepts`: retired in 0.9.1, `sync plan` refuses it) (`references` on a brain not yet upgraded is read as `documents`). Send only the databases of modules that are on (brain-sync step 2). Meetings are never a snapshot database.
+- `database`: the `brain.json` key: `domains`, `areas`, `goals`, `key_results`, `projects`, `people`, `orgs`, `documents`, `inbox` or `tasks` (the tracked tasks only, below) (never `concepts`: retired in 0.9.1, `sync plan` refuses it) (`references` on a brain not yet upgraded is read as `documents`). `review`, `decisions` and `questions` are retired in 0.16.0: only the 0.16.0 Notion migration sends them, once, with `--review-transition` or `--questions-transition` ([review-transition.md](review-transition.md)); a plain plan ignores their rows. Send only the databases of modules that are on (brain-sync step 2). Meetings are never a snapshot database.
 - **The rows the plan acts on,** each in exactly this shape (send the properties shown, with these names; a row of a space not yet migrated uses the old name given in brackets):
-
-  ```json
-  { "database": "review", "page_id": "1e2f3a4b-5c6d-4e7f-8a9b-0c1d2e3f4a5b", "last_edited": "2026-12-05T08:15:00Z",
-    "properties": { "Brain ID": "prp-1q5w8e3r", "State": "Pending", "Your call": "Approve", "What to fix": null } }
-  ```
-  A Review row: `Your call` is the select's label (`Approve`, `Reject`, `Fix`) or `null`; `What to fix` is its text or `null`; `State` is sent as Notion shows it (`Pending`, `Applied`, `Closed`). [Before migration 0009: `Decision` and `Note`.] Send every Review row that has a Brain ID, decided or not. A row of the new layout (its proposal has `published["@review"]`) also carries `"review": { "decided": true, "decided_at": "2026-12-05T08:10:00Z", "accept_all": false, "page_edited_at": "2026-12-05T08:12:00Z", "body_markdown": "…" }`: Decided, Decided at and Accept all as the page shows them, the page's `last_edited_time`, and its body as Markdown (a block you cannot convert is the line `<!-- unconvertible block -->`; `null` when the body cannot be read). brain-apply references/review-items.md §1 has the details. A format-2 row (0.15.0; its proposal's `@review` has `format: 2`) carries the same `review` object; its submission is **Your call** (and What to fix), so send those as for any row, and send the body as Notion returns it, escapes included (the CLI undoes them; review-items.md §6).
 
   ```json
   { "database": "inbox", "page_id": "c3000000-0000-4000-8000-000000000001", "last_edited": "2026-12-05T08:20:00Z",
@@ -50,10 +44,13 @@ A copy of the inputs in spec/cli.md §5.14, so the skill works from inside a bra
   *(Reports)* A Report row (a Documents page with Origin Report, decision 0071) with Refresh asked ticked or What to fix set. [Before migration 0019 it is an Inbox row: `"database": "inbox"`, read the same way. Before migration 0010: `Refresh`.] It becomes `refresh_requests` `{ "page_id", "report" }` and `report_fixes` `{ "page_id", "report", "text" }`.
 
   ```json
-  { "database": "decisions", "page_id": "5f6a7b8c-9d0e-4f1a-8b2c-3d4e5f6a7b8c", "last_edited": "2026-12-05T08:30:00Z",
-    "properties": { "Name": "Use Supabase for auth", "Summary": "…", "Lifecycle": "Draft", "Brain ID": "dec-7k2m9q4x", "Promote asked": true } }
+  { "database": "tasks", "page_id": "d4000000-0000-4000-8000-000000000001", "last_edited": "2026-12-05T08:10:00Z",
+    "properties": { "Name": "Can the site go live by the end of March?", "Status": "Done" }, "status_group": "complete" }
+  { "database": "tasks", "page_id": "d4000000-0000-4000-8000-000000000002", "last_edited": "2026-12-05T08:12:00Z",
+    "properties": { "Name": "Driver shortage in the north", "Status": "In Progress" }, "status_group": "in_progress", "gone": true }
+  { "database": "tasks", "page_id": "d4000000-0000-4000-8000-000000000003", "last_edited": null, "properties": {}, "unreadable": true }
   ```
-  *(Documents)* A decision row also carries `Promote asked` (its other properties as usual). True becomes a `promote_requests` item `{ "page_id", "note", "existing"? }`.
+  *(Tasks)* A tracked task, one per entry of `brain sync tracked`, read by its page id (SKILL.md step 2): the mapped title and status properties under their Notion names, and `status_group` (`todo`, `in_progress`, `complete` for a Notion Status property; `null` for a select). A page in the trash adds `"gone": true`. A page Notion can't find is `"unreadable": true` with `last_edited: null` and no properties, never `gone`. A finished one (Done, Won't Do, gone, unreadable) becomes a `tracked_tasks` item `{ "question", "page_id", "page_title"?, "state", "status", "observed_at" }`, which `sync apply` writes as a pending `tracked_task`.
 
   ```json
   { "database": "documents", "page_id": "6a7b8c9d-0e1f-4a2b-8c3d-4e5f6a7b8c9d", "last_edited": "2026-12-10T10:00:00Z",
