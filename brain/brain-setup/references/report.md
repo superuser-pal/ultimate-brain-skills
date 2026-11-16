@@ -9,7 +9,7 @@ Counts and codes only, from the `setup` log lines, `brain status` and your own n
 ```text
 Ultimate Brain setup report
 CLI 0.14.0 · skills ultimate-brain-skills 1.4.0 · agent Claude Code · platform darwin
-Notion AI: yes · Custom Agents: yes · modules: knowledge, orgs, documents, reports, tasks
+Notion AI: yes · Custom Agents: yes · modules: orgs, documents, reports, tasks
 Time: 52 min (first setup line to the last)
 1 prerequisites: done
 2 settings: done (markitdown on, gh on)

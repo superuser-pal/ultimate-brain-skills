@@ -1,144 +1,156 @@
 ---
 name: brain-apply
-description: Apply the user's decisions on proposed changes to the brain. Shows pending proposals in chat and applies what the user approves, rejects or fixes, or reads the calls and What to fix texts the user left in the Notion Review queue and applies them, then rebuilds and republishes. Use when the user says "apply my reviews", "what needs my decision", "approve the launch change", "apply the Review queue", or after deciding proposals in Notion.
+description: Ask the user, in this chat, what the brain is waiting for them to decide, and apply their answers. Lists the waiting proposals, asks them in rounds of at most five, most consequential first, with options and a recommended answer (changed facts and decisions, your edits to brain values made in Notion (one listed question), merges, answers to open questions, a tracked question whose task is finished, then each source's notes and additions as one question per source). Applies what the user says, then rebuilds and publishes. Use when the user says "what needs my decision", "apply my decisions", "approve the launch change", "more", or at the end of a catch-up.
 ---
 
-# Apply review decisions
+# Decide in the session
 
-Proposals are changes the brain wants to make to existing notes (decision 0003). The user decides each one: **Approve**, **Reject**, or **Fix** (apply it, corrected as the user says in plain words; decision 0045). This skill records those decisions and applies them through the CLI. Only the user decides. Never approve, reject or fix on their behalf, and never infer a decision from the minutes or from earlier chat.
+Proposals are changes the brain wants to make to what it holds (decision 0003). They wait as files in `_proposals/`, and the user decides each one here, in Claude Code or Codex (decision 0096): Notion is where they read the brain, not where they decide. This skill asks the questions and records the answers through the CLI. Only the user decides. Never approve, reject or fix on their behalf, and never infer a decision from an input or from earlier chat.
 
 Run every CLI command as `brain <command> --brain <brain> --json`. Exit 1 means some items need attention; read them. Exit 2 or 4 means your command or input was wrong: fix it. Exit 3 or 5 means stop and report. Exit 10: report a bug. If `brain` is not found (`command not found`), install it with `npm install -g ultimate-brain`, then retry.
 
-**Working files.** Make your own temporary folder with `mktemp -d`, outside the brain, and keep every file you write for the CLI in it: the snapshot, the plan files (the first plan and the one you verify with), the `--input` files of `apply`, `proposal revise` and `proposal settle`, the render output you write back from and the page conversions. Never use a fixed name such as `/tmp/ub-apply` or `/tmp/plan.json`: another session on the same machine would overwrite your plan or your render, and you would apply or publish its content. Inside a catch-up, use the catch-up's folder.
+**Working files.** Make your own temporary folder with `mktemp -d`, outside the brain, and keep every `--input` file in it. Never use a fixed name such as `/tmp/ub-apply`: another session on the same machine would overwrite it. Inside a catch-up, use the catch-up's folder.
 
-## Pick the mode
+**Off its working branch:** when `brain status` (run it first) has the warning `BRAIN_OFF_WORKING_BRANCH`, say its message in one line and offer "fix my backup" before writing anything (brain-setup references/backup.md, "Off the working branch, at the start of a run"). Never create a branch, a worktree or a pull request in the brain (decision 0086). A catch-up has already checked it.
 
-**Off its working branch:** when `brain status` (run it first, in every mode) has the warning `BRAIN_OFF_WORKING_BRANCH`, say its message in one line and offer "fix my backup" before writing anything (brain-setup references/backup.md, "Off the working branch, at the start of a run"). Never create a branch, a worktree or a pull request in the brain (decision 0086). A catch-up has already checked it.
+**Attended only.** A run without the user (a scheduled catch-up, the weekly review) decides nothing and asks nothing: every proposal stays pending for the next session (decision 0096 §4). The one thing such a run carries out is a decision the user already gave: the Notion write of an approved `notion_change` ("Notion writes", below).
 
-- **Chat:** the user wants to decide here ("what needs my decision?", "approve the budget change"). Use this, or when Notion is not configured.
-- **Notion:** the user decided in the Notion Review queue ("apply my reviews"), and `brain status` shows `review` among `notion.configured`.
-- **Unattended** (a scheduled catch-up, nobody in the chat): Notion mode, applying only what the user decided word for word: Approve or Reject with an empty What to fix, and, on a row with item sections, the explicit, exact, current decisions of references/review-items.md (never revision text). A decision with text in What to fix (a Fix, or "all except b") stays in its row for an attended run, because turning words into changes is judgment nobody would check (decisions 0003, 0051). `--record-only` is for a run that must not apply anything at all.
+## 1. What waits
 
-## Chat mode
+1. `brain proposal list --status approved,edited`: decisions recorded earlier but not applied yet (a run that stopped). Run `brain apply` with no `--input` to apply them, then carry out its `notion_writes` ("Notion writes").
+2. `brain proposal list --waiting`: `waiting` holds the questions in the order to ask them (spec/cli.md §5.6), `held` the proposals that rest on content the user excluded, `counts` both.
+3. Nothing in `waiting` and nothing `held`: say `Nothing waits for your decision.` and stop.
 
-1. **List.** Run `brain proposal list --status pending,approved,edited,rejected`. `approved`, `edited` and `rejected` ones were decided earlier but not yet applied.
-2. **Show** the pending ones as a numbered list, one line each, in words the user can judge without opening files:
-   `3. Acme website: budget 80000 EUR → 95000 EUR. "Budget raised to 95000 EUR to cover the CMS licence." (Acme launch review, 10 Dec)`
-   For each kind:
-   - `update_fact`: old → new value.
-   - `contradiction`: both values, and say approving keeps both as contested, while a fix picks the true one.
-   - `add_to_note`: the text to add.
-   - `update_body` (decision 0045): the reference note and the lines that change, `-` old and `+` new.
-   - `add_link`: what gets linked to what. A grouped row lists every link, lettered: "Acme website: add a) Lucía Fernández, b) Tomás Vidal to People, c) alias 'acme site'".
-   - `supersede`: the new note replaces the old one.
-   - `merge`: the duplicate is folded into the survivor.
-   - `new_item`: the note that would be created.
-   - `review_notes` (decisions 0041, 0043, 0045): everything one input proposes, lettered as the Review row's Proposed letters them: the **changes** first (every fact change marked ⚠, a new fact as `(new) → <value>`; then new text for a reference; then text added to a note), then the new **notes**, then the **links**. "From Acme launch review: a) ⚠ Launch date on Acme website: 2027-02 → 2027-03, b) Add to Row-level security: Carlos will use RLS…, c) Decision: Use Contentful as the blog CMS, …, h) People on Acme website: Lucía Fernández". End the line with the source and date ("(Acme sync, 3 Dec)"), with no quote: each item has its own `why`, shown when the user asks. Approving applies the changes, makes the notes `reviewed` and applies the links; rejecting archives the notes still `draft` and applies nothing.
-   - `answer`: the question and its answer, and the note that answers it: "Who owns the mobile app? → Carlos Ruiz owns it (decision: Carlos owns the mobile app)". Approving closes the question; it shows as Answered in Notion.
-   - `notion_change` (a Suggestion from Ultimate Assistant): the row and the Notion field, old → new: "Send the revised quote (task): Status To Do → Done". Approving makes the change in Notion ("Notion writes" below).
-   - `set_field` (a Suggestion): the project's Area or the Area's Domain, old → new: "Studio newsletter: Area Clients → Marketing".
+## 2. A round
 
-   Look up titles with `brain index --json` instead of showing ids. Mention the ones already decided but not applied.
+A round is **at most five questions**, taken from `waiting` in its order. Counting:
+- **Your corrections from Notion** (every `notion_correction`, listed first) are **one** question.
+- **A source's notes and additions** (the `review_notes` of one `source` without `fingerprint`, listed together) are **one** question, whatever number of parts hold them.
+- Every other proposal is one question.
 
-   **A held proposal** (`held: true` in `proposal list`; spec/eligibility.md §4.3) rests on content the user excluded, or its support can't be shown. The list gives it without its wording, and so do you: never look its title, value, text or why up anywhere else (its file, Notion, an earlier list). Show its kind and target only: `4. Held: a fact change on Acme website (launch date). It rests on content you excluded from the brain, so it isn't shown.` A `review_notes` whose `held` names some items shows the others as usual and each held letter as `c) held: rests on content you excluded`. Approving a held item closes it without applying anything, and rejecting it records the no; the next ingest of its input may propose it again from what the user kept. A fix with a value the user types is their own correction, applied as theirs (spec/eligibility.md §9.5); never suggest a value for it.
-3. **Ask** which to approve, reject or fix. Accept replies like "approve 1 and 3, reject 2, fix 4: 90000 EUR", "approve 5 except b" or "fix 5: a is March, c belongs to Acme app". Fix works on every kind: read the user's words into `fixes` as "Reading What to fix" below says. On a grouped `add_link` or a `review_notes`, "except b" leaves those items out: on a `review_notes` they move to a new pending row (deferred, not rejected). When a reply names a row by its source and two rows share it, the letter or title only one of them has settles it; otherwise ask. **If a reply is unclear, ask again.** Don't guess.
-4. **Apply.** Write the input and run `brain apply --input <file>`:
-   ```json
-   { "decisions": [
-     { "proposal": "prp-…", "action": "approve", "decided_at": "<now, ISO 8601 UTC>", "decided_by": "chat" },
-     { "proposal": "prp-…", "action": "fix", "note": "90000 EUR", "fixes": [ { "value": "90000 EUR" } ], "decided_at": "<now>", "decided_by": "chat" },
-     { "proposal": "prp-…", "action": "approve", "exclude": [ { "field": "people", "value": "per-…" } ], "decided_at": "<now>", "decided_by": "chat" },
-     { "proposal": "prp-…", "action": "approve", "note": "all except a, h", "exclude": [ { "change": 0 }, { "target": "per-…", "field": "aliases", "value": "Mari López" } ], "decided_at": "<now>", "decided_by": "chat" },
-     { "proposal": "prp-…", "action": "fix", "note": "a is March", "fixes": [ { "change": 0, "value": "2027-03" } ], "decided_at": "<now>", "decided_by": "chat" }
-   ] }
-   ```
-   To apply only what was decided earlier, run `brain apply` with no `--input`.
-5. Continue with **Finish** below.
+**By subject** (decision 0098 §3). Keep the order, except that the questions on the same subject come together: they follow the first of them in the round, in their own order. A question's subject is its proposal's `subject` (a note id, or a plain name); a proposal with none, and a `tracked_task` (its subject is its question's), gets one by the rule of brain-ingest [references/parts.md](../brain-ingest/references/parts.md), "Subjects", which you don't write back. Show the subject's **short view** once, before the first question on it in the round (parts.md, "The short view"). A source's question shows the view of each of its parts and stays in its place; so does the corrections question, which shows no view (each of its lines names its note).
 
-## Notion mode
+Open the first round with one line: `<n> decisions wait. The first <k>, most important first:`. Then each question, numbered:
+- what changes, in words the user can judge without opening files (titles from `brain query --read`, never ids);
+- the passages it rests on, quoted as `brain query --read <src-id>` returns them, the brain's and the input's when they disagree (a passage the read withholds is not quoted: say it rests on content you excluded);
+- lettered options, the recommended one marked with one line on why;
+- answered with letters or in the user's own words.
 
-**Example rows** (decisions 0084, 0087): leave out every Review row whose Name starts with `Example · ` (the word `Example`, a space, the middle dot `·`, a space, matched exactly), in either layout, before you build the snapshot. It is one of the Notion template's invented rows, which setup removes when it connects the brain. It holds no proposal, so nothing is applied from it, whatever its page says. Name how many once in your report: "1 example row skipped: delete it in Notion, or say "set up my brain" to remove it".
+End the round with `Answer each (for example "1a, 2: March, 3 later"), or say "more" or "enough".` After the answers are applied (step 3), "more" asks the next round; "enough" stops, and the rest keeps waiting.
 
-**Rows with item sections** (rendered since migration 0013: one section per change, a `Decision:` line each) follow [references/review-items.md](references/review-items.md), including how to verify, apply, draft a requested revision and write back. A page written from 0.15.0 (format 2, its §6) is submitted with **Your call**: Approve takes the page as it reads, except ⚠ and ⚑ items still on Pending; Request revision with What to fix asks for redrafts; Reject rejects what is still Pending. An older page is submitted with **Submit decisions**. Either way a submitted Accept is the user's decision on the exact wording: show it and apply it after the re-read, without asking for a yes. The steps below are for rows of the older layout (the Proposed property, Your call, What to fix), which keep their rules until they are terminal.
+**Each kind of question:**
 
-1. **Read** the Review database through the Notion MCP: the rows where **Your call** is set and **State** is Pending. Normalize each row into the snapshot format of spec/cli.md §5.14.1:
-   - `database: "review"`, the `page_id` and `last_edited`;
-   - the properties Name, Kind, Your call, What to fix, State and Brain ID. A space not yet migrated (migration 0009) still has Decision and Note: send them under those names, and the CLI reads them the same way, Edit as Fix.
-2. **Plan.** Run `brain sync plan --input <snapshot>`. It writes nothing. Save the reply's **`data` object** (not the whole JSON reply) as the plan file; `sync apply` rejects the full reply. Read:
-   - `decisions`: what will be applied;
-   - `conflicts`: `NOTE_TO_READ` is an Approve or Reject with text in What to fix, and `FIX_TO_READ` a Fix with its text: read each as "Reading What to fix" below says. `FIX_WITHOUT_TEXT` is a Fix with What to fix empty: the user says what's wrong in Notion (or here);
-   - `ignored`: e.g. `ALREADY_TERMINAL`. Nothing to do.
-3. **Apply.** Run `brain sync apply --input <plan file>`, adding `--record-only` only for a run that must not apply anything (an unattended catch-up adds `--skip-conflicted` instead, see brain-catch-up). Then apply the decisions you resolved from What to fix with `brain apply --input <file>` (unattended: leave `NOTE_TO_READ` and `FIX_TO_READ` rows for an attended run).
-4. Continue with **Finish** below.
+| Kind | Ask |
+|---|---|
+| `notion_correction` (all of them, one question) | `<n> corrections from Notion (the brain can't tell who made them):`, then one lettered line each, `<note title> · <property>: <the brain's value> → <Notion's value>`, then `Accept all, all except …, or reject?` Recommend "accept all", unless a correction contradicts what a source in the brain says (read the note with `brain query --read`): then "all except" it, naming the source. Say once that an edit that isn't the user's (Notion AI, an automation) can be turned down here |
+| `update_fact` with `before`, `contradiction` | `<note> · <field>: <before> → <after>`, both passages. Options: the new value, keep the old one, another value, later. A `contradiction` approved keeps both values as contested; a fix picks the one that holds |
+| `update_body` | the Document and the lines that change, `-` old and `+` new |
+| `replace_line`, a correction group (`review_notes` with `correction`) | each restated line, old and new, lettered |
+| `supersede` | the new decision replaces the older one, both named |
+| `merge` | the duplicate folded into the survivor, both named |
+| `new_item` | the note that would be created, and why the brain is unsure (a possible duplicate) |
+| `answer` | the question and its answer, and the note that answers it. When the question is tracked (its id is in `brain sync tracked`, Tasks on), ask "An answer to a tracked question" below instead |
+| `tracked_task` | "A tracked question's finished task" below |
+| `set_field` | the note's Area (or an Area's Domain), old → new |
+| `notion_change` | the Notion row and its field, old → new: `Send the revised quote (task): Status To Do → Done` |
+| a cleanup `review_notes` (`cleanup`) | each item lettered: Remove (the note's text without the excluded lines), Restore (a paragraph is back), Keep or Remove (a note that can't be tied to a passage; Remove is the default) |
+| a source's `review_notes` (one question) | `From <source title>:` then each part, `<subject> (<n> notes, <n> additions, <n> links)`, with its short view, then the items lettered on across the parts in each part's item order (changes, then notes, then links; spec/schema.md §11.3), then `Accept all, all except …, or reject?` A deferred one (`deferred_from`) is asked the same way |
+| a reflection theme's `review_notes` (`fingerprint`) | the draft Document it holds: accept, reject or later |
+| any other pending proposal (an `add_link` or `add_to_note` of its own, a fact with no `before` written before 0.16.0) | what it adds |
 
-## Reading What to fix
+A **grouped link item** ("People on Pilot rollout: + Ana Ruiz, + Lee Chen") is one letter, decided whole. Never offer to turn down one link of a group. When the user names one ("not Lee"), say the item goes in or out whole, and ask: accept it, or turn it down (and say which link to add on its own).
 
-Text you word yourself from a What to fix (a sentence to add, a reference's new text, an answer) follows [the writing reference](../brain-query/references/writing.md) (decision 0081 §7). A value or wording the user wrote is applied as they wrote it.
+**Held proposals** (`held`) are not questions: say `<n> more rest on content you excluded, so they can never be applied. Reject them?` and, on a yes, reject them together. Never look up a held proposal's title, value or text anywhere (its file, Notion, an earlier list): show its kind and target only.
 
-What to fix is the user's instruction for that one row, in plain words (decisions 0037, 0045). The CLI never interprets it; you do, and you **never apply a change the text doesn't clearly ask for**. Read the letters against the proposal itself (`brain proposal list --target <a note id>`, then its `changes`, `notes` and `links`), never against what you remember of the row. Letters run over the items in the order of spec/schema.md §11.3: every entry of `changes` (as stored), then `notes`, then `links`; `a` is `{ "change": 0 }` when the row has changes. A letter the row doesn't have → ask. A title works like a letter ("all except the risk"). Every decision you write carries `note` = the text as written, `decided_at` = the row's `last_edited`, `decided_by: notion` (in chat: now and `chat`).
+### An answer to a tracked question
 
-- **Approve with a narrower scope** ("all except b, e", "only Ana"): `approve` with one `exclude` entry per item left out: `{ "change": <index> }`, `{ "note": "<id>" }` or `{ "target", "field", "value" }` on a Review notes row, `{ "field", "value" }` from `links` on an `add_link` row. On a Review notes row the excluded items move to a new pending row; say so in the report.
-- **Fix** (Your call is Fix, or an Approve whose text corrects a value: "yes, but it's March"): `fix` with `fixes`, by kind (spec/schema.md §11.3):
-  - a fact, a contradiction, text to add, a reference's new text or an answer: one `{ "value": … }`, the corrected value or text. For a fact, write the value in the shape the fact has (`2027-03`, not "March");
+The question has a task that follows it up (spec/capture-and-review.md §6.4). Show the answer and the task together:
+```
+The March review answers "Can the site go live by the end of March?": yes, on 28 March.
+Record the answer and set its task Done?
+  a) yes (recommended)  b) record the answer, leave the task  c) not yet
+```
+- **a)** `approve` the `answer`. Then read the task's status through the MCP (`value_before`), and write a `notion_change` with `brain proposal new`: `database: tasks`, `page` = the task's page id from `brain sync tracked`, `page_title` = its title, `property: status`, `value_after` = the done status (`Done`, else the first option of the Status property's complete group), `source` = the answer's `source`, `why` = the answer. Apply it in the same `brain apply` with `decided_by: chat` and the user's words as `note`, then carry out its write and settle it ("Notion writes"). The brain sets the task Done this once.
+- **b)** `approve` the `answer` alone.
+- **c)** no decision: the answer waits.
+
+### A tracked question's finished task
+
+One question per `tracked_task` (decision 0101 §6), worded from its `task_state`:
+
+```
+The task for "Can the site go live by the end of March?" is Done. Is the question answered?
+  a) yes: say the answer (recommended: the task is done)
+  b) drop the question
+  c) keep it open
+```
+- `done`: `is <task_status>`, a recommended.
+- `dropped` (Won't Do): `is <task_status>` (the status as read, `is Won't Do`), b recommended.
+- `gone`: `is in Notion's trash`, c recommended; say that c also unlinks the task, so "track it" can give the question a new one.
+- `unreadable`: the first line is `I can't see this task any more (deleted, or no access).`, c recommended; say that c keeps the link, since the page may only be out of the brain's reach, and the question isn't asked again while the page stays unreadable.
+- A task whose `page_title` isn't the question's title (the user renamed it) is named too: `The task "Ask Sam about go-live" for "Can the site go live…" is Done.`
+
+Answers: **a** with the answer in the user's words is `fix` with `[{ "answer": "<one sentence>" }]`; "a" alone: ask for the answer in the same turn. **b** is `fix` with `[{ "drop": true }]`. **c** is `reject`: the question stays open and isn't asked again while the task stays as it is. "Later" records nothing.
+
+## 3. Reading the answers
+
+The CLI never interprets the user's words; you do, and you **never apply a change the words don't clearly ask for**. Read letters against the proposal itself (`brain proposal list --target <a note id>`: its `changes`, `notes` and `links`), never against what you remember. Every decision carries `note` = the user's answer as written (`"yes"` for a plain yes), `decided_at` = now (ISO 8601 UTC), `decided_by: "chat"`. Text you word yourself from an answer (a sentence to add, an answer) follows [the writing reference](../brain-query/references/writing.md) (decision 0081 §7); a value or wording the user wrote is applied as they wrote it.
+
+- **Accept** → `approve`.
+- **Reject** → `reject` (a rejected draft is archived; a rejected change changes nothing).
+- **A corrected value or wording** ("yes, but it's March") → `fix` with `fixes`, by kind (spec/schema.md §11.3):
+  - a fact, a contradiction, text to add, a Document's new text or an answer: one `{ "value": … }`, in the shape the fact has (`2027-03`, not "March");
   - a supersede or merge: one `{ "value": "<id>" }`, the note it should be instead;
   - a possible new note: `{ "field": "title" | <a frontmatter key>, "value": … }`;
-  - an add_link row: `{ "link": { "field", "value" }, "value": <the corrected value> }`;
-  - a Review notes row: `{ "change": <index>, "value": … }` for a change ("a: March"), `{ "note": "<id>", "field", "value" }` for a new note ("c belongs to Acme app" → `field: projects`, `value: ["prj-…"]`; a title, summary or area works the same way), `{ "link": { "target", "field", "value" }, "value": … }` for a link ("Lucía is on Acme website, not Acme app").
+  - an `add_link`: `{ "link": { "field", "value" }, "value": <the corrected value> }`;
+  - a `notion_correction`: one `{ "value": … }` ("b, but 30 March" fixes b alone);
+  - a `review_notes`: `{ "change": <index>, "value": … }` for a change, `{ "note": "<id>", "field", "value" }` for a new note ("c belongs to Acme app" → `field: projects`, `value: ["prj-…"]`), `{ "link": { "target", "field", "value" }, "value": … }` for a link.
+- **On a source's question,** each part's `review_notes` gets its own decision item with the same `note`: **accept all** approves each; **reject** rejects each; **"all except b, e"** approves each part with the named items in `reject` (`{ "change": <index> }`, `{ "note": "<id>" }`, or one `{ "target", "field", "value" }` per link of a grouped item), and a part named whole ("all except Hiring") is rejected; **"later" on a part** gives that part no decision; **"later" on an item** puts it in `exclude` (it moves to a new pending `review_notes`).
+- **On the corrections question,** one decision item per correction, with the same `note`: accept all approves each, "all except b" rejects b and approves the rest, reject rejects each.
+- **A wording to redraft** ("say the pilot, not the trial", "shorter"): draft the new wording in the same turn, show it and ask for a yes; the accepted wording is a `fix`. A redraft that draws on a passage the proposal doesn't list is a new proposal with its own passages, not a fix.
+- **A fix and an except together** ("all except b, and a is March"): `fix` with `fixes` and `reject`, never on the same item. Names become ids through `brain query --candidates "<the name>"`; a name that matches no note, or two, → ask.
+- **A different change** in an answer (a role typed while answering a link, a fact about another note): decide this question as asked, and write the other change as its own proposal with `brain proposal new` (`why` = the user's words, `source` = this proposal's `source`, `passages` = `["user-correction:<this proposal's id>"]`), then ask it.
+- **Unclear** → ask again, quoting the words. Don't guess.
 
-  A fix and an "except" can come together ("all except b, and a is March"): `fix` with both `fixes` and `exclude`, never on the same item. Names become ids through `brain query --candidates "<the name>"`; a name that matches no note, or two → ask.
-- **Reject with a reason** ("wrong meeting"): `reject`; the reason is kept in `note`.
-- **A different change** (a role typed on a link row, a fact about another note) → apply this row as Your call says, and write the other change as its own proposal with `brain proposal new` (`why` = the text, `source` = the proposal's `source`, `passages` = `["user-correction:<this row's prp id>"]`: it rests on the user's words, not on the input), so it gets its own Review row.
-- **Unclear** → ask the user, quoting the text, and leave the row as it is until they answer.
+**Apply** once per round: `brain apply --input <file>`, the decisions in the order asked.
+```json
+{ "decisions": [
+  { "proposal": "prp-…", "action": "approve", "note": "1a", "decided_at": "<now>", "decided_by": "chat" },
+  { "proposal": "prp-…", "action": "fix", "note": "2: 90000 EUR", "fixes": [ { "value": 90000 } ], "decided_at": "<now>", "decided_by": "chat" },
+  { "proposal": "prp-…", "action": "approve", "note": "all except b", "reject": [ { "change": 1 } ], "decided_at": "<now>", "decided_by": "chat" }
+] }
+```
 
-In a catch-up these are decided in its read-only pass and confirmed in its one batch of questions.
-
-## Finish (both modes)
+## 4. Finish
 
 1. **Read the results** of each item:
-   - **`applied`:** done.
-   - **`awaiting_notion`:** an approved or fixed `notion_change`. Its write is in `data.notion_writes`: carry it out now, as "Notion writes" below says. Without Notion configured or reachable, leave it: the proposal stays `approved`, and the next run that reaches Notion carries it out.
-   - **`closed`:** a rejection, `STALE_PROPOSAL` or `SOURCE_EXCLUDED`. Stale means the note changed after the proposal was written (for example your own Notion edit), so the brain did not apply it. Tell the user the current value; the next ingest may propose again. `SOURCE_EXCLUDED` means it rests on content the user excluded, or its support can't be shown: nothing of it was applied. Say so without its wording ("1 change closed: it rested on content you excluded"); the next ingest of its input may propose it again from what the user kept.
-   - **`recorded`:** decided but not applied (`--record-only`).
-   - **`skipped` with `ALREADY_TERMINAL`:** it was already done.
-   - **`review_notes` items** also list `notes`, one result each: `reviewed`, `archived` (rejected), `kept_draft` (excluded) and `unchanged` (no longer `draft` when applied: the user changed its Lifecycle in Notion). An applied one lists `changes`, each `applied`, `dropped` (`STALE_PROPOSAL`: its note changed since the row was written, so only that item was closed; `SOURCE_EXCLUDED`: it rested on content the user excluded, so it was withheld and the rest applied) or `deferred` (excluded), and `deferred`: the new pending row that holds the excluded items. Name the `kept_draft`, `unchanged`, dropped and deferred items once, under Check.
-   - **`failed`:** report the `reason` and `message`. `INVALID_RESULT` means applying it would break a rule, such as a value of the wrong shape. `FIX_UNKNOWN` means a fix named an item the row doesn't have, and `EXCLUDE_UNKNOWN` the same for an "except": re-read What to fix against the proposal. `UNKNOWN_ID` means the proposal or its note is gone.
-2. **Rebuild:** run `brain index`, `brain views`, then `brain lint`. If lint reports an error in a file this run changed, stop and report; don't commit.
-3. **Commit:** `apply: <n> applied, <n> closed`, listing the proposal titles in the body. If this run does not publish (step 4), push now, per `settings.push` (the brain's AGENTS.md, "Write path"), never off the working branch. The report then ends with the backup line (brain-setup references/backup.md, "The report's last line"): none after a push that succeeded; `<n> changes not backed up yet (Back up after each run: remind me).` with `remind`; `Not backed up: <reason>. Say "fix my backup".` when the push failed or wasn't made.
-4. **Publish** *(Notion mode, attended runs only, per `settings.publish`)*. A chat run does not publish: its changes go out with the next Notion-mode run or `brain sync` (spec/cli.md §6, "Apply in chat"). In Notion mode:
-   1. Run `brain sync render --changed`, write the pages through the MCP, then `brain sync record`. The steps are the same as in the brain-ingest skill's references/notion.md "Publish": Review rows move to State Applied or Closed, the changed notes are updated, and the notes just approved get their pages (only reviewed knowledge is in Notion, decision 0071; a rejected draft never gets one).
-   2. Log it with `brain log publish - pages=<n>`; `sync record` itself does not log (§3.9, §5.14.6).
-   3. Commit: `publish: apply results`, then push (same rule as step 3).
-5. **Report** in three lines (decision 0037):
+   - **`applied`:** done. **`awaiting_notion`:** an approved `notion_change`; carry out its write ("Notion writes"). Without Notion reachable, leave it: the proposal stays `approved` and the next run carries it out.
+   - **`closed`:** a rejection, `STALE_PROPOSAL` (the note changed since: tell the user its current value) or `SOURCE_EXCLUDED` (it rested on content the user excluded: say so without its wording).
+   - **`review_notes`** results list `notes` (`reviewed`, `archived`, `kept_draft`, `unchanged`), `changes` (`applied`, `dropped`, `deferred`, `rejected`) and `deferred` (the new pending proposal holding what was left for later). Name the `kept_draft`, `unchanged`, dropped and deferred items once, under Check.
+   - **`failed`:** report the reason. `FIX_UNKNOWN` or `EXCLUDE_UNKNOWN`: a letter the proposal doesn't have; read the answer again. `INVALID_RESULT`: a value of the wrong shape. Don't re-run `apply` without changing its input.
+2. **Rebuild:** `brain index`, `brain views`, `brain lint`. If lint reports an error in a file this run changed, stop and report; don't commit.
+3. **Commit:** `apply: <n> applied, <n> closed`, the proposal titles in the body.
+4. **Publish** *(Notion configured, per `settings.publish`; with `ask`, ask once)*: `brain sync render --changed`, write the pages through the MCP, `brain sync record`, as brain-ingest references/notion.md "Publish" says; `brain log publish - pages=<n>`; commit `publish: decisions`. This gives the notes just made `reviewed` their pages, puts a rejected correction's value back in Notion, and updates the Briefs. Then push per `settings.push` (the brain's AGENTS.md, "Write path"), never off the working branch.
+5. **Report** in three lines, short (decision 0037):
    ```
-   Done: 8 applied · 1 closed (stale) · 12 pages published
-   Needs you: 1 failed ("all except k" on Acme launch review: the row has no k) · 2 rows still pending
-   Next: say which item you meant, here or in What to fix
+   Done: 6 decided (4 applied, 1 rejected, 1 closed: stale)
+   Needs you: 3 decisions still wait
+   Next: say "more", or "what needs my decision" later
    ```
-   - **Done:** counts only, and only the ones that aren't zero.
-   - **Needs you:** what failed and why in a few words, a stale proposal with the note's current value, what is still pending. `Needs you: nothing` when there is none.
-   - **Next:** one action, or one question.
-
-   **Below the three lines, the report grows with what was applied** (decision 0037, amended 2026-10-18), uncapped, one line each:
-   - **What changed:** each applied change in words ("Acme budget is now 95000 EUR", "Ivo joins Acme rollout", "6 notes from Acme launch review accepted", "Who owns the mobile app? answered: Carlos Ruiz").
-   - **Fixes:** every correction you read and applied, repeated back with its letter and row ("Acme launch review, a: launch set to 2027-03, not 2027-02"; "c: Use Contentful now belongs to Acme app"), so the user can check you read them right.
-   - **Check:** each item or proposal closed as stale, with the note's current value; each deferred row, with what it holds; each failure with its reason in a few words; each What to fix the user should look at again; each change proposed from What to fix. Only things the user can act on: a note the render skipped because it has nothing to publish (its type has no database, or nothing changed) is not a finding.
-
-   A run with nothing applied stops at three lines. Never ids, file paths, commands or commit names: the user reads the report to act in Notion or chat, where those mean nothing.
+   Below them, only when there is something: **Fixes** (each correction you read, repeated back: "2: budget set to 90000 EUR") and **Check** (stale items with the current value, deferred items, failures). Never ids, paths or commands. Then the backup line (brain-setup references/backup.md, "The report's last line").
 
 ## Notion writes
 
-A `notion_change` is a change to a Notion-owned field (a task's Status, Due, Project or Area, a project's Status, an Area's Archived), proposed by Ultimate Assistant. The CLI can't write Notion, so `brain apply` and `brain sync apply` record the decision and hand back the write in `data.notion_writes`; the skill that ran them carries out every item, after the apply, and settles it. This is the user's explicit decision, so an unattended catch-up does it too. Until a skill carries out a write the proposal stays `approved` (or `edited`), its row shows Pending, and the next Ultimate Assistant session does it first.
+A `notion_change` changes a Notion-owned field (a task's Status, Due, Project or Area, a project's Status, an Area's Archived). The CLI can't write Notion, so `brain apply` records the decision and hands back the write in `data.notion_writes`; the skill that ran it carries out every item and settles it. A recorded decision is the user's, so a run without the user carries out these writes too.
 
 For each item `{ proposal, database, page_id, property, payload, expect, value }`:
-1. **Read** the page's `property` through the MCP and normalize it: a status or select its option name (`null` when empty), a date its first 10 characters (`null` when empty), a relation its page ids sorted, a checkbox its boolean. Compare a status trimmed and case-insensitive, a date by its `YYYY-MM-DD`, a relation as a sorted list, a checkbox exactly. A page Notion reports as not found, in the trash or archived, or without the property, can never be written: its result is `stale`, and the confirmation says `<title>: not changed: the page or its <property> is gone from Notion.` Any other failed read is a failed write (step 3).
-2. **Equal to `value`:** nothing to write; the result is `applied`. **Equal to `expect`:** update `page_id` with `{ <property>: payload }` (a `status` or `select` payload sets that option by name, a `date` its start, a `relation` the page list, a `checkbox` the box); on success the result is `applied`. **Anything else:** write nothing; the result is `stale` (the user changed it in Notion since), and the confirmation says `<title>: not changed: it changed in Notion since I read it.` (Ultimate Assistant adds `Say "review again" to see it as it is now.`)
-3. **A failed write** (the MCP returns an error, or the write can't be confirmed) settles nothing and isn't retried in this run, whatever the error: the proposal stays `approved`, the next run that applies decisions (or the next Ultimate Assistant session) carries it out, and you name it in the report's Needs you line (Ultimate Assistant: in its confirmation line). Read each write's own result, unfiltered, before you settle anything.
-4. **Settle:** `brain proposal settle --input` with `{ "settled": [ { "proposal": "<prp id>", "result": "applied" | "stale" } ] }`, one entry per item of steps 1 and 2, then commit the `changed` paths (`apply: <n> Notion changes`). The next `brain sync` pulls the new values into the brain.
-
-In the report, a settled `applied` counts as applied, a `stale` one as closed (stale) with the value Notion holds now, under Check.
+1. **Read** the page's `property` through the MCP and normalize it: a status or select its option name (`null` when empty), a date its first 10 characters, a relation its page ids sorted, a checkbox its boolean. Compare a status trimmed and case-insensitive. A page Notion reports as not found, in the trash or archived, or without the property, can never be written: its result is `stale` (`<title>: not changed: the page or its <property> is gone from Notion.`). Any other failed read is a failed write (step 3).
+2. **Equal to `value`:** nothing to write; `applied`. **Equal to `expect`:** update `page_id` with `{ <property>: payload }`; on success `applied`. **Anything else:** write nothing; `stale` (`<title>: not changed: it changed in Notion since I read it.`).
+3. **A failed write** settles nothing and isn't retried in this run: the proposal stays `approved`, the next run carries it out, and the report names it under Needs you.
+4. **Settle:** `brain proposal settle --input` with `{ "settled": [ { "proposal": "<prp id>", "result": "applied" | "stale" } ] }`, then commit the `changed` paths (`apply: <n> Notion changes`).
 
 ## Don'ts
 
-- **Don't apply anything the user didn't decide in this chat or in Notion.** The user's decision is what makes a change to existing knowledge trusted (decision 0003). An undecided proposal stays open, and the report says how many are waiting.
-- **Don't edit notes or proposal files directly** (`sed`, a text editor, a script; U-18) to "help" a proposal along, nor to mark one applied. If a proposal is wrong, the user rejects or fixes it, and `brain sync apply` or `brain apply` writes the result.
-- **Don't re-run `apply` after a failure** without changing the input. Apply is atomic per item, and the failed item is unchanged; fix the cause first.
+- **Don't decide for the user.** An unanswered question stays pending, and the report says how many wait.
+- **Don't edit notes or proposal files directly** (`sed`, a text editor, a script; U-18). A proposal that is wrong is rejected or fixed, and `brain apply` writes the result.
+- **Don't send the user to Notion to decide.** There is nothing to decide there: every decision is made in this chat.

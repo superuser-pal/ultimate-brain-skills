@@ -27,7 +27,7 @@ Once `brain status` shows `checks.databases` passing, commit with brain-connect-
 
 ### The Example rows (decisions 0084, 0087)
 
-The Notion template carries fifteen invented rows that show a filled space, at least one in every database on Brain Data (a Domain, an Area, a Project, a Person, an Org, a Meeting, two Tasks, an Inbox row, a Decision, a Question, a Document, a Review row, a Goal and a Key Result), each titled with the prefix **`Example · `**: the word `Example`, a space, the middle dot `·` (U+00B7), a space, matched exactly, case included. Nothing in the brain may ever be made from one, so they go now, before identities, seeding, a sync or an ingest reads Notion.
+The Notion template carries invented rows that show a filled space, at least one in every database on Brain Data (a Domain, an Area, a Project, a Person, an Org, a Meeting, Tasks, one of them a question followed up, an Inbox row, a Document, a Goal and a Key Result), each titled with the prefix **`Example · `**: the word `Example`, a space, the middle dot `·` (U+00B7), a space, matched exactly, case included. Nothing in the brain may ever be made from one, so they go now, before identities, seeding, a sync or an ingest reads Notion.
 
 1. **Only in a duplicate of the template:** `notion.template_version` was stored by step 4a. Without it (a space built from the prompts, which has no Example rows, or a duplicate whose Template version line was deleted, which can't be told from one), search nothing: log `step=connect result=done examples=0`. The skills that read Notion still leave out any Example row (brain-sync, brain-ingest, brain-catch-up, brain-apply, ultimate-assistant).
 2. **Find them.** Query **every database on the duplicate's Brain Data page** (each id stored in `notion.databases`, and `notion.tasks.database` only when it is the Tasks database on Brain Data), whether its module is on or off, for the rows whose title starts with `Example · `, all pages of each (a title `starts_with` filter, or read the titles and match them yourself). Never search a database outside Brain Data, such as the user's own tasks database (decision 0018).
@@ -47,6 +47,8 @@ Notion AI writes each meeting's minutes with this prompt; the brain reads that s
 ```text
 Write the minutes on this page, below the transcript, and nothing else.
 ```
+
+**A notetaker** (Granola, Fireflies or another) that writes meetings into Notion: tell the user to turn off its own export of tasks to the brain's Tasks database. The ingest creates a meeting's Tasks, once; a notetaker's tasks would come in twice (decision 0101 §5).
 
 1. **Walk through.** When `TEMPLATE.md` says the Meetings template already carries the minutes prompt, skip to the check. Otherwise give the user the prompt's text (the `text` block of `<product.path>/notion/minutes-format.md`) in the chat, ready to copy, and say that they should keep it handy: it runs on each meeting page, as above. Don't wait here; the sample comes next.
 2. **The sample.** Give the user the sample meeting below, exactly as written. Ask them to create a new page in **Meetings** titled `Setup check: delete me` and paste the sample into its body. Then they open the Notion AI chat on that page, paste the prompt followed by the line above, and send. Wait for "done". Never write the sample from the user's own material.
@@ -81,7 +83,7 @@ It has two subjects (the kitchen layout, the schedule), one decision (the island
 
 ## Step 4b: Brain Assistant
 
-Brain Assistant is the Notion AI agent the user chats with in Notion (Today, Check minutes, the buttons that message it).
+Brain Assistant is the Notion AI agent the user chats with in Notion (Today, Check minutes, the buttons that message it). **Brain Assistant and its buttons need Business (or Enterprise) with Notion credits:** a Custom Agent runs on credits (decision 0101 §7). Say so before the walk-through; the minutes prompt (step 4a) doesn't need credits.
 
 **Running a skill.** In Brain Assistant's chat the user asks for a skill by its name ("Run Today"), or mentions the skill's page by its link, copied from this space's Skills database (••• → Copy link). A Custom Agent doesn't recognise a skill typed as a `/` command: never tell the user to type `/Today`. Never tell them to pick the page from the `@` picker either: it can offer another space's page of the same name, and a fresh duplicate's skills may not be indexed yet.
 
@@ -95,7 +97,7 @@ Brain Assistant is the Notion AI agent the user chats with in Notion (Today, Che
 
    Wait for "done".
 2. **The test task,** with Tasks on and its database mapped. Ask: "To check it, I'll create one task in your brain's Tasks, "Setup check: delete me", due today, and close it as Won't Do afterwards. OK?" On the yes, create it through the MCP in `notion.tasks.database`, with the mapped title, Due today, and Status `notion.tasks.new_task_status` when set. With Tasks off, create nothing.
-3. **The check.** Name this space's Tasks database: "In Brain Assistant's chat, ask **Run Today** (by name, not `/Today`). It should list **Setup check: delete me** from the Tasks database under <top page> › Brain Data, and nothing from outside <top page>. Paste or describe what it lists." It passes when the answer lists the test task (with Tasks on) and nothing from outside the brain's databases: no task, Review row, page or meeting from another space or elsewhere in the workspace. With Tasks off, it passes when nothing from outside the brain's databases comes back.
+3. **The check.** Name this space's Tasks database: "In Brain Assistant's chat, ask **Run Today** (by name, not `/Today`). It should list **Setup check: delete me** from the Tasks database under <top page> › Brain Data, and nothing from outside <top page>. Paste or describe what it lists." It passes when the answer lists the test task (with Tasks on) and nothing from outside the brain's databases: no task, page or meeting from another space or elsewhere in the workspace. With Tasks off, it passes when nothing from outside the brain's databases comes back.
 4. **Close the test task** with the same yes: set its Status to `notion.tasks.wont_do_status` (default `Won't Do`) through the MCP.
 5. **Pass:** log `step=brain-assistant result=done`, commit. **Fail** (Today read another space, or elsewhere): log `result=failed reason=assistant-reads-outside`, name what came back that shouldn't have, and give the two fixes in this order: (a) **the run used another space's Today** (picked from the `@` picker): ask **Run Today** by name again, or mention the Today page by the link copied from the Skills database under <top page>; (b) **the agent's access reaches another space**: a Custom Agent, in Tools and access remove every Brain Data, How it works or Skills not under <top page>; personal Instructions, the instruction to stay inside Ultimate Brain is missing or was pasted in part, so paste the whole text again. Offer to check again.
 

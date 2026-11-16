@@ -7,7 +7,7 @@ How step 5 carries out an answer to a numbered finding. Each finding in the sess
 - **"yes N"** is finding N's recommendation `a`; **"yes Nb"** its `b`; **"yes 1, 3"** each one's `a`. **"yes to all"** is every recommendation `a` of the last report shown. Nothing is applied for a finding the user didn't name.
 - **A contradiction is never applied on a bare yes.** "yes 1" (or "yes to all" reaching it) makes you ask `1: which holds? a) 2027-02  b) 2027-01  c) another value`, and nothing is applied for it until the user picks one ("1a", "yes 1b") or gives their own ("1: 2027-03"). "1c" alone asks for the value.
 - **A value of the user's own** takes the place of the recommendation for any finding: "2: Head of Ops at Quayside" (a stale fact), "3: keep M. Lopez" (a duplicate, the other note surviving), "4: Every release needs legal's and finance's sign-off" (a promotion). A date is written as the fact holds it (`2027-03`, `2027-03-15`); a relative one ("next Friday") counts from the machine's local date when the user answers. When a value is unclear, ask, and apply nothing for that finding.
-- **"later N"** writes the finding as a Review row; **"skip N"**, with "because …" or not, remembers the skip (don't ask why). **"more"** and **"done"**: SKILL.md.
+- **"later N"** writes the finding as a pending proposal, asked later in the session; **"skip N"**, with "because …" or not, remembers the skip (don't ask why). **"more"** and **"done"**: SKILL.md.
 - **Order.** The answers of one message are carried out in the order of their numbers, each committed before the next.
 - **A finding answered before in this session:** a "later" one can still get a yes or a skip (see "Already proposed"); for any other, say what was already done and write nothing.
 
@@ -23,11 +23,11 @@ How step 5 carries out an answer to a numbered finding. Each finding in the sess
 
 Confirm in one line, quoting values as written: `1: launch date set to 2027-02 on Acme website`, `2: role set to "former PM at Acme (left in June 2026)"`, `3: merged M. Lopez into María López`, `4: added to Acme website`. An apply that closes the proposal as stale (the note changed since you read it): `1: not changed: Acme website changed since I read it. Say "tidy the brain" again to see it as it is now.` One closed with `SOURCE_EXCLUDED` (the user excluded its evidence meanwhile): `1: not changed: it rests on content you excluded from the brain.` Count `applied` only for an applied proposal.
 
-A proposal decided in chat never becomes a Review row: it is the Git record of the yes. The note it changed is published at "done".
+A proposal decided in chat is the Git record of the yes. The note it changed is published at "done".
 
-## "later N": a Review row
+## "later N": a waiting proposal
 
-Write step 1 above and no decision: the proposal is `pending`, and becomes a Review row when the session publishes at "done". Then step 3, with the message `reflect: later <proposal title>`. Confirm `4: later; it will be in Review once I publish.` Count it in `proposals`. A contradiction needs no value for "later": the user picks it on the Review row (Approve keeps both claims as contested; Fix with the value that holds).
+Write step 1 above and no decision: the proposal is `pending`, and waits for a session (decision 0096 §4): "what needs my decision" asks it, with a reflection theme as its own question. Then step 3, with the message `reflect: later <proposal title>`. Confirm `4: later; say "what needs my decision" when you want it back.` Count it in `proposals`. A contradiction needs no value for "later": the user picks it when it is asked (accept keeps both claims as contested; a value is the one that holds).
 
 ## "skip N"
 
@@ -38,24 +38,24 @@ Write step 1 above, then decide it with `"action": "reject"`, and `"note"` = the
 
 ## A theme
 
-A theme isn't applied: its yes drafts a Document the user reviews like any new note (0076 §4). **"later" on a theme is the same as a yes**: the draft goes to Review either way.
+A theme isn't applied: its yes drafts a Document the user reviews like any new note (0076 §4). **"later" on a theme is the same as a yes**: the draft waits for the session either way.
 
 **A yes or a later:**
 1. `brain id new reference`.
 2. `brain note new --input` with one note: `type: reference`, the id, `title` = the term with a capital (`Pricing tiers`), and `frontmatter`: `origin: learned`, `summary` (one line: what the subject is, from the inputs), `sources` = the inputs that discuss it, and `area` and `projects` when the inputs agree on them (every input that names one names the same). The body is the brain's explanation, short: what the inputs say about the subject, each statement ending with its input's title and date in parentheses (by type and date for an input read in its awaiting-cleanup form). Only what the inputs' returned lines say, never from memory or a file.
 3. `brain proposal new --input` with `{ "kind": "review_notes", "source": <the newest input of the cluster's evidence: the first one, by date, then id>, "notes": [<the Document's id>], "note_passages": { "<the Document's id>": [<the passages of the input lines its statements draw from, judging.md>] }, "title": "Theme: <term>", "why": "<term> comes up in <n> meetings and sources, and no note has it", "fingerprint": "theme:<slug>", "evidence": [<every evidence id>] }`. No decision.
-4. Step 3 of "A yes", with the message `reflect: draft <Document title>`. Confirm `5: drafted "Pricing tiers"; review it in Review once I publish.` Count it in `drafted`.
+4. Step 3 of "A yes", with the message `reflect: draft <Document title>`. Confirm `5: drafted "Pricing tiers"; say "what needs my decision" to read and accept it.` Count it in `drafted`.
 
 **A skip** writes no Document: `proposal new` with `{ "kind": "new_item", "title": "Theme: <term>", "note": { "type": "reference", "title": "<Term>", "frontmatter": { "origin": "learned", "summary": "…", "sources": [ … ] }, "body": "<one line>" }, "why": …, "source": <the newest input>, "passages": [<as for the draft>], "fingerprint": "theme:<slug>", "evidence": [ … ] }`, then decide it with `reject` as "skip N" says.
 
 ## Already proposed
 
-When `proposal new` skips the item `DUPLICATE_PENDING` (an earlier "later" of this session, or a Review row still pending from an earlier session), decide the `existing` proposal it names instead (`brain proposal list --status pending` shows it):
+When `proposal new` skips the item `DUPLICATE_PENDING` (an earlier "later" of this session, or a proposal still pending from an earlier session), decide the `existing` proposal it names instead (`brain proposal list --status pending` shows it):
 - a yes approves it, or fixes it with the user's value, as step 2 says;
 - a skip rejects it;
-- a "later": it is already waiting in Review; say so and write nothing.
+- a "later": it is already waiting; say so and write nothing.
 
-For a theme the existing proposal is its `review_notes`: a yes or a "later" writes nothing (the draft is already waiting in Review; say so); a skip rejects it, which archives the draft.
+For a theme the existing proposal is its `review_notes`: a yes or a "later" writes nothing (the draft is already waiting; say so); a skip rejects it, which archives the draft.
 
 ## Counts
 

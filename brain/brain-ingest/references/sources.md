@@ -27,7 +27,7 @@ A file attached to a Ready Inbox row or a Reviewed meeting page is ingested with
 
 1. **List them** when you read the row or meeting, with each file's name, type and size. They go in the pre-check (or the catch-up's batch), all selected by default; a long one asks "which parts?" as for the drop folder.
 2. **Download each one during the run** into the run's temporary folder, outside the brain: Notion's file links expire after about an hour, so never save a link to use later. Hash it and convert it as "Get the text" says for a `document`.
-3. **Ingest the parent first** (the row's capture or the meeting's minutes), so its source id exists. Then each attachment is its own source: `kind: document`, `source_key` `file:sha256:<hash>`, `file_name`, `converter`, `attached_to` = the parent's source id, the row's `only_keep` when it has one, and no `digest` (it has no Inbox row of its own; its notes go on the parent's). Its new notes list the attachment in `sources`, and they go in the parent's Review notes row: one `review_notes` for the parent input, listing the parent's and the attachments' notes.
+3. **Ingest the parent first** (the row's capture or the meeting's minutes), so its source id exists. Then each attachment is its own source: `kind: document`, `source_key` `file:sha256:<hash>`, `file_name`, `converter`, `attached_to` = the parent's source id, the row's `only_keep` when it has one, and no `digest` (it has no Inbox row of its own; its notes go on the parent's). Its new notes list the attachment in `sources`, and they go in the parent's parts: the `review_notes` of the parent input, by subject, listing the parent's and the attachments' notes.
 4. *(Documents)* **A row with Document asked ticked** keeps each attached **file** as a Document (U-18: the file the user meant to keep must reach Notion): with Only keep empty, one `whole` Document per file; with Only keep set, one `part` Document per file holding what it names ([extraction.md](extraction.md), "Documents"). The capture's own text is kept only when the row has no file.
 5. **A file that can't be read** (an unknown format, a broken file, MarkItDown missing) is skipped: the parent is still ingested and still becomes Done (or Ingested), and the report's Check line names the file, the reason and the fix.
 
@@ -120,7 +120,7 @@ A corrected input is read again as a **new source** with `replaces` = the id of 
 - **An Inbox row set back to Ready** that has a Brain ID: the first version is the source with that row's `notion:` key. Snapshot it again with `replaces` (without it, the CLI skips the same row as a duplicate). The row keeps its page: the next render moves its Brain ID to the new version.
 - **New versions** of a document (a v2 of a requirements file, by the user's word or the pre-check's yes): `replaces` = the latest version of that document. Its `only_keep`, when the user gave none, is the earlier version's, without asking; a Document of the earlier version gets the changed lines as an `update_body` ([extraction.md](extraction.md), "Documents").
 
-A new version keeps the first version's `source_key` and `title`, so the versions sit side by side, even in Markdown-only mode (the key records where the text first came from; versions are told apart by `replaces` and their content). Then write the new source alone, with its real id, in the step 6 batch, and run `brain source diff <new src-id>`: it returns the removed (`- `) and added (`+ `) lines. Analyse **only those lines** ([extraction.md](extraction.md), "Re-reads"). The result usually holds no new note, only changes: they go in one `review_notes` for the input, with `notes: []` (a meeting's changes carry the meeting id as `source`; any other input's, the new source's id), so the user sees one Review row with only what changed. A re-read whose diff yields nothing durable writes the source and proposes nothing: say so.
+A new version keeps the first version's `source_key` and `title`, so the versions sit side by side, even in Markdown-only mode (the key records where the text first came from; versions are told apart by `replaces` and their content). Then write the new source alone first, with its real id (`brain note new` with that one item: the one thing written before the parts, parts.md), and run `brain source diff <new src-id>`: it returns the removed (`- `) and added (`+ `) lines. Analyse **only those lines** ([extraction.md](extraction.md), "Re-reads"). The result usually holds no new note, only changes: they go in one `review_notes` for the input, with `notes: []` (a meeting's changes carry the meeting id as `source`; any other input's, the new source's id), so the user is asked only about what changed. A re-read whose diff yields nothing durable writes the source and proposes nothing: say so.
 
 ## 4. Match and load context
 
@@ -132,24 +132,24 @@ Follow [extraction.md](extraction.md), including "By source kind".
 
 ## 6. Write new notes
 
-Run SKILL.md step 7 as it is (ids from `brain id new`, the dry run for paths, links, the real run; [example-batch.json](example-batch.json) shows the shapes), with these differences:
+Prepare the batch as SKILL.md step 7 says (ids from `brain id new`, the dry run for paths, links; [example-batch.json](example-batch.json) shows the shapes), with these differences:
 - there is no meeting note. The batch holds the source and the new notes (people, decisions, questions, learned Documents); every new note lists the source in `sources`; decisions and questions have no `decided_in` or `raised_in`;
 - give the source a `summary`: one line on what it taught, in the user's terms ("Acme's brief sets the February launch and a 95000 EUR budget"). It becomes the Inbox row's Summary, and is written once: the source never changes after this run;
 - give every source except a `capture` or an attachment a **`digest`** (decision 0043), of the whole input (the Inbox row describes the document): the key points by section, as Markdown bullets under the input's own headings, and the figures and dates exactly as stated. No links, no conclusions of your own. It becomes the body of the source's Inbox row, written once;
 - *(Documents)* **the Documents** the input is kept as, in the same batch ([extraction.md](extraction.md), "Documents"). "Full text for the Acme brief" in chat means a `whole` Document now: Full text is retired (decision 0049). With Documents off, say the module is off and offer "turn on documents";
-- the owner's action items become tasks ([extraction.md](extraction.md), "Tasks for the owner"); hold them for step 7. A to-do is never a question note, the owner's or anyone else's (extraction.md, "Questions or commitments");
+- the owner's action items become tasks ([extraction.md](extraction.md), "Tasks for the owner"); hold them for the publish (§7). A to-do is never a question note, the owner's or anyone else's (extraction.md, "Questions or commitments");
 
-Then run SKILL.md step 8 (propose changes) and step 9 (rebuild and check) as they are.
+Then run SKILL.md steps 8 to 11 as they are: the changes by subject, the parts (attended), the write, rebuild and check.
 
 ## 7. Log, commit, publish
 
-1. Run `brain log ingest <source id> created=<n> proposals=<n> tasks=<n>`. Commit: `ingest: <title> (<kind>) (<n> new, <n> proposals)`.
+1. Run `brain log ingest <source id> created=<n> proposals=<n> tasks=<n>`. Commit: `ingest: <title> (<kind>) (<n> new, <n> waiting)`.
 2. *(Notion, per `settings.publish`)* Publish, following [notion.md](notion.md) "Publish" for each write, pages before tasks:
-   1. **Pages:** `sync render --changed`, write, `sync record`: the new notes and Documents, the proposals and the **source itself**, rendered as its Inbox row (a capture's row is updated: Kind only if empty, Summary, what it produced, Brain Status Done; any other source gets a new row, with its digest as the body: [notion.md](notion.md), "Inbox bodies"). An attachment has no row: its notes appear on the parent's.
+   1. **Pages:** `sync render --changed`, write, `sync record`: the new notes and the Documents accepted in their part (a `draft` Document has no page) and the **source itself**, rendered as its Inbox row (a capture's row is updated: Kind only if empty, Summary, what it produced, Brain Status Done; any other source gets a new row, with its digest as the body: [notion.md](notion.md), "Inbox bodies"). An attachment has no row: its notes appear on the parent's.
    2. *(Tasks)* **Tasks,** now that the Inbox row exists for their backlink: `brain sync tasks --source <source id>`, create each item once, `sync record` the page ids. An item still pending (a project not in Notion) isn't created; list it in the report. Commit `publish: <title>`. If a write fails, the next render produces it again; a capture whose row wasn't updated stays Ready and is skipped as a duplicate next time.
    3. *(Documents)* On a row with Document asked ticked, untick it through the MCP once its Documents are written (decision 0048).
 3. *(Notion, captures the user said to skip)* Set the row's Brain Status to **Done** through the MCP, and its Summary to why ("Skipped: same as Acme requirements"); change nothing else on it (decision 0048).
 
 ## 8. Report
 
-SKILL.md step 12, once per run (for the drop folder, once for all its files). Tasks created for the owner count on the Done line; action items for other people, and any of the owner's that weren't created, are listed under the report.
+SKILL.md step 13, once per run (for the drop folder, once for all its files). Tasks created for the owner count on the Done line; action items for other people, and any of the owner's that weren't created, are listed under the report.

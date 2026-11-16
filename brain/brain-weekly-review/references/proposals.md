@@ -25,6 +25,6 @@ A move or a merge writes only its own proposal: the tasks that would follow it a
 ## What `proposal new` may answer
 
 - **Created:** keep the id (`created[…].id`).
-- **Skipped `DUPLICATE_PENDING`:** the change is already waiting in Review; keep the `existing` id it names. That is how a rerun in the same week keeps its items without writing them twice.
+- **Skipped `DUPLICATE_PENDING`:** the change is already waiting for the session; keep the `existing` id it names. That is how a rerun in the same week keeps its items without writing them twice.
 - **Skipped for any other reason** (`NO_CHANGE`, `ALREADY_LINKED`, `SOURCE_EXCLUDED`): the finding no longer holds. A knowledge finding: take it out of `judged.findings` (its cluster stays in `judged.clusters`) and run `select` again, then write the proposals of the new list (the ones already written answer `DUPLICATE_PENDING`). A work or correction item: the run can't go on to `record`; stop, and log the failure (SKILL.md step 9, "A failure alone", with `failures="<item kind>: <reason>"`).
 - **Refused** (exit 2 or 4): fix the input from the pointer and write it again.

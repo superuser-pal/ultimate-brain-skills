@@ -1,6 +1,6 @@
 # Writing for people
 
-Text the brain saves, or that someone else reads, follows this page: a note's summary and body, a Notion page or property, a report, a Review row, a workflow's progress line. Chat with the user follows the response style in the brain's `AGENTS.md` instead.
+Text the brain saves, or that someone else reads, follows this page: a note's summary and body, a Notion page or property, a report, a proposal's wording or a question asked in a session, a workflow's progress line. Chat with the user follows the response style in the brain's `AGENTS.md` instead.
 
 It lives in brain-query because every brain and every linked folder has brain-query; any skill that writes for people links here.
 

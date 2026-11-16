@@ -9,10 +9,10 @@
    ```text
    s1. Finance (area) · Areas without a Domain · skipped 6 Nov, back on 6 Dec · "a personal area, no Domain needed"
    s2. "Buy new running shoes" (task) · stalled tasks · skipped 2 Nov, back on 2 Dec · no reason
-   Workshops (area) · empty Areas · rejected in Review 4 Nov, back on 4 Dec
+   Workshops (area) · empty Areas · rejected 4 Nov, back on 4 Dec
    Say "unskip s2" to see it again.
    ```
 
-   The subject is written as the report writes it, from the snapshot or the brain; a task no longer in the snapshot is `a task no longer in Notion`. The signal labels are the report's: overdue tasks, stalled tasks, stalled projects, projects with no next step, finished projects still open, misplaced projects, duplicate projects, tasks with no project, Areas without a Domain, empty Areas. After the entries come the rejected Suggestion rows (item 5), with no `s` number: the `notion_change`, `set_field` and `merge` proposals with a `finding`, rejected (`decision.action` `reject`) less than 30 days before `as_of`, from `brain proposal list --status rejected,closed`. The `s` numbers last for the session.
+   The subject is written as the report writes it, from the snapshot or the brain; a task no longer in the snapshot is `a task no longer in Notion`. The signal labels are the report's: overdue tasks, stalled tasks, stalled projects, projects with no next step, finished projects still open, misplaced projects, duplicate projects, tasks with no project, Areas without a Domain, empty Areas. After the entries come the rejected proposals (item 5), with no `s` number: the `notion_change`, `set_field` and `merge` proposals with a `finding`, rejected (`decision.action` `reject`) less than 30 days before `as_of`, from `brain proposal list --status rejected,closed`. The `s` numbers last for the session.
 4. **Undoing a skip.** "unskip s<n>" names that list's entry; "unskip 4" names finding 4 when the user skipped it in this session. Run `brain assistant dismiss --input` with `{ "dismissals": [ { "key": "<key>", "remove": true } ] }` and confirm `s2: unskipped: it shows in the next report.` A later "yes 4" on a skipped finding applies it and removes its skip the same way.
-5. **A rejected Suggestion row** works as a skip with no entry: the findings leave it out for 30 days from the Reject, counted in "skipped for now". "unskip" can't reach it: say `that one was rejected in Review; it comes back on <D Mon>.`
+5. **A rejected proposal** (rejected in the session, or a Suggestion row rejected in Notion before 0.16.0) works as a skip with no entry: the findings leave it out for 30 days from the Reject, counted in "skipped for now". "unskip" can't reach it: say `that one was rejected; it comes back on <D Mon>.`

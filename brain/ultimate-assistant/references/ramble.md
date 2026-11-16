@@ -1,6 +1,6 @@
 # A ramble lands in its place
 
-When the user says several things at once ("the Acme quote is done, I should call Lucía about the contract by the 13th, and maybe a blog series on onboarding"), split it into items, show them as a numbered list with where each goes, and place what the user says yes to. **The yes is the review:** what the user says yes to lands directly; what they don't name is dropped. A ramble item never becomes a Review row.
+When the user says several things at once ("the Acme quote is done, I should call Lucía about the contract by the 13th, and maybe a blog series on onboarding"), split it into items, show them as a numbered list with where each goes, and place what the user says yes to. **The yes is the review:** what the user says yes to lands directly; what they don't name is dropped. A ramble item never waits as a proposal.
 
 ## The list
 

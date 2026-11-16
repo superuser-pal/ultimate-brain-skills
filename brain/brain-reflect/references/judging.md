@@ -54,6 +54,6 @@ Don't give `before` or `from`: `proposal new` fills them from the note and the s
 
 ## Held findings
 
-- A finding whose fingerprint is in its cluster's `held` is dropped: the user has it waiting in Review, or skipped it.
+- A finding whose fingerprint is in its cluster's `held` is dropped: the user has it waiting for the session, or skipped it.
 - **A skip that came back.** A contradiction, stale fact or promotion the user skipped comes back to `held` no more once an input newer than the skip names the note. Before keeping such a finding, run `brain proposal list --target <target>` and look for a rejected or closed proposal with the same fingerprint. If there is one, keep the finding only when an input of the cluster that isn't in that proposal's `evidence`, and was created on or after its `decision.decided_at` date, bears on that field (for a promotion, on that rule). Otherwise drop it and write nothing: the user's skip still stands.
 - `near_duplicate` and `recurring_term` clusters whose fingerprint is held never reach you: the CLI leaves them out.
