@@ -134,7 +134,7 @@ Run them in this order. Each that needs a write asks first; one yes covers the t
    | **Write up** | the Documents module is on | a Documents row titled `Setup check: Write up (delete me)`, Origin Promoted, its body the Write up sample below | a body that differs from the sample |
    | **Refresh report** | the Reports module is on | a Documents row titled `Setup check: Refresh report (delete me)`, Origin Report, its body the Refresh report sample below | one appended section headed `Proposed refresh · based on Notion`, and the text above it unchanged |
 
-   A button that doesn't apply is `skip`. Nothing in the brain is made from a sample: no step of setup reads one except this check, and catch-up and seeding come later.
+   A button that doesn't apply is `skip`. Nothing in the brain is made from a sample: no step of setup reads one except this check, catch-up and seeding come later, and a catch-up never takes in an Inbox row that is still New (the Tidy capture sample stays New, and is trashed right after its read).
 7. **Say what was checked and by whom.** What the user saw in Notion's interface (Today's list, the agent's settings, Send message to) is their check; what you read through the MCP (the mentions, the sample pages) is yours. Never say you verified through the API what only the user saw: "You checked that Tidy capture sends to your Brain Assistant; I read the sample page and it was tidied."
 
 ### Recorded
@@ -145,7 +145,7 @@ Brain Assistant is done only when Today (check 2), the mentions (check 4) and th
 brain log setup - step=brain-assistant result=done agent=custom mentions=pass tidy_capture=pass write_up=pass refresh_report=skip --brain <brain> --json
 ```
 
-Then commit. **With personal Instructions:** `agent=instructions`, the three buttons `skip`, done on checks 2, 4 and check 5's Instructions part. **Any other ending** is `result=failed` with the first failing reason (`assistant-missing`, `assistant-reads-outside`, `mentions-outside`, `button-unbound`, `samples-left`), the keys of the checks run so far (a check not run is left out), and one line with the concrete next step, such as "Next: in Tidy capture's settings, select your Brain Assistant in Send message to, then say "check Brain Assistant again"." Ticking First things first's last box records nothing: only this line does.
+Then commit. **With personal Instructions:** `agent=instructions`, the three buttons `skip`, done on checks 2, 4 and check 5's Instructions part. **Any other ending** is `result=failed` with the first failing reason (`assistant-missing`, `assistant-reads-outside`, `mentions-outside`, `button-unbound`, `samples-left`), the keys of the checks run so far (a check not run is left out; with `assistant-missing`, `agent` is left out too, since there is no agent yet), and one line with the concrete next step, such as "Next: in Tidy capture's settings, select your Brain Assistant in Send message to, then say "check Brain Assistant again"." Ticking First things first's last box records nothing: only this line does.
 
 ### The samples
 
