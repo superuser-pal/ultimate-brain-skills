@@ -58,7 +58,7 @@ Still to do after this screen:
  - Duplicate the Notion template and connect your agent to Notion
  - Connect the brain to its Notion databases
  - Paste the minutes prompt, and check it
- - Set up Brain Assistant, and check it
+ - Create your own Brain Assistant, and check it and its buttons
  - Say which names you appear under
  - Describe your work, so the brain starts with it
  - Check the first results

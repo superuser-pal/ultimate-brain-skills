@@ -13,7 +13,7 @@ You never edit the Markdown by hand. You work in Notion and talk to your agent.
 
 | Module | Adds | On for a new brain |
 |---|---|---|
-| **Domains** | Group Areas by work or life context | no |
+| **Domains** | Group Areas by work or life context; a Domain's page lists its Areas and the Projects, Meetings and Documents in them | no |
 | **Orgs** | Client and partner organizations | yes |
 | **Documents** | A document, or part of one, kept as a page you can read, and what the brain learned (ideas, methods, definitions) | no |
 | **Reports** | Ask the brain in the Inbox, and get a report in Documents you can refresh (needs Documents) | no |
@@ -246,7 +246,7 @@ Meetings have Check minutes and captures have Tidy capture. A document (a file, 
 
 ## Ask Brain Assistant in Notion
 
-**Brain Assistant** is a Notion AI agent that reads Ultimate Brain and answers. It never changes your knowledge, and never creates Tasks from a meeting: the brain does, once, when it takes the meeting in. Brain Assistant and its buttons need Business (or Enterprise) with Notion credits. Open its chat (Agents → Brain Assistant, or @mention it on a page) and ask for a skill by its name, or ask a question. Brain Assistant doesn't run a skill typed as a `/` command: say "Run Today", not `/Today`. To point at a skill's page instead, paste its link (open it from your space's Skills database, ••• → Copy link); don't pick it from the `@` picker, which can offer another space's page of the same name.
+**Brain Assistant** is a Notion AI agent that reads Ultimate Brain and answers. It never changes your knowledge, and never creates Tasks from a meeting: the brain does, once, when it takes the meeting in. Brain Assistant and its buttons need Business (or Enterprise) with Notion credits. **Duplicating the template doesn't give you a configured Brain Assistant:** create your own, give it access, paste its Instructions and select it in the three buttons, as the page **First things first** (linked from Start here) lists. Then say "set up my brain" (or "check Brain Assistant again"): your agent checks it with Today and a sample page for each button, and calls it ready only when those checks pass. Open its chat (Agents → Brain Assistant, or @mention it on a page) and ask for a skill by its name, or ask a question. Brain Assistant doesn't run a skill typed as a `/` command: say "Run Today", not `/Today`. To point at a skill's page instead, paste its link (open it from your space's Skills database, ••• → Copy link); don't pick it from the `@` picker, which can offer another space's page of the same name.
 
 | Ask | You get |
 |---|---|
@@ -491,6 +491,8 @@ Run these in Claude Code or Codex, from your brain's folder.
 | A meeting wasn't ingested | It is still Not Reviewed or Skipped, or no ingest has run since you marked it | Set it to **Reviewed**, then "ingest my reviewed meetings" |
 | A meeting you created for next week sits in Upcoming | Future meetings stay out of the review queue | Nothing; it moves to To review after its date |
 | Text you typed in a project's Brief disappeared | The brain rewrites Brief and Decision log on every sync | Put your notes in **My notes** |
+| Tidy capture, Write up or Refresh report does nothing | The button isn't sending to your own Brain Assistant | In the button's settings, select your Brain Assistant in **Send message to** and keep its message (First things first), then "check Brain Assistant again" |
+| A meeting or Document shows no Domain | It has no Area: its projects are in different Areas, or it hasn't been ingested yet | Set its Area in Notion |
 | Your edit to a Summary or Role changed back | You turned the correction down, or it was never synced | "sync with Notion", then accept it when your agent asks |
 | Your edit to a Summary or Role isn't in the brain yet | Corrections wait for your yes | "what needs my decision" |
 | A new project or person isn't in the brain | It is imported on the next sync | "sync with Notion" |

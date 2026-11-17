@@ -16,7 +16,7 @@ Time: 52 min (first setup line to the last)
 3 notion-mcp: failed once (notion-unreachable), then done
 4 connect: done (template 0024, 15 examples removed)
 4a minutes-prompt: failed once (shape-wrong), then done
-4b brain-assistant: done (custom agent)
+4b brain-assistant: done (custom agent, mentions pass, buttons 3 of 3)
 5 identities: done
 6 seeding: done (14 notes, 4 documents)
 7 first value: passed on attempt 2 · tasks pass · report pass · organised pass · answer pass
@@ -26,7 +26,7 @@ Time: 52 min (first setup line to the last)
 - **Header:** the CLI version (`brain --version`), the skills snapshot's name and version (`skills` in `brain status`), the agent (Claude Code or Codex), the platform (`node -p process.platform`).
 - **Plan and modules:** `notion_ai` and `custom_agents` from the latest `prerequisites` line; the modules that are on.
 - **Time:** from the first `setup` line to the last, in minutes (hours and minutes above 90).
-- **One line per step,** from all its lines in order, the latest deciding its state: `done`, `failed (<reason>)`, `failed <n> times (<reason>, <reason>), then done` (a step done, then failed on a re-check, then done again, counts its one failure), `declined` (shown as `off` for the schedule), or `not reached`. Add in brackets only what the examples show: the `markitdown` and `gh` settings, the template version (`unknown` when `template_version` is null) and the Example rows removed (from the latest `connect` line's `examples=`, left out when `0`), `custom agent` or `personal instructions` (from the `prerequisites` line's `custom_agents`), the seeding counts. Step 7 has its own form, below.
+- **One line per step,** from all its lines in order, the latest deciding its state: `done`, `failed (<reason>)`, `failed <n> times (<reason>, <reason>), then done` (a step done, then failed on a re-check, then done again, counts its one failure), `declined` (shown as `off` for the schedule), or `not reached`. Add in brackets only what the examples show: the `markitdown` and `gh` settings, the template version (`unknown` when `template_version` is null) and the Example rows removed (from the latest `connect` line's `examples=`, left out when `0`), the seeding counts. Step 4b's brackets: the agent kind, `custom agent` or `personal instructions` (from the line's `agent=`, else the `prerequisites` line's `custom_agents`), then `mentions <pass|fail>` and `buttons <passed> of <applicable>` (`buttons skipped` with personal Instructions); a line written before these keys existed shows the agent kind alone. Step 7 has its own form, below.
 - **Step 7:** `passed on attempt <n>` or `unresolved after <n> attempts`, counting its `first-value` lines, then each check from the latest line (`not run` for a check left out, `skip (Tasks off)`). While first value is unresolved, step 8 reads `not offered (first value unresolved)`.
 - Without Notion AI, 4a and 4b read `not required (no Notion AI)`.
 - Asked before setup is finished, the steps not reached say so, and the Time line counts up to now.
@@ -62,6 +62,10 @@ The `reason=` of a `result=failed` line:
 | `shape-wrong` | the minutes check found the shape wrong |
 | `transcript-missing` | the minutes check found the minutes but not the sample's transcript on the page |
 | `assistant-reads-outside` | Today returned something from outside the brain's databases (another space, or elsewhere in the workspace) |
+| `assistant-missing` | the user has no Brain Assistant of their own to ask yet (step 4b) |
+| `mentions-outside` | a mention in a Skills page opens a page outside the user's space, or one the MCP can't open (step 4b) |
+| `button-unbound` | a button's sample page didn't change as its check expects (step 4b) |
+| `samples-left` | a button check's sample page couldn't be moved to the trash (step 4b) |
 | `remote-failed` | the backup couldn't be created, or `gh` can't read it (another host, no access) |
 | `remote-public` | the backup is a public repository (step 2) |
 | `push-failed` | a push failed |
