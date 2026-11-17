@@ -6,7 +6,16 @@ Seeding goes through Ultimate Assistant's ramble (decision 0064): run the ultima
 
 ## 1. Describe
 
-Ask once: "Tell me about your work in a few sentences: what you do, for whom, and with whom. Add any other part of your life you want the brain to hold (a second business, personal projects). If there is a folder or a repo with a project's plans, name it too."
+**A quick map first** (spec/setup.md §8.1 step 1). Before the question, one short message of at most 4 lines, in the user's language: what a Domain, an Area and a Project are, with generic examples, and one invitation. For example:
+
+> A quick map before you start: a Domain is a big part of your life, like your job, a side business or your personal life.
+> An Area is something you look after inside it with no end date: Clients, Finances, Family, Health.
+> A Project has a goal and an end, like "Website relaunch", and sits in an Area.
+> Name yours if you know them, or just tell me about your work and I'll propose them.
+
+The examples stay generic and invented, never taken from the brain. The map explains Domains; it doesn't add them: they are still proposed only with two or more contexts (below).
+
+Then ask once: "Tell me about your work in a few sentences: what you do, for whom, and with whom. Add any other part of your life you want the brain to hold (a second business, personal projects). If there is a folder or a repo with a project's plans, name it too."
 
 - "Nothing to seed" (or the brain already holds the user's work): log `step=seeding result=done notes=0 documents=0`, commit, and go on to step 7.
 - A folder or a repo: see "A folder or a repo" below; its project joins the preview.
@@ -17,7 +26,7 @@ Read the brain first (`brain index --json`) and match every item against it by t
 
 Then show one numbered list, in the ramble's form, with these groups:
 
-- **Domains,** only when the description has **two or more contexts** (work and personal, two businesses): name and Type (`Professional`, `Entrepreneurship` or `Personal`). Say the Domains module will be turned on. With one context: no Domains, and the module stays off.
+- **Domains,** only when the description has **two or more contexts** (work and personal, two businesses): name and summary (one line on what the context is). No Type: Domains have none since Ultimate Brain 0.16.1, and their name and summary carry what kind of context each is. Say the Domains module will be turned on. With one context: no Domains, and the module stays off.
 - **Areas:** name, its Domain (when there are Domains), and **What to track**: 1 to 8 short lowercase phrases for the kinds of thing worth extracting in that Area (`budget, deadlines, scope changes, risks`), proposed from the description. The user changes it like any value.
 - **Projects:** name, Area, Status (`Planned`, `Active`, `On Hold` or `Done`), a one-line purpose, the client Org if any.
 - **Orgs** that a project's client or a person's org names.
@@ -28,8 +37,8 @@ Then show one numbered list, in the ramble's form, with these groups:
 Here is what I'd set up. Nothing is written until you say yes.
 
 Domains (two contexts, so the Domains module will be turned on)
- 1. Studio work · Professional
- 2. Home · Personal
+ 1. Studio work · The interior design studio I run with two partners
+ 2. Home · Family life and the house
 Areas
  3. Clients · Studio work · What to track: budget, deadlines, scope changes, risks
  4. Family · Home · What to track: school dates, appointments
@@ -61,13 +70,13 @@ The answers work as in the ramble: "yes to all", "yes 1–7, 9", "N: <change>", 
    - Domain: `org` when the preview names one. Area: `domain` when there are Domains, and `track` with the What to track list. Project: `area` (required), `client` (an `org-` id) when given; body: the one-line purpose. Person: `org` when they have one; `facts: { "role": "<role>" }` and, beside it in `frontmatter`, `timeline: [ { "field": "role", "value": "<role>", "from": "<today>", "learned": "<today>", "source": "<the source_key>", "assessment": "accepted" } ]`.
    - Domains, Areas, Projects and Orgs are written `reviewed` by the CLI (decision 0070). People are written `draft`, like every new person: they are published as Draft, so the first meeting matches them, and the user marks them Reviewed in Notion when they like.
 4. **Rebuild and commit:** `brain index`, `brain views`, `brain lint`, then one commit `setup: seed my work`.
-5. **One publish** of every seeded note and the setup's source, whatever `settings.publish` says, since the preview's yes covers it: `brain sync render --ids <every seeded id and the source's>`, create each page through the MCP, `brain sync record`, and a render again for any pending relations, as the brain-sync skill's Push says, with its `publish` log line and commit. Then, under the same yes, set what Notion owns on the new pages through the MCP: each Project's Status and each Domain's Type from the preview. The next sync pulls them into the brain. **A publish that fails** (Notion unreachable, a CLI error): the notes stay in Git; log `step=seeding result=failed reason=<code>` and stop with the fix. On resume, the preview shows every item `already in the brain`, so nothing is written again: publish the seeded notes that have no page yet (`brain sync render --ids <their ids>`), then go on.
+5. **One publish** of every seeded note and the setup's source, whatever `settings.publish` says, since the preview's yes covers it: `brain sync render --ids <every seeded id and the source's>`, create each page through the MCP, `brain sync record`, and a render again for any pending relations, as the brain-sync skill's Push says, with its `publish` log line and commit. Then, under the same yes, set what Notion owns on the new pages through the MCP: each Project's Status from the preview. Never set a Type on a Domain. The next sync pulls them into the brain. **A publish that fails** (Notion unreachable, a CLI error): the notes stay in Git; log `step=seeding result=failed reason=<code>` and stop with the fix. On resume, the preview shows every item `already in the brain`, so nothing is written again: publish the seeded notes that have no page yet (`brain sync render --ids <their ids>`), then go on.
 6. **Key documents** (below).
 7. **Log** `step=seeding result=done notes=<seeded notes, the source not counted> documents=<Documents kept>`, commit.
 
 ## Key documents
 
-Say: "Drop your 3 to 5 key documents into <drop folder> now, then say "done"." Then run the brain-ingest skill on the drop folder, answering **Keep as document** for each file and placing each under the Area and Project the user names (from the preview). What the user said here is the drop folder's answer: don't ask its question again. Each becomes a Document. What the brain reads from them (decisions, questions, people, tasks) goes through **Review as usual**, one row per file: the user's first Review is on their own material. Say so in one line, and wait for nothing: deciding those rows is part of step 7.
+Say: "Drop your 3 to 5 key documents into <drop folder> now, then say "done"." Then run the brain-ingest skill on the drop folder, answering **Keep as document** for each file and placing each under the Area and Project the user names (from the preview). What the user said here is the drop folder's answer: don't ask its question again. Each becomes a Document. What the brain reads from them (decisions, questions, people, tasks) is decided in this session, like any attended ingest: one preview and one yes per file, then that file's questions (spec/setup.md §8.3). The user's first decisions are on their own material. An item the user leaves for later stays waiting and is asked in a later session.
 
 - No documents ("I'll add them later"): `documents=0`. The first-value check then has no seeded document: see first-value.md.
 

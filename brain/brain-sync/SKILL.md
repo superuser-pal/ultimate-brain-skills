@@ -23,7 +23,7 @@ Run CLI commands as `brain <command> --brain <brain> --json`. Database ids come 
    | Database | Read when |
    |---|---|
    | Areas, Projects, People | always (core) |
-   | Domains | Domains is on (decision 0065): Type, Archived and your edits to a domain come in, and a Domain you add in Notion is imported |
+   | Domains | Domains is on (decision 0065): Archived and your edits to a domain come in (no Type: it was removed in 0.16.1, and a Type still in the space isn't read), and a Domain you add in Notion is imported |
    | Orgs | Orgs is on |
    | Documents (learned Documents included: there is no Concepts database since 0.9.1) | Documents is on |
    | Goals, Key Results | Planning is on |
