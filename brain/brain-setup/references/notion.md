@@ -83,7 +83,9 @@ It has two subjects (the kitchen layout, the schedule), one decision (the island
 
 ## Step 4b: Brain Assistant
 
-Brain Assistant is the Notion AI agent the user chats with in Notion (Today, Check minutes, the buttons that message it). **Brain Assistant and its buttons need Business (or Enterprise) with Notion credits:** a Custom Agent runs on credits (decision 0101 §7). Say so before the walk-through; the minutes prompt (step 4a) doesn't need credits.
+Brain Assistant is the Notion AI agent the user chats with in Notion (Today, Check minutes, and the three buttons that message it: **Tidy capture**, **Write up**, **Refresh report**). **Brain Assistant and its buttons need Business (or Enterprise) with Notion credits:** a Custom Agent runs on credits (decision 0101 §7). Say so before the walk-through; the minutes prompt (step 4a) doesn't need credits.
+
+**Duplicating the template doesn't give the user a configured Brain Assistant** (decision 0103 §1): they create their own, give it access, replace the mentions and select it in the buttons, as the page **First things first** in their space lists. Never assume one came with the template, and never say it is ready before the checks below pass.
 
 **Running a skill.** In Brain Assistant's chat the user asks for a skill by its name ("Run Today"), or mentions the skill's page by its link, copied from this space's Skills database (••• → Copy link). A Custom Agent doesn't recognise a skill typed as a `/` command: never tell the user to type `/Today`. Never tell them to pick the page from the `@` picker either: it can offer another space's page of the same name, and a fresh duplicate's skills may not be indexed yet.
 
@@ -91,15 +93,86 @@ Brain Assistant is the Notion AI agent the user chats with in Notion (Today, Che
 - Another page has the same title: "Your workspace has two pages called <top page>. Rename this one, for example to <top page> · Test, so you can tell them apart in Notion, then say done." Read the title again after "done". Nothing in the brain depends on it.
 - Other Skills databases exist: say how many, and that the right one is the one under <top page>.
 
-1. **Walk through.** Give the steps from `<product.path>/notion/TEMPLATE.md` for a duplicate when it has them (pointing the agent at the copy), else the "Setup" of `<product.path>/notion/brain-assistant.md`, as text in the chat:
-   - **A Custom Agent** when the `prerequisites` line has `custom_agents=yes`: Tools and access limited to Brain Data, How it works and the Skills database (Brain Assistant's skills; "Brain Assistant Skills" in a space built before 0.14.0), each named by its space: "Add **Brain Data**, **How it works** and **Skills** under <top page>. In the picker each result shows the page it sits under; pick only those under <top page>, and if a result doesn't show it, paste the page's link instead."
-   - **Personal Instructions** otherwise: the same Instructions text in the user's personal Notion AI Instructions, and the skills as personal skills.
+### Your own agent: create it, or keep the one you have
 
-   Wait for "done".
-2. **The test task,** with Tasks on and its database mapped. Ask: "To check it, I'll create one task in your brain's Tasks, "Setup check: delete me", due today, and close it as Won't Do afterwards. OK?" On the yes, create it through the MCP in `notion.tasks.database`, with the mapped title, Due today, and Status `notion.tasks.new_task_status` when set. With Tasks off, create nothing.
-3. **The check.** Name this space's Tasks database: "In Brain Assistant's chat, ask **Run Today** (by name, not `/Today`). It should list **Setup check: delete me** from the Tasks database under <top page> › Brain Data, and nothing from outside <top page>. Paste or describe what it lists." It passes when the answer lists the test task (with Tasks on) and nothing from outside the brain's databases: no task, page or meeting from another space or elsewhere in the workspace. With Tasks off, it passes when nothing from outside the brain's databases comes back.
-4. **Close the test task** with the same yes: set its Status to `notion.tasks.wont_do_status` (default `Won't Do`) through the MCP.
-5. **Pass:** log `step=brain-assistant result=done`, commit. **Fail** (Today read another space, or elsewhere): log `result=failed reason=assistant-reads-outside`, name what came back that shouldn't have, and give the two fixes in this order: (a) **the run used another space's Today** (picked from the `@` picker): ask **Run Today** by name again, or mention the Today page by the link copied from the Skills database under <top page>; (b) **the agent's access reaches another space**: a Custom Agent, in Tools and access remove every Brain Data, How it works or Skills not under <top page>; personal Instructions, the instruction to stay inside Ultimate Brain is missing or was pasted in part, so paste the whole text again. Offer to check again.
+Ask once: "Does this space already have a Brain Assistant you created, that answers in its chat?" Skip the question when an earlier `brain-assistant` line has `agent=` and a reason other than `assistant-missing`: the agent exists, so go straight to the checks.
+
+- **No** (a fresh duplicate, or not sure): walk through the items below in order, **one at a time**, each message ending with what the user does next ("say done").
+- **Yes:** keep that agent. **Never ask for a second one.** Go straight to the checks, and show an item below only when its check fails, as the repair.
+
+The items are those of First things first. Their wording, and the Instructions to paste, come from the "Setup" and "Instructions" of `<product.path>/notion/brain-assistant.md`, their only source: read the file and give each item as its matching step says it, as text in the chat. What each item must make clear:
+
+1. **The plan.** With `custom_agents=no` on the `prerequisites` line, there is no Custom Agent: give the personal-Instructions path instead (below), and skip items 2, 3 and 6.
+2. **Create the agent:** Agents → New Custom Agent, named **Brain Assistant**, with no triggers.
+3. **Tools and access:** "Add **Brain Data**, **How it works** and **Skills** under <top page>, and nothing else. In the picker each result shows the page it sits under; pick only those under <top page>, and if a result doesn't show it, paste the page's link instead." ("Brain Assistant Skills" in a space built before 0.14.0.) Say that a mention in the Instructions doesn't give the agent access: only Tools and access does.
+4. **The Instructions:** the block of brain-assistant.md's "Instructions" to paste, and each `[@Brain Data]` and `[@How it works]` in it replaced with a mention of that page under <top page>.
+5. **The mentions in the skills:** each page of **Skills** under <top page>; every mention of Brain Data or How it works must open the page under <top page>.
+6. **The buttons:** **Tidy capture** (Inbox), **Write up** and **Refresh report** (Documents; each there with its module on). For each: open the database as a full page → ••• → Properties → the button, and in **Send message to** select their own Brain Assistant. Keep the message as it is: its skill name, its "I confirm" and its **@This page**. Selecting the agent says who receives the message; @This page says which page it is about. One never replaces the other.
+
+**Personal Instructions** (`custom_agents=no`): the same Instructions text in the user's personal Notion AI Instructions, and the skills as personal skills. Say once that the three buttons won't work on this plan: they message a Custom Agent.
+
+### The checks
+
+Run them in this order. Each that needs a write asks first; one yes covers the test task and every sample page ("To check it, I'll create a task and up to three sample pages in your space, read them back, and move them to the trash afterwards. OK?").
+
+1. **The test task,** with Tasks on and its database mapped: create it through the MCP in `notion.tasks.database`, titled `Setup check: delete me`, Due today, Status `notion.tasks.new_task_status` when set. With Tasks off, create nothing.
+2. **Today (the scope check).** "In Brain Assistant's chat, ask **Run Today** (by name, not `/Today`). It should list **Setup check: delete me** from the Tasks database under <top page> › Brain Data, and nothing from outside <top page>. Paste or describe what it lists." It passes when the answer lists the test task (with Tasks on) and nothing from outside the brain's databases: no task, page or meeting from another space or elsewhere in the workspace. With Tasks off, it passes when nothing from outside the brain's databases comes back.
+   - **The user has no agent to ask yet:** `assistant-missing`. Go back to item 2 above.
+   - **Today read another space** (a task or meeting the brain's databases don't hold, or the test task missing while other tasks show): `assistant-reads-outside`. Name what came back that shouldn't have, and give the two fixes in this order: (a) **the run used another space's Today** (picked from the `@` picker): ask **Run Today** by name again, or mention the Today page by the link copied from the Skills database under <top page>; (b) **the agent's access reaches another space**: a Custom Agent, in Tools and access remove every Brain Data, How it works or Skills not under <top page>; personal Instructions, the instruction to stay inside Ultimate Brain is missing or was pasted in part, so paste the whole text again. Offer to check again.
+3. **Close the test task** on a pass: set its Status to `notion.tasks.wont_do_status` (default `Won't Do`) through the MCP.
+4. **The mentions in the skills** (you read them through the MCP). Read every page of the Skills database under <top page> and every page mention in it. It passes when each mention opens a page under <top page> (its parent chain reaches the top page). A mention that opens a page elsewhere, or one the MCP can't open (another person's space, such as the template author's), is `mentions-outside`: name the skill page and the mention's text, and say to replace it with a mention of the page of that name under <top page> (item 5).
+5. **Access and Instructions** (the user's check: the API can't read a Custom Agent's settings). "Open Brain Assistant's settings. Does Tools and access hold Brain Data, How it works and Skills under <top page>, and nothing else? And does every mention in its Instructions open the page under <top page> (hover or open it)?" A no shows item 3 or 4 again. With personal Instructions, ask only the Instructions part.
+6. **The buttons** (Custom Agent only). One at a time, for each button that applies (the table below), with the yes above:
+   1. Create its sample page through the MCP, with the exact title and body below.
+   2. Ask: "Open the button's settings and check that **Send message to** names your own Brain Assistant. Then click **<button>** on the page **<title>** and tell me when Brain Assistant has answered."
+   3. On the user's answer, read the page back through the MCP. It passes when it changed as the table says. Unchanged, or changed otherwise: `button-unbound`; give item 6 as the repair and offer to check again.
+   4. Move the page to Notion's trash (`in_trash: true`) under the same yes. One that couldn't be trashed leaves the step unfinished with `samples-left` until it is gone; the user may delete it by hand.
+
+   | Button | Applies when | The sample page | Passes when the page, read back, shows |
+   |---|---|---|---|
+   | **Tidy capture** | always | an Inbox row (`notion.databases.inbox`) titled `Setup check: Tidy capture (delete me)`, Kind Capture, Brain Status New, its body the Tidy capture sample below | a body that differs from the sample and still holds the name Sam Rivera, the number 1200 (`1,200` counts) and the date 3 March; Brain Status still New |
+   | **Write up** | the Documents module is on | a Documents row titled `Setup check: Write up (delete me)`, Origin Promoted, its body the Write up sample below | a body that differs from the sample |
+   | **Refresh report** | the Reports module is on | a Documents row titled `Setup check: Refresh report (delete me)`, Origin Report, its body the Refresh report sample below | one appended section headed `Proposed refresh · based on Notion`, and the text above it unchanged |
+
+   A button that doesn't apply is `skip`. Nothing in the brain is made from a sample: no step of setup reads one except this check, and catch-up and seeding come later.
+7. **Say what was checked and by whom.** What the user saw in Notion's interface (Today's list, the agent's settings, Send message to) is their check; what you read through the MCP (the mentions, the sample pages) is yours. Never say you verified through the API what only the user saw: "You checked that Tidy capture sends to your Brain Assistant; I read the sample page and it was tidied."
+
+### Recorded
+
+Brain Assistant is done only when Today (check 2), the mentions (check 4) and the user's check 5 pass, and every button that applies passed:
+
+```sh
+brain log setup - step=brain-assistant result=done agent=custom mentions=pass tidy_capture=pass write_up=pass refresh_report=skip --brain <brain> --json
+```
+
+Then commit. **With personal Instructions:** `agent=instructions`, the three buttons `skip`, done on checks 2, 4 and check 5's Instructions part. **Any other ending** is `result=failed` with the first failing reason (`assistant-missing`, `assistant-reads-outside`, `mentions-outside`, `button-unbound`, `samples-left`), the keys of the checks run so far (a check not run is left out), and one line with the concrete next step, such as "Next: in Tidy capture's settings, select your Brain Assistant in Send message to, then say "check Brain Assistant again"." Ticking First things first's last box records nothing: only this line does.
+
+### The samples
+
+Invented text, never the user's material. Write each body exactly as given.
+
+Tidy capture:
+
+```text
+call sam rivera re the quote. he said 1200 is ok if we start before 3 march
+also ask about the second room
+```
+
+Write up:
+
+```text
+A short guide to keeping meeting notes in one place.
+```
+
+Refresh report:
+
+```text
+## Where it stands
+- The sample project is on track.
+
+## Gaps
+- None
+```
 
 ## Step 5: identities
 
