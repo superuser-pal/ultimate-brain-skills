@@ -7,7 +7,7 @@ Capture information, remember decisions and keep track of your work. Use ordinar
 | Place | Use it for |
 |---|---|
 | **Notion** | Capture ideas, read your knowledge and manage tasks. |
-| **Brain Assistant in Notion AI** | Prepare for meetings, check minutes, clean captures and help write documents. Needs Business (or Enterprise) with Notion credits. |
+| **Brain Assistant in Notion AI** | Prepare for meetings, check minutes, clean captures and help write documents. Needs Business (or Enterprise) with Notion credits. Duplicating the template doesn't give you one: create your own as **First things first** (linked from Start here) says, and **“set up my brain”** checks it. |
 | **Your agent in Claude Code or Codex** | Bring information into the brain, ask you what it needs decided, answer questions and maintain the system. Every decision is made here. |
 
 Open your agent in your brain's folder for the requests below. Connected work folders also support the actions configured for them. Features depend on your installed version and enabled modules; ask **“Which modules do I have?”** if something is missing.
@@ -61,7 +61,7 @@ Ready and Reviewed make inputs available for processing. Processing happens when
 | **Refresh report** | A report in Documents | Notion AI adds a proposed refresh in a toggle. Review it, replace the report text if you agree, delete the toggle, then click **Accept**. |
 | **Accept** | A Document or report | Marks the current wording for the next **“Catch up.”** Your click authorises that exact wording; if the page changes afterward, accept the final version again. |
 
-The Notion AI buttons message Brain Assistant, so they need it configured, and Business (or Enterprise) with Notion credits. Document and report buttons also depend on their modules being enabled. **Only keep** limits the document you preserve; it does not exclude the rest of an input from knowledge processing. Use the selection controls below for exclusions.
+The Notion AI buttons message Brain Assistant, so each needs your own Brain Assistant selected in its **Send message to** (First things first), and Business (or Enterprise) with Notion credits. Document and report buttons also depend on their modules being enabled. **Only keep** limits the document you preserve; it does not exclude the rest of an input from knowledge processing. Use the selection controls below for exclusions.
 
 ## Notion AI prompts
 
@@ -127,6 +127,7 @@ Scheduled catch-up needs the configured computer and agent available. It decides
 | You corrected an already processed meeting | Set it back to **Reviewed**, then say **“Catch up.”** |
 | Something waits for your decision | Say **“What needs my decision?”** |
 | A button request is still waiting | Say **“Catch up”**; check whether its module is enabled. |
+| Tidy capture, Write up or Refresh report does nothing | In the button's settings, select your own Brain Assistant in **Send message to** (First things first), then say **“Check Brain Assistant again.”** |
 | A changed version sits as **New** | It waits for your check: say **“Go,”** or set it **Ready**. |
 
 Put your own project notes in **My notes**. The brain refreshes generated sections such as **Brief** and **Decision log**.
