@@ -4,7 +4,7 @@ The CLI never calls Notion (spec/cli.md §1). You read and write Notion through 
 
 ## Fetch (SKILL.md step 2)
 
-1. Query the `meetings` database for pages where **Brain Status = Reviewed**, sorted by Date ascending. `brain.json` holds database ids; Notion queries take the **data source id**: retrieve the database first and query its `data_sources[0].id`.
+1. Query the `meetings` database for pages where **Brain Status = Ready**, sorted by Date ascending. In a space not yet migrated to 0.16.2 (migration 0029) the option is still named **Reviewed**: take those too (decision 0109). `brain.json` holds database ids; Notion queries take the **data source id**: retrieve the database first and query its `data_sources[0].id`.
 2. For each page, read:
    - **page id:** becomes `notion:<id>` as the source key, and the meeting note's `notion`;
    - **`last_edited_time`:** becomes the source's `origin_edited`;
@@ -18,7 +18,7 @@ The CLI never calls Notion (spec/cli.md §1). You read and write Notion through 
 
 The minutes are the page body **without the template parts**. Leave out:
 - the "Minutes format" callout (it holds the prompt, not minutes);
-- the "Before marking Reviewed" checklist;
+- the "Before setting Ready" checklist ("Before marking Reviewed" in a space made before 0.16.2);
 - the linked or inline Tasks views, and, in a space made before 0.16.0, the Decisions and Questions views.
 
 **The For the brain toggle** (lean minutes, decision 0079) is not minutes text to store: it holds the selection and the quotes, for the ingest. A summary that holds one is in the lean shape and is read by [selection.md](selection.md) (§2 step 1), which gives `extract-plan` the summary with the toggle kept whole: its `<details>` and `<summary>For the brain</summary>` tags, its lines and their indentation. The CLI finds the toggle by those tags; without them its Selection lines and quotes are controls in the wrong place (`SELECTION_UNREADABLE`). Such a summary is never a legacy summary, so the source body below never holds it, and its rule 3 never applies to it. If you find one while building a source body, stop and follow selection.md instead.

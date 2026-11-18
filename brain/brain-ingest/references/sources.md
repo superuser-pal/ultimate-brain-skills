@@ -23,13 +23,13 @@ The user's drop folder is where they put documents for the brain, outside both r
 
 ## Attachments: files attached in Notion (decision 0042) *(Notion)*
 
-A file attached to a Ready Inbox row or a Reviewed meeting page is ingested with that row or meeting: file, PDF and image blocks in the page body, or a Files property. Files on other pages (projects, areas) are never read.
+A file attached to a Ready Inbox row or a Ready meeting page is ingested with that row or meeting: file, PDF and image blocks in the page body, or a Files property. Files on other pages (projects, areas) are never read.
 
 1. **List them** when you read the row or meeting, with each file's name, type and size. They go in the pre-check (or the catch-up's batch), all selected by default; a long one asks "which parts?" as for the drop folder.
 2. **Download each one during the run** into the run's temporary folder, outside the brain: Notion's file links expire after about an hour, so never save a link to use later. Hash it and convert it as "Get the text" says for a `document`.
 3. **Ingest the parent first** (the row's capture or the meeting's minutes), so its source id exists. Then each attachment is its own source: `kind: document`, `source_key` `file:sha256:<hash>`, `file_name`, `converter`, `attached_to` = the parent's source id, the row's `only_keep` when it has one, and no `digest` (it has no Inbox row of its own; its notes go on the parent's). Its new notes list the attachment in `sources`, and they go in the parent's parts: the `review_notes` of the parent input, by subject, listing the parent's and the attachments' notes.
 4. *(Documents)* **A row with Document asked ticked** keeps each attached **file** as a Document (U-18: the file the user meant to keep must reach Notion): with Only keep empty, one `whole` Document per file. With Only keep set, nothing is taken in from the row yet: the capture and its files are recorded as sources, the row becomes Done, and each file's part becomes a checked row (`file` = its name), taken in on "go" or Ready ([checked.md](checked.md)). The capture's own text is kept only when the row has no file, and then whole.
-5. **A file that can't be read** (an unknown format, a broken file, MarkItDown missing) is skipped: the parent is still ingested and still becomes Done (or Ingested), and the report's Check line names the file, the reason and the fix.
+5. **A file that can't be read** (an unknown format, a broken file, MarkItDown missing) is skipped: the parent is still ingested and still becomes Done, and the report's Check line names the file, the reason and the fix.
 
 ## Linked repos: "catch up" with a repo linked (decision 0042)
 
@@ -117,7 +117,7 @@ Build the source item ([cli-inputs.md](cli-inputs.md) §1b), with `only_keep` wh
 ### Re-reads and new versions (decision 0045)
 
 A corrected input is read again as a **new source** with `replaces` = the id of the version the brain read before; the old version stays as it is (decision 0032). Find that id by following `replaces` forward from the first version: `grep -rl "replaces: <id>" <brain>/sources/` until nothing names the last one (an administrative lookup: it gives ids and paths only; read nothing of those files).
-- **A meeting set back to Reviewed** after its ingest (the meeting note already has this page's `notion`): the first version is the meeting's `source`. Snapshot the minutes again with `replaces`. A dry run that skips it as `DUPLICATE_SOURCE` means the minutes didn't change: the brain side is done (SKILL.md step 2).
+- **A meeting set back to Ready** after its ingest (the meeting note already has this page's `notion`): the first version is the meeting's `source`. Snapshot the minutes again with `replaces`. A dry run that skips it as `DUPLICATE_SOURCE` means the minutes didn't change: the brain side is done (SKILL.md step 2).
 - **A minutes file in Markdown-only mode** that the user says corrects a meeting already in the brain ("I fixed the Acme sync minutes, read them again"): the same, with the meeting found by its title and date (`brain query --candidates "<title>" --types meeting`).
 - **An Inbox row set back to Ready** that has a Brain ID: the first version is the source with that row's `notion:` key. Snapshot it again with `replaces` (without it, the CLI skips the same row as a duplicate). The row keeps its page: the next render moves its Brain ID to the new version.
 - **New versions** of a document (a v2 of a requirements file, by the user's word or the pre-check's yes): `replaces` = the latest version of that document. Its `only_keep`, when the user gave none, is the earlier version's, without asking; a Document of the earlier version gets the changed lines as an `update_body` ([extraction.md](extraction.md), "Documents").

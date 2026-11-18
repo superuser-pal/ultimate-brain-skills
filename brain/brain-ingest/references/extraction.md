@@ -96,7 +96,7 @@ The source records what the user asked to keep in `only_keep` (cli-inputs.md §1
 
 ### Re-reads: only what changed (decision 0045)
 
-A corrected input read again (a meeting set back to Reviewed, an Inbox row set back to Ready, a new version of a document) is a new source with `replaces` (sources.md "Re-reads"). Analyse **only the lines `brain source diff` gives**, against what the brain already holds from the earlier version:
+A corrected input read again (a meeting or an Inbox row set back to Ready, a new version of a document) is a new source with `replaces` (sources.md "Re-reads"). Analyse **only the lines `brain source diff` gives**, against what the brain already holds from the earlier version:
 - **a changed line corrects the old one** (U-18): what the earlier version said was wrong, so the new line **replaces** it; it is not a second claim. Never add the new wording next to the old one, and never mark the pair `^[ambiguous]`:
   - a changed value (a date, an amount, a name, a role) held as a fact → `update_fact` on that note, `before` = the old value, `after` = the new, `why` = the new line ("launch in February" → "launch in March": `launch_date` 2027-02 → 2027-03);
   - a changed statement in a note's text ("in a transition period" → "done with the transition period") → one `add_to_note` worded as the correction, naming what it replaces: "Correction (fixed minutes, 2026-10-27): the team is done with the transition period; the earlier minutes said it was still in it." No proposal kind rewrites a note's body (only a Document's `update_body`), so also name the note under Check with the old wording: "Acme sync's text still says 'in a transition period'; the correction is added below it";

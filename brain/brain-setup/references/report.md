@@ -41,7 +41,7 @@ The product repository is the one named by the `repository` field of `<product.p
 - **`gh` off, or no `repository` field:** give the text, ready to copy, and the new-issue link `https://github.com/<owner/name>/issues/new?labels=beta-setup` (with no `repository` field, only the text, and say the report can be sent to whoever invited them).
 - **No:** nothing is sent.
 
-At the end of setup (steps 1 to 8 done), after the answer, log `step=finished result=done` and commit `setup: finished`. A report shown while setup is unfinished, first value unresolved included, writes no `finished` line and unlocks nothing. Then say, in two lines: setup is done, and what to do tomorrow ("Mark a meeting Reviewed after it's summarised, then say "catch up".").
+At the end of setup (steps 1 to 8 done), after the answer, log `step=finished result=done` and commit `setup: finished`. A report shown while setup is unfinished, first value unresolved included, writes no `finished` line and unlocks nothing. Then say, in two lines: setup is done, and what to do tomorrow ("Set a meeting Ready after it's summarised, then say "catch up".").
 
 ## Reason codes
 

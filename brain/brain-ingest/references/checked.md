@@ -5,7 +5,7 @@ When the user wants a document changed before it goes in, you write the changed 
 ## What it applies to
 
 An input of kind `document`, `email`, `chat` or `note`: a converted file (an attached file and a drop-folder file included), a web page, a pasted thread or a text given in the session. Never minutes or a capture, and never a task page (that is [task-document.md](task-document.md)):
-- **Minutes** keep Check minutes and Reviewed. A change asked on a meeting is made on its page: say so ("fix it on the meeting page, then set it Reviewed").
+- **Minutes** keep Check minutes and Ready. A change asked on a meeting is made on its page: say so ("fix it on the meeting page, then set it Ready").
 - **A capture** (a row the user created) keeps Tidy capture: the user edits the row before setting it Ready. On a capture, Only keep applies to its attached files only. A capture with no file and Only keep filled is kept whole: say so under Check ("Only keep applies to attached files; *Pilot notes* was kept whole").
 
 ## What writes a checked row

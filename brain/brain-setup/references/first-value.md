@@ -66,7 +66,7 @@ When the attempt's checks are done, or the user stops, write one line with each 
 
   Offer no schedule, and write no `finished` line. The setup report can still be shown (report.md); it unlocks nothing.
 
-**The first meeting** is checked later, by the first catch-up that ingests a Reviewed meeting once first value has passed: its report adds one line saying how it went. When first value passes, tell the user: "Your first meeting is the last check: mark it Reviewed after it's summarised, and the next catch-up tells you how it went."
+**The first meeting** is checked later, by the first catch-up that ingests a Ready meeting once first value has passed: its report adds one line saying how it went. When first value passes, tell the user: "Your first meeting is the last check: set it Ready after it's summarised, and the next catch-up tells you how it went."
 
 ## Step 8: the scheduled catch-up
 

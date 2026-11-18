@@ -107,3 +107,4 @@ The `data` object of the `sync plan` reply. Not the whole reply. The one edit yo
 - One record per page actually written. `synced_at` is required.
 - `published`: the render item's `published`. For a Document or report body you just wrote, add `"@notion_body": "sha256:<hex>"`: the hash of the Markdown you read back from the page right after writing it (SKILL.md, "Accepted wording", step 6); if the read-back failed, `"@notion_body": null`, which removes the old baseline.
 - `tasks` (meetings and sources): the new task page ids.
+- A meeting's `published` holds `"Brain Status": "Done"` since 0.16.2 (decision 0109: Meetings use the Inbox's names New, Ready and Done; Skipped stays). A record written before holds `Ingested`: `sync render` reads it as `Done` (and Reviewed as Ready, Not Reviewed as New), so the renamed option sends no write. Never edit an old record by hand.
