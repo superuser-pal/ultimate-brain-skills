@@ -33,7 +33,7 @@ This skill orders the work; the other skills hold the steps: brain-sync (pull an
 
 Keep text out of the session that nothing needs: never print an input's text (a transcript, a file) to look at it when the command that takes it returns what the run uses (`brain source extract` returns the extract's passages), and when you need a few fields of a long `--json` reply, filter it (`jq`, or a short `python3 -c`). After a context summary, read again only the section you need, not the whole skill.
 
-**Working files.** Make your own temporary folder with `mktemp -d` and keep `snapshot.json`, `plan.json` and the conversions in it; never a fixed name such as `/tmp/ub-catchup`: another session on the same machine would overwrite your plan.
+**Working files.** Make your own temporary folder with `mktemp -d` and keep the saved Notion replies, `snapshot.json`, `plan.json` and the conversions in it; never a fixed name such as `/tmp/ub-catchup`: another session on the same machine would overwrite your plan.
 
 Run every CLI command as `brain <command> --brain <brain> --json`. If `brain` is not found (`command not found`), install it with `npm install -g ultimate-brain`, then retry.
 

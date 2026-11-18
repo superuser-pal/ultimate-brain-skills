@@ -4,6 +4,8 @@ A copy of the inputs in spec/cli.md §5.14, so the skill works from inside a bra
 
 ## Snapshot (input to `brain sync plan`)
 
+Written by `brain sync snapshot` (SKILL.md step 3, spec/cli.md §5.14.10) from the query replies you saved and your `rows.json`; never by hand. The rows below are what it writes, and `rows.json` uses the same row format, with no other field, for the rows that are no query reply: a tracked task read by its id, and a Documents or Report row read for wording (its `Brain ID` and its `wording` object).
+
 ```json
 {
   "as_of": "2026-12-05T09:00:00Z",
@@ -78,7 +80,16 @@ A copy of the inputs in spec/cli.md §5.14, so the skill works from inside a bra
   | date | `{"start": "<date or timestamp>", "end": "<…>" or null}` or `null` |
   | relation | array of page ids, sorted |
   | formula, rollup | their scalar result |
+  | rollup of a relation (Show original) | a relation: array of page ids, sorted; empty → `[]` |
 - A property you did not read is left out, and is then not compared.
+
+## Inputs of `brain sync snapshot`
+
+`brain sync snapshot --input <folder or file> [--input …] --output <tmp>/snapshot.json`; a folder stands for every `.json` file in it. Each file is one of:
+- **A query reply**, saved as the MCP returned it: `{ "object": "list", "results": [ <pages> ], "has_more": …, "next_cursor": … }`, one page of results. The row's database comes from each page's `parent.database_id`.
+- **`rows.json`:** `{ "rows": [ <rows in the snapshot format above> ] }`, nothing else at the top. A row whose page also came from a query reply joins it only when it is a tracked task (onto that task's Document-asked row) or carries `wording` (onto its Documents row); the same property must have the same value in both.
+
+Anything else is `INPUT_INVALID`. The reply's `data` is `{ "output", "rows", "examples_left_out", "databases" }`.
 
 ## Plan (input to `brain sync apply` and `brain sync render --plan`)
 
