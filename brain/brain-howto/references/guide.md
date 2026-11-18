@@ -32,7 +32,7 @@ The navigation on the left of every page lists the Spaces. Each one has tabs tha
 
 | Space | Use it to | Tabs |
 |---|---|---|
-| **Home** | Start your day | Buttons (Quick capture, Ask the brain, New meeting, New project) · "What's on today?" (Areas: one line per area, like "Agency · 4 to review · 1 meeting", or "all clear"; Tasks; Meetings; Projects; Inbox: captures New or Ready) · "Needs you": minutes to review · "What did the brain take in?" (Came in, Meetings) |
+| **Home** | Start your day | Buttons (Quick capture, Ask the brain, New meeting, New project, New task) · "What's on today?" (Areas: one line per area, like "Agency · 4 to review · 1 meeting", or "all clear"; Tasks; Meetings; Projects; Inbox: captures New or Ready) · "Needs you": minutes to review · "What did the brain take in?" (Came in, Meetings) |
 | **Tasks** | Do the work | Today · Upcoming · No date · Waiting On · Someday · Questions · Risks · Done |
 | **Meetings** | Prepare meetings and get minutes into the brain | Upcoming · To review · Ready for the brain · Ingested this week · Calendar |
 | **Projects** | Keep projects moving | Active · By area · Deadlines · Gone quiet |
