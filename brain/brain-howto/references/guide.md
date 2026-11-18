@@ -32,7 +32,7 @@ The navigation on the left of every page lists the Spaces. Each one has tabs tha
 
 | Space | Use it to | Tabs |
 |---|---|---|
-| **Home** | Start your day | Buttons (Quick capture, Ask the brain, New meeting, New project) · "What's on today?" (Areas: one line per area, like "Agency · 4 to review · 1 meeting", or "all clear"; Tasks; Meetings; Projects; Inbox: captures New or Ready) · "Needs you": minutes to review · "What did the brain take in?" (Came in, Meetings) |
+| **Home** | Start your day | Buttons (Quick capture, Ask the brain, New meeting, New project, New task) · "What's on today?" (Areas: one line per area, like "Agency · 4 to review · 1 meeting", or "all clear"; Tasks; Meetings; Projects; Inbox: captures New or Ready) · "Needs you": minutes to review · "What did the brain take in?" (Came in, Meetings) |
 | **Tasks** | Do the work | Today · Upcoming · No date · Waiting On · Someday · Questions · Risks · Done |
 | **Meetings** | Prepare meetings and get minutes into the brain | Upcoming · To review · Ready for the brain · Ingested this week · Calendar |
 | **Projects** | Keep projects moving | Active · By area · Deadlines · Gone quiet |
@@ -234,7 +234,7 @@ Meetings have Check minutes and captures have Tidy capture. A document (a file, 
 | A repo's knowledge (decisions, docs, changelog) | "link the repo at ~/code/acme-api". The agent proposes a link kit (what to read and never read, where the repo's tasks live, its Area and Project) and writes it into the repo only after your yes ("Projects in other folders" below). Each catch-up then reads the files changed since the last one; the first time, it asks which to take. Apart from the kit, the brain never writes to the repo |
 | A question for a full report | **Ask the brain** on Home: type the question as the Name ("Where do we stand with the Acme launch?"). The next catch-up answers with a report in **Documents**, linked from yours, and on the project's or area's page under **Reports**. To bring it up to date later, click **Refresh report** on it ("Correcting what came in"). Needs the Reports module (and Documents) |
 | An email, chat thread or note | Paste it into a **Quick capture** (keep who sent it and when). For a thread, ask Brain Assistant to **Run Clean email** on the page: Brain Assistant gives each message a heading with names and date ("Tomás Vidal → Lucía Fernández · 3 Dec 2026"), its own text word for word below it, and a divider before the next, newest first. It drops addresses, signatures, disclaimers, quoted copies and Teams, Zoom or Meet blocks, and rewrites the page right away (the page history keeps the original), asking first only when something is truly unclear. Then set the row to **Ready** and "catch up". Or paste it straight to your agent: "ingest this email" |
-| A task | Add it in Tasks. Action items from meetings, and your own from documents, emails and captures, are created for you |
+| A task | Click **New task** on Home, or add it in Tasks. Action items from meetings, and your own from documents, emails and captures, are created for you |
 
 **Tasks:**
 - New tasks from the brain start as **To Do**.
