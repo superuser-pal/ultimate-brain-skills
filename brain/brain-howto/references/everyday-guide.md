@@ -53,6 +53,7 @@ Ready and Reviewed make inputs available for processing. Processing happens when
 | **Quick capture** | Home | Creates an Inbox capture as **Ready**. Add your content, then say **“Catch up.”** Set it to **New** while preparing it if needed. |
 | **New meeting** | Home | Creates a meeting page. Add the details and use it for notes. |
 | **New project** | Home | Creates a project as **Planned**. Fill in its details, then say **“Sync with Notion”** to bring it into the brain. |
+| **New task** | Home | Creates a task (Kind **Task**, the default status, **To Do**) with no project or due date, and opens it. Give it a project, area or due date if you want; it's yours, like a task added in Tasks. Requires Tasks. |
 | **Ask the brain** | Home | Creates a report request. Type your question as its name, then say **“Catch up.”** Requires Reports and Documents. |
 | **Tidy capture** | A **New** Inbox capture | Notion AI immediately cleans the wording. Check the result, set **Ready**, then say **“Catch up.”** |
 | **Keep as document** | An Inbox item | Requests a readable Document and sets the item to **Ready**. Fill in **Only keep** for a specific section, then say **“Catch up.”** With Only keep, that section first comes back as a changed version for you to check. |
