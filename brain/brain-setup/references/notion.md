@@ -62,7 +62,7 @@ Write the minutes on this page, below the transcript, and nothing else.
 
    Add any shape problem from step 3 to the same message.
 5. **Pass** (the shape and the transcript): log `step=minutes-prompt result=done`, commit. **Fail:** log `result=failed` with `reason=transcript-missing` (step 4) or else `reason=shape-wrong`. A page with no minutes at all is `shape-wrong`. For `shape-wrong`, name what is missing ("no `Selection:` line under subject 2", "the quote in [s1.i2] isn't in the sample") and say the likely cause: the prompt was pasted only in part, or run outside the page's Notion AI chat. Either way, offer to check again once they've fixed it.
-6. **Either way:** the test page is never set to Reviewed, so no catch-up reads it. Ask the user to delete it.
+6. **Either way:** the test page is never set to Ready, so no catch-up reads it. Ask the user to delete it.
 
 ### The sample meeting
 

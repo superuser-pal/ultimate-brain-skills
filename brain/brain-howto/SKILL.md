@@ -20,9 +20,9 @@ Answer how-to questions about the system from [references/guide.md](references/g
    - The state is what `brain status` and Notion's properties say, never what a note says. **A question about what the brain knows** ("where did my decision about the CMS go?", "what does the brain have on Acme?") goes to the brain-query skill, which searches and reads through `brain query` (spec/eligibility.md §10). Never open, grep or list the brain's note files, and never answer from `brain index --json` or another listing: they hold content the user excluded or hasn't approved.
 
 3. **Answer** in the guide's terms:
-   - Lead with the answer in one or two sentences. Then give the steps, naming the Space, tab and property exactly as the guide does ("Meetings → To review", "set Brain Status to Reviewed").
+   - Lead with the answer in one or two sentences. Then give the steps, naming the Space, tab and property exactly as the guide does ("Meetings → To review", "set Brain Status to Ready").
    - When the answer involves the agent, quote the phrase from "What to say to your agent", and offer to run that skill now.
-   - When you checked the live state, say what you found ("your meeting 'Acme weekly' is still Not Reviewed").
+   - When you checked the live state, say what you found ("your meeting 'Acme weekly' is still New"). A space not yet migrated to 0.16.2 still shows a meeting as Not Reviewed, Reviewed or Ingested: read them as New, Ready and Done (decision 0109), use the new names in the answer, and say once that `brain upgrade` names the migration that renames them.
 
 4. **If the guide doesn't cover it,** say so, and answer from the product docs only if you can cite them: the space design and the Notion files install with the CLI, under the folder `brain status` reports as `product.path` (`<product.path>/docs/notion-space-design.md`, `<product.path>/notion/`); the decisions are in the product repo. Name the full path. Flag the gap so the guide can be extended.
 
@@ -44,8 +44,8 @@ When the user asks for a tour or is new, walk through the guide in this order: t
 
 ## Example (synthetic Acme brain)
 
-**Question:** *"I marked the Acme weekly as reviewed yesterday but nothing showed up in the brain. Why?"*
+**Question:** *"I set the Acme weekly to Ready yesterday but nothing showed up in the brain. Why?"*
 
 `brain status` shows the last log line is from three days ago, so no ingest has run since. The answer:
 
-> No ingest has run since you marked it: the brain's last run was on 2026-12-03. Marking a meeting Reviewed only makes it ready; the brain reads it when you say **"ingest my reviewed meetings"**. Want me to run it now?
+> No ingest has run since you set it: the brain's last run was on 2026-12-03. Setting a meeting Ready only confirms it; the brain reads it when you say **"ingest my reviewed meetings"**. Want me to run it now?
