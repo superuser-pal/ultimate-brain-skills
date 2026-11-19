@@ -1,6 +1,6 @@
 ---
 name: brain-sync
-description: Sync the brain with the user's Notion space in both directions. Pulls first (imports rows the user created in Notion, queues their edits to brain-owned values as corrections to ask in the session, refreshes Notion-owned fields like status and priority, and reads the tasks that follow up open questions), then publishes the brain's new and changed notes back to Notion. Use when the user says "sync with Notion", "pull my Notion edits", "publish the brain", or after editing pages in Notion.
+description: Sync the brain with the user's Notion space in both directions. Use when the user says "sync with Notion", "pull my Notion edits", "publish the brain", or after editing pages in Notion. Pulls first (imports rows the user created in Notion, queues their edits to brain-owned values as corrections to ask in the session, refreshes Notion-owned fields like status and priority, and reads the tasks that follow up open questions), then publishes the brain's new and changed notes back to Notion.
 ---
 
 # Sync with Notion
