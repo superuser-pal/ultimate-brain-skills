@@ -1,12 +1,15 @@
 // The `skills` and `names` checks (spec/skills-delivery.md §10.3). The skill rules copy the product's
 // scripts/build-skills.ts: name = folder, only name and description, description ≤ 1024 characters, a non-empty body,
-// references one level deep, no capitals for emphasis.
+// references one level deep, no capitals for emphasis. The fork adds its own: a description of at most 900 characters,
+// leaving room under the 1,024 that Codex and Copilot CLI enforce, and no `<…>` placeholder in it (the Agent Skills
+// schema rejects a tag in a description).
 import { readdir, readFile } from "node:fs/promises";
 import { join, relative } from "node:path";
 
 import { isMap, parseDocument } from "yaml";
 
 const NAME = /^[a-z0-9]+(-[a-z0-9]+)*$/;
+const DESCRIPTION_MAX = 900;
 
 /** A Markdown file's YAML frontmatter mapping and body; throws on a missing or broken frontmatter. */
 export function parseFrontmatter(source) {
@@ -56,6 +59,8 @@ export async function validateSkills(brain) {
     if (attributes.name !== name) problems.push(`${where}: name must be "${name}" (the folder name)`);
     if (typeof attributes.description !== "string" || attributes.description.trim() === "") problems.push(`${where}: description is required`);
     else if (attributes.description.length > 1024) problems.push(`${where}: description is over 1024 characters`);
+    else if (attributes.description.length > DESCRIPTION_MAX) problems.push(`${where}: description is over ${DESCRIPTION_MAX} characters (${attributes.description.length})`);
+    if (typeof attributes.description === "string" && /<[A-Za-z]/.test(attributes.description)) problems.push(`${where}: description has a <…> placeholder; write it in words`);
     if (body.trim() === "") problems.push(`${where}: body is empty`);
     problems.push(...(await textProblems(join(brain, name), body)));
   }
