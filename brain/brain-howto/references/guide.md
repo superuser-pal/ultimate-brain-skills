@@ -246,19 +246,9 @@ Meetings have Check minutes and captures have Tidy capture. A document (a file, 
 
 ## Ask Brain Assistant in Notion
 
-**Brain Assistant** is a Notion AI agent that reads Ultimate Brain and answers. It never changes your knowledge, and never creates Tasks from a meeting: the brain does, once, when it takes the meeting in. Brain Assistant and its buttons need Business (or Enterprise) with Notion credits. **Duplicating the template doesn't give you a configured Brain Assistant:** create your own, give it access, paste its Instructions and select it in the three buttons, as the page **First things first** (linked from Start here) lists. Then say "set up my brain" (or "check Brain Assistant again"): your agent checks it with Today and a sample page for each button, and calls it ready only when those checks pass. Open its chat (Agents → Brain Assistant, or @mention it on a page) and ask for a skill by its name, or ask a question. Brain Assistant doesn't run a skill typed as a `/` command: say "Run Today", not `/Today`. To point at a skill's page instead, paste its link (open it from your space's Skills database, ••• → Copy link); don't pick it from the `@` picker, which can offer another space's page of the same name.
+**Brain Assistant** is a Notion AI agent that reads Ultimate Brain and answers. It never changes your knowledge, and never creates Tasks from a meeting: the brain does, once, when it takes the meeting in. Brain Assistant and its buttons need Business (or Enterprise) with Notion credits. **Duplicating the template doesn't give you a configured Brain Assistant:** create your own, give it access, paste its Instructions and select it in the three buttons, as the page **First things first** (linked from Start here) lists. Then say "set up my brain" (or "check Brain Assistant again"): your agent checks it with Today and a sample page for each button, and calls it ready only when those checks pass.
 
-| Ask | You get |
-|---|---|
-| "Run Today" | What's due today and today's meetings |
-| "Run Check minutes" (on a meeting page) | Missing sections and names and numbers to confirm; fixes the text after you say yes |
-| "Run Prep" (on a meeting page) | Past meetings, open questions, tasks and recent decisions for that meeting |
-| "Run Weekly review" | This week's weekly review (the Inbox row **Week of …**): a short summary of what changed and your task analysis, then its items explained. It decides nothing and writes nothing: it tells you which tasks to change (you set them) and that the rest is decided with your agent ("what needs my decision"). With no review this week, it says how to get one (say "weekly review" to your agent, or turn on the Monday schedule) |
-| "Run Plan check" | Projects without goals, goals without projects, overdue items |
-| "Run Tidy capture" (on a new capture in the Inbox; also the **Tidy capture** button) | A cleaner version of the capture; replaces the text after you say yes (the button carries the yes) |
-| "Run Clean email" (on a capture with Brain Status New holding a pasted email thread; on a Ready one it stops and says why) | Each message under a heading of names and date, its own text word for word, a divider between messages, newest first; no addresses, signatures, disclaimers, quoted copies or meeting blocks; rewrites the page directly and asks only on a serious doubt |
-| **Write up** and **Refresh report** (buttons, not commands) | Click them on a Document or a report; see the buttons table above |
-| "how do I …?" | An answer from this guide |
+Open its chat (Agents → Brain Assistant, or @mention it on a page) and ask for a skill by its name ("Run Today", not `/Today`), or ask a question; asked "how do I …?", it answers from this guide. How to run each skill and what it does are in the [Everyday Guide](everyday-guide.md), under **Notion AI prompts**.
 
 Brain Assistant reads; your agent in Claude Code or Codex writes. To get something *into* the brain, use the phrases below.
 

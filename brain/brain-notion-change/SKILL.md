@@ -1,6 +1,6 @@
 ---
 name: brain-notion-change
-description: Change the structure of the user's Notion space (a database, property, select option, relation, template, view) the safe way, design first in the product repo and then applied in Notion; run a released migration on the user's space; or check the live Notion space against the design and report drift. Use when the user says "add a property to Projects", "change the Notion space", "add an option to Kind", "run migration 0006", "migrate my Notion space", "check my Notion space", "is my Notion set up right", or after a structural edit made directly in Notion.
+description: Change the structure of the user's Notion space the safe way, run a released migration on it, or check it against the design. Use when the user says "add a property to Projects", "change the Notion space", "add an option to Kind", "run migration 0006", "migrate my Notion space", "check my Notion space", "is my Notion set up right", or after a structural edit made directly in Notion. A structural change (a database, property, select option, relation, template, view) is designed first in the product repo and then applied in Notion; a check reports the live space's drift from the design.
 ---
 
 # Change or check the Notion space

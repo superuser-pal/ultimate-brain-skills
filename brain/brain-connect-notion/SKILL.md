@@ -1,6 +1,6 @@
 ---
 name: brain-connect-notion
-description: Connect the brain to the user's Notion space, duplicated from the Notion template or built from the notion/ prompts. Gives the agent access to Notion, finds the Brain Data page and its databases, checks each has the properties the brain reads and writes, stores their ids and the template version in brain.json, maps the Tasks database and records the owner's identities. Also lists and switches the optional modules (Domains, Knowledge, Orgs, Documents, Reports, Tasks, Planning), walking the user through a module's Notion steps when it is turned on. Changes nothing in Notion itself. Use when the user says "connect the brain to Notion", "which modules do I have?", "turn on documents", "turn planning off", after building the Notion space, when Notion is unreachable, or when a skill reports a Notion database is not configured or a module is off.
+description: Connect the brain to the user's Notion space, duplicated from the Notion template or built from the notion/ prompts, and switch its modules. Use when the user says "connect the brain to Notion", "which modules do I have?", "turn on documents", "turn planning off", after building the Notion space, when Notion is unreachable, or when a skill reports a Notion database is not configured or a module is off. Gives the agent access to Notion, finds the Brain Data page and its databases, checks each has the properties the brain reads and writes, stores their ids and the template version in brain.json, maps the Tasks database and records the owner's identities. Modules are Domains, Knowledge, Orgs, Documents, Reports, Tasks and Planning; turning one on walks the user through its Notion steps. Changes nothing in Notion.
 ---
 
 # Connect the brain to Notion
@@ -106,8 +106,10 @@ The agent reads and writes Notion through a Notion MCP server (decision 0015). G
 1. Open notion.so/profile/integrations, create an internal integration for the workspace, and copy its secret (`ntn_…`) from its Configuration tab.
 2. Open **Brain Data** → `•••` → **Connections** → add the integration. Do the same for the **How it works** page if the user wants the agent to update it.
 3. Add the server, with the secret in place of `ntn_…`:
-   - **Claude Code:** `claude mcp add notion --env NOTION_TOKEN=ntn_… -- npx -y @notionhq/notion-mcp-server`
-   - **Codex:** `codex mcp add notion --env NOTION_TOKEN=ntn_… -- npx -y @notionhq/notion-mcp-server`
+   - **Claude Code:** `claude mcp add notion --env NOTION_TOKEN=ntn_… -- npx -y @notionhq/notion-mcp-server@2.6.1`
+   - **Codex:** `codex mcp add notion --env NOTION_TOKEN=ntn_… -- npx -y @notionhq/notion-mcp-server@2.6.1`
+
+The version is fixed: a newer server comes only with a later skills release. For one added earlier without a version, remove it (`claude mcp remove notion` or `codex mcp remove notion`) and add it again.
 
 The secret is a password: the user types it in their own terminal, never in the chat.
 

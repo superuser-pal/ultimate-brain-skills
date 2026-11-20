@@ -1,6 +1,6 @@
 ---
 name: brain-reflect
-description: Tidy the brain. Reads the clusters `brain reflect --candidates` finds, judges each one, and reports contradictions, stale facts, duplicate notes, rules worth adding to a project or Area, and recurring themes with no note, each with a recommendation; then applies what the user says yes to, leaves a pending proposal for "later", and remembers a skip. Changes nothing without a yes. Use when the user says "tidy the brain", "what's inconsistent?", "any duplicates?", "what's out of date in my notes?", "anything contradictory?". With "report only" in the request it only reports and changes nothing.
+description: Tidy the brain, reporting contradictions, stale facts, duplicate notes, rules worth adding to a project or Area, and recurring themes with no note. Use when the user says "tidy the brain", "what's inconsistent?", "any duplicates?", "what's out of date in my notes?", "anything contradictory?". Reads the clusters `brain reflect --candidates` finds and judges each one, with a recommendation; then applies what the user says yes to, leaves a pending proposal for "later", and remembers a skip. Changes nothing without a yes. With "report only" in the request it only reports and changes nothing.
 ---
 
 # Tidy the brain

@@ -25,6 +25,21 @@ test("the skills check applies the product's rules to brain/", async (t) => {
   ]);
 });
 
+test("the skills check fails a description over 900 characters or with a <…> placeholder", async (t) => {
+  const root = tempDir(t);
+  const front = (name, description) => `---\nname: ${name}\ndescription: ${description}\n---\n\nBody.\n`;
+  write(root, {
+    "brain/brain-long/SKILL.md": front("brain-long", "a".repeat(901)),
+    "brain/brain-edge/SKILL.md": front("brain-edge", "a".repeat(900)),
+    "brain/brain-tag/SKILL.md": front("brain-tag", 'Use when the user says "ingest this page <url>".'),
+    "brain/brain-less/SKILL.md": front("brain-less", "Use when the count is 3 < 5 or a < b fails."),
+  });
+  assert.deepEqual(await validateSkills(join(root, "brain")), [
+    "brain/brain-long/SKILL.md: description is over 900 characters (901)",
+    "brain/brain-tag/SKILL.md: description has a <…> placeholder; write it in words",
+  ]);
+});
+
 test("the names check fails when a general skill's folder or frontmatter name is an operational skill's", async (t) => {
   const root = tempDir(t);
   write(root, {
