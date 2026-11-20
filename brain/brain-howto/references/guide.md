@@ -246,11 +246,11 @@ Meetings have Check minutes and captures have Tidy capture. A document (a file, 
 
 ## Ask Brain Assistant in Notion
 
-**Brain Assistant** is a Notion AI agent that reads Ultimate Brain and answers. It never changes your knowledge, and never creates Tasks from a meeting: the brain does, once, when it takes the meeting in. Brain Assistant and its buttons need Business (or Enterprise) with Notion credits. **Duplicating the template doesn't give you a configured Brain Assistant:** create your own, give it access, paste its Instructions and select it in the three buttons, as the page **First things first** (linked from Start here) lists. Then say "set up my brain" (or "check Brain Assistant again"): your agent checks it with Today and a sample page for each button, and calls it ready only when those checks pass.
+**Brain Assistant** is a Notion AI agent that reads Ultimate Brain and answers. After your yes to a change it names with its value, it sets your own fields: a task's status or due date, a project's status, priority or dates, a goal's status, a key result's progress. It never changes your knowledge, and never creates Tasks from a meeting: the brain does, once, when it takes the meeting in. Brain Assistant and its buttons need Business (or Enterprise) with Notion credits. **Duplicating the template doesn't give you a configured Brain Assistant:** create your own, give it access, paste its Instructions and select it in the three buttons, as the page **First things first** (linked from Start here) lists. Then say "set up my brain" (or "check Brain Assistant again"): your agent checks it with Today and a sample page for each button, and calls it ready only when those checks pass.
 
 Open its chat (Agents → Brain Assistant, or @mention it on a page) and ask for a skill by its name ("Run Today", not `/Today`), or ask a question; asked "how do I …?", it answers from this guide. How to run each skill and what it does are in the [Everyday Guide](everyday-guide.md), under **Notion AI prompts**.
 
-Brain Assistant reads; your agent in Claude Code or Codex writes. To get something *into* the brain, use the phrases below.
+Brain Assistant reads, and sets those fields after your yes; your agent in Claude Code or Codex writes what the brain knows. To get something *into* the brain, use the phrases below.
 
 ---
 
@@ -355,7 +355,7 @@ Order of attention:
 5 more findings wait for next week. Say "weekly review more" in a session for the rest.
 ```
 
-**It decides nothing.** A proposal is decided with your agent: say "what needs my decision" (right after the review, or any time). A **task** item is set on the task itself in Notion (a new date, Done or Won't Do). In Notion, the week's Inbox row says "decide in Claude Code or Codex" for each proposal, and Brain Assistant's "Run Weekly review" reads it with you without deciding.
+**It decides nothing.** A proposal is decided with your agent: say "what needs my decision" (right after the review, or any time). A **task** item is set on the task itself in Notion (a new date, Done or Won't Do): by you, or by Brain Assistant. In Notion, the week's Inbox row says "decide in Claude Code or Codex" for each proposal, and Brain Assistant's "Run Weekly review" reads it with you: it asks about each task item in numbered options and sets the ones you pick ("1a") after your answer, and decides nothing for you.
 
 **Five at most, and no nagging.** A week shows at most five decisions, five new proposals and five notes or tasks they would change, across your work and your notes, corrections first, then overdue and stalled work, then tidying. The rest waits for next week ("weekly review more" shows it now). A finding shown before comes back only when its evidence changed, it became overdue, it got much later, or it is a contradiction in a reviewed note that is still open. What you skipped or rejected stays skipped. A week with nothing new writes nothing at all: no empty page.
 
