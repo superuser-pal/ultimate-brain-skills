@@ -142,6 +142,19 @@ A Document is a `reference` note with an `origin` (references/extraction.md, "Do
 - **`origin` is required.** `whole`: `sources` is exactly that one `src-` id and the body is its body byte for byte, or the CLI refuses it; the CLI writes it as `reviewed`, and a second one of the same source comes back in `skipped` as `ALREADY_KEPT` (fine). `part` is refused since 0.16.0: a part is a checked row ([checked.md](checked.md)); a `part` Document written before stays as it is. `question` (the second example) only on a `whole` Document of a `task` source: the question the task tracks. `learned`: what the brain learned (extraction.md "Learned Documents"), a draft in `review_notes`; `sources` may be left out, but give them. `promoted`: `promoted_from` names an existing decision that has no promoted Document yet; it takes that note's lifecycle; `sources` may be left out.
 - Leave `whole` and `promoted` Documents out of `review_notes`: they need no yes (a `whole` one is the input's own text, a `promoted` one is asked for in the session).
 
+### A person or org skipped as WITHHELD_MATCH (SKILL.md step 7)
+
+**A person or org skipped as `WITHHELD_MATCH`** (CLI 0.13.1 and later): the brain already has them but withholds their name until the cleanup of content you excluded is done (their whole note is withheld, or part of it), so step 4 found no match. Never write them again under another title. Take the new item out of the batch and use the skip's `existing` id wherever the batch named them (the meeting's `attendees`, a decision's `deciders`, step 8's `add_link`). With `cite` in the skip, the note's title and path are withheld: write the name as plain text, with no link. Without `cite`, read the note with `brain query --read <existing>` and link it by the `path` that returns. Name each one under Check by its `cite` label, or by the title the read returned: "Dana Whitfield → person per-3k8m2q7x, title withheld: awaiting cleanup; not created again. If that's someone else, say so." If the user says it is someone else, send the item again with `"distinct_from": ["<existing>"]` and the CLI writes it. The skip gives an id, not content: it is never evidence for an answer or a proposal (spec/eligibility.md §7).
+
+### A meeting's or Document's Area (SKILL.md step 7)
+
+**A meeting's or Document's Area follows its projects** (decision 0105 §2; spec/schema.md §4 meeting and reference). When the meeting note, or a Document this run writes, has `projects` and no `area` (the user set no Area on the row, and the source has none), set its `area` from those projects' `area`:
+- every project has the same `area`: that Area;
+- the projects have different `area`s: no `area`, and one line in the report (with the input's lines in an unattended run, under Check in an attended one): `<meeting or Document title>: its projects are in different Areas (<Area>, <Area>), so no Area was set.`;
+- a project written in this batch counts by its own `area`.
+
+An `area` the user set (on the row, or already in the note) stays, whatever its projects' Areas. Nothing older is backfilled. The Area is what Notion's read-only Domain rollup reads, so a meeting or Document with no Area shows no Domain.
+
 ## 3. The proposals batch
 
 ```json
@@ -211,6 +224,13 @@ A Document is a `reference` note with an `origin` (references/extraction.md, "Do
   ```
   `answer_note` only when a note answers it (usually a decision of this batch). A question that already has an answer is skipped as `ALREADY_ANSWERED`.
 - **A re-run is safe:** identical pending proposals are skipped as `DUPLICATE_PENDING`.
+
+### One part's items, and the dry run (SKILL.md step 8)
+
+- per part, **one `review_notes`**: `{ "kind": "review_notes", "source": "<mtg-id, or the src- id for any other input>", "subject": "<the part's note id, or its plain name>", "notes": [<the part's knowledge notes from step 7: the meeting, people, decisions, questions, `learned` and `part` Documents; never the source, and never a `whole` Document>], "note_passages": { … } }`, with `notes: []` when the part has no new note. It takes in what goes in with the part's yes, each sent as its own item with the same `source` and `subject`: a link → `add_link` (a person joining a project's `people`, an attendee missing from an existing meeting, a new alias, decision 0028); text added to a note → `add_to_note`; a fact the note doesn't have yet → `update_fact`. Mark what you are unsure of with `unsure`, `repeat` and `note_flags` (cli-inputs.md, "Unsure flags and repeats"): those items are asked in their part;
+- every change that removes or replaces something the brain holds is a proposal of its own, asked in its part: a new value for a fact the brain holds → `update_fact` (the CLI sets `before`); two sources disagreeing → `contradiction`; a Document's new text from a new version of its file → `update_body` (references/extraction.md, "Documents"; never on a promoted Document); a new decision replacing an older one → `supersede` (the new decision is in step 7's batch); a likely duplicate → `merge`; a new decision or question for a meeting that existed before this run → `new_item`; the material answers an open question the brain already has → `answer` (the answer in one sentence, the quote as `why`, `answer_note` = the note that answers it, usually a decision of step 7).
+
+Check the batch with `brain proposal new --dry-run`. `DUPLICATE_PENDING`, `ALREADY_LINKED` and `ALREADY_ANSWERED` skips are fine: the change already waits for a decision, is already made, or the question already has an answer; leave it out of the parts. `NOTHING_TO_REVIEW`: that part brings nothing new. `SOURCE_EXCLUDED` means the change rests on a passage that is no longer live: propose it again only from live passages, if they support it alone, and otherwise drop it; never reword it to get past the check. Name it under Check without its wording ("1 change left out: it rested on content you excluded").
 
 ## 4. Action items (Notion mode)
 

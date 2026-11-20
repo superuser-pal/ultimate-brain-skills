@@ -31,6 +31,10 @@ A file attached to a Ready Inbox row or a Ready meeting page is ingested with th
 4. *(Documents)* **A row with Document asked ticked** keeps each attached **file** as a Document (U-18: the file the user meant to keep must reach Notion): with Only keep empty, one `whole` Document per file. With Only keep set, nothing is taken in from the row yet: the capture and its files are recorded as sources, the row becomes Done, and each file's part becomes a checked row (`file` = its name), taken in on "go" or Ready ([checked.md](checked.md)). The capture's own text is kept only when the row has no file, and then whole.
 5. **A file that can't be read** (an unknown format, a broken file, MarkItDown missing) is skipped: the parent is still ingested and still becomes Done, and the report's Check line names the file, the reason and the fix.
 
+### Attachments in the meeting procedure (SKILL.md step 3)
+
+**Attachments** *(Notion)*: files attached to the meeting page (file, PDF and image blocks in the body, or a Files property) are ingested with it, each as its own source under the meeting's: [references/sources.md](references/sources.md), "Attachments". List them in this question, all selected by default.
+
 ## Linked repos: "catch up" with a repo linked (decision 0042)
 
 A linked repo is a read-only source: `brain.json` `repos` lists its name, path, area, file patterns and the last commit the brain ingested. Never write to it, and never run its code.
@@ -124,9 +128,21 @@ A corrected input is read again as a **new source** with `replaces` = the id of 
 
 A new version keeps the first version's `source_key` and `title`, so the versions sit side by side, even in Markdown-only mode (the key records where the text first came from; versions are told apart by `replaces` and their content). Then write the new source alone first, with its real id (`brain note new` with that one item: the one thing written before the parts, parts.md), and run `brain source diff <new src-id>`: it returns the removed (`- `) and added (`+ `) lines. Analyse **only those lines** ([extraction.md](extraction.md), "Re-reads"). The result usually holds no new note, only changes: they go in one `review_notes` for the input, with `notes: []` (a meeting's changes carry the meeting id as `source`; any other input's, the new source's id), so the user is asked only about what changed. A re-read whose diff yields nothing durable writes the source and proposes nothing: say so.
 
+### Re-reads in the meeting procedure (SKILL.md steps 2, 3 and 6)
+
+**Already ingested?** If a meeting note in `brain index --json` already has this page's id as `notion` (an administrative lookup: it gives the meeting's id, nothing more), the user set it back to Ready: either they fixed the minutes (a **re-read**, decision 0045), or a publish failed earlier. Snapshot the minutes as a re-read (step 3): when the dry run skips them as `DUPLICATE_SOURCE`, nothing changed and the brain side is done, so skip to step 12 for it; otherwise go on as a re-read ([references/sources.md](references/sources.md), "Re-reads and new versions").
+
+**A re-read** (the meeting was ingested before) adds `replaces` = the latest version of the meeting's source to the item, writes the new source alone first (`brain note new` with that one item), then reads only the lines `brain source diff` gives ([references/sources.md](references/sources.md), "Re-reads and new versions"). It writes no new meeting note: steps 4–6 run on the changed lines only, and the parts (step 9) ask what changed. The new version is the one thing written before the parts, since the diff needs it.
+
+**A re-read** analyses only the changed lines, and a changed line **corrects** what the old line said (decision 0045, U-18): propose to replace the old statement (references/extraction.md "Re-reads": an `update_fact` for a fact, else an `add_to_note` worded as a correction), never to add the new wording as a second claim next to the old one, and never mark the pair ambiguous.
+
 ## 4. Match and load context
 
 Run SKILL.md steps 4 and 5 as they are, with the names in the text in place of attendees.
+
+### Load context in the meeting procedure (SKILL.md step 5)
+
+5. **Load context.** Read the full text of at most **8** notes (decision 0013) with **one** `brain query --read <id>,<id>,… --json`, in this order: the project, the attendees' person notes, any note the minutes revisit (a decision they reverse, a question they answer, a fact they restate; find these with `brain query --candidates`), the client org, then the project's most recent decisions and open questions (found with `brain index --json`: the decisions and questions among the project's `project_of` entries in `backlinks`, most recently `updated` first; take their ids, types and dates from it, nothing else). For long notes, use the frontmatter and the latest sections only. A note the read withholds is left out of the eight and is not replaced by its file; take the next one in the order.
 
 ## 5. Analyse
 

@@ -41,7 +41,7 @@ When a meeting's summary or a capture has subjects and item ids (escaped or not,
 
 ## A changed document, checked before it goes in (decision 0098 §4 to §7)
 
-When the user wants a document changed before it goes in ("keep only the requirements, as a spec", "drop the appendix", "the depot count is 11, not 9"), or Keep as document has Only keep filled, take nothing in: record the original as a source, write the changed text to a new Inbox row for the user to check, and take that row in when they say **"go"** or set it Ready. Follow [references/checked.md](references/checked.md). Minutes and captures keep their own checks (Check minutes, Tidy capture).
+When the user wants a document changed before it goes in, or Keep as document has Only keep filled, take nothing in: follow [references/checked.md](references/checked.md).
 
 ## Keep a task as a document (decision 0100)
 
@@ -49,7 +49,7 @@ When the user wants a document changed before it goes in ("keep only the require
 
 ## Promote to document (decision 0099 §9)
 
-*(Documents)* "Promote the decision on … to a document" is asked here, in the session. Find the decision with `brain query --candidates "<the words>" --types decision` and `brain query --read`, say which one and that its Document will be seeded from it, and on the user's yes write one `promoted` Document as references/extraction.md "Documents" says. Then rebuild, commit (`documents: promote <title>`) and publish.
+*(Documents)* "Promote the decision on … to a document" is asked here, in the session: follow [references/extraction.md](references/extraction.md), "Promote to document".
 
 ## Only the ingest creates a meeting's Tasks (decision 0101 §5)
 
@@ -59,9 +59,9 @@ A meeting's Tasks are created once, by its ingest, from the meeting's own items 
 
 1. **Check the brain.** Run `brain status`. If `index_stale` is true, run `brain index`. Note the owner name and which Notion databases are configured. If Notion is configured and the brain has no area, project or person notes at all (all three counts are 0), run the brain-sync skill first (or ask the user to): without the synced Areas, Projects and People there is nothing to match against, and the ingest would create duplicates. **Off its working branch:** when `brain status` has the warning `BRAIN_OFF_WORKING_BRANCH`, say its message in one line and offer "fix my backup" before writing anything (brain-setup references/backup.md, "Off the working branch, at the start of a run"). Never create a branch, a worktree or a pull request in the brain (decision 0086).
 
-2. **Fetch** *(Notion)*. Query the Meetings database for pages with Brain Status = **Ready** (or **Reviewed**, its name before 0.16.2, decision 0109), oldest Date first, through its data source ([references/notion.md](references/notion.md)). Process them one at a time. Never take New or Skipped meetings (decision 0012; New was Not Reviewed before 0.16.2), nor a meeting whose Name starts with `Example · ` (the Notion template's invented rows, decision 0084: nothing in the brain is made from one; name how many you skipped once in the report, "1 example meeting skipped: delete it in Notion"). For each page, read its properties (Name, Date, Attendees, Project, Area) and the minutes: which parts of the page count as minutes is in references/notion.md.
+2. **Fetch** *(Notion)*. Read [references/notion.md](references/notion.md), "Fetch", before it: take the meetings with Brain Status = **Ready**, oldest Date first, one at a time; never New or Skipped meetings, nor an `Example · ` one.
 
-   **Already ingested?** If a meeting note in `brain index --json` already has this page's id as `notion` (an administrative lookup: it gives the meeting's id, nothing more), the user set it back to Ready: either they fixed the minutes (a **re-read**, decision 0045), or a publish failed earlier. Snapshot the minutes as a re-read (step 3): when the dry run skips them as `DUPLICATE_SOURCE`, nothing changed and the brain side is done, so skip to step 12 for it; otherwise go on as a re-read ([references/sources.md](references/sources.md), "Re-reads and new versions").
+   **Already ingested?** If a meeting note in `brain index --json` already has this page's id as `notion`, the user set it back to Ready: read [references/sources.md](references/sources.md), "Re-reads in the meeting procedure", before step 3.
 
 3. **Pre-check** (both modes). Before writing anything, ask the user **one** question covering everything that blocks a correct ingest:
    - the Date is empty;
@@ -71,13 +71,13 @@ A meeting's Tasks are created once, by its ingest, from the meeting's own items 
 
    If nothing blocks, don't ask. An empty Project is not a blocker (see the stop conditions). **When the Project property is empty and the minutes have a `## Projects` section** (notion/minutes-format.md), or in lean minutes a `Projects:` line in the For the brain toggle, use the projects it lists, matched in step 4, instead of asking (decision 0043).
 
-   **Attachments** *(Notion)*: files attached to the meeting page (file, PDF and image blocks in the body, or a Files property) are ingested with it, each as its own source under the meeting's: [references/sources.md](references/sources.md), "Attachments". List them in this question, all selected by default.
+   **Attachments** *(Notion)*: files attached to the meeting page are ingested with it, each as its own source: [references/sources.md](references/sources.md), "Attachments". List them in this question, all selected by default.
 
    **Snapshot the source.** Build the source note (see [references/cli-inputs.md](references/cli-inputs.md) §1). Its body is the minutes **verbatim**, as references/notion.md defines them; beyond those exclusions, don't tidy them. Run `brain note new --dry-run` with only the source, without an `id` (the source gets its id in step 7):
    - **`skipped` with `DUPLICATE_SOURCE`:** this exact text was already ingested. Report it, and in Notion mode set nothing. Stop here for this meeting.
    - **Otherwise:** keep the source item for step 7.
 
-   **A re-read** (the meeting was ingested before) adds `replaces` = the latest version of the meeting's source to the item, writes the new source alone first (`brain note new` with that one item), then reads only the lines `brain source diff` gives ([references/sources.md](references/sources.md), "Re-reads and new versions"). It writes no new meeting note: steps 4–6 run on the changed lines only, and the parts (step 9) ask what changed. The new version is the one thing written before the parts, since the diff needs it.
+   **A re-read** (the meeting was ingested before) is snapshotted as references/sources.md, "Re-reads in the meeting procedure", says.
 
 4. **Match.** Resolve every name in the minutes with `brain query --candidates "<the name as written>" --types <type> --json`:
    - attendees → person notes (`--types person`);
@@ -86,7 +86,7 @@ A meeting's Tasks are created once, by its ingest, from the meeting's own items 
 
    A candidate matches when its `title` is the name, or one of its `aliases` is, as `brain query --read` returns them (those reads count toward step 5's eight). A candidate in its awaiting-cleanup form shows no title or aliases: it is not a match by name; ask in the pre-check when it is the only candidate. Record each match with its id, and list the names that have no note. A person or org the brain withholds is not found here either; step 7's dry run says so (`WITHHELD_MATCH`).
 
-5. **Load context.** Read the full text of at most **8** notes (decision 0013) with **one** `brain query --read <id>,<id>,… --json`, in this order: the project, the attendees' person notes, any note the minutes revisit (a decision they reverse, a question they answer, a fact they restate; find these with `brain query --candidates`), the client org, then the project's most recent decisions and open questions (found with `brain index --json`: the decisions and questions among the project's `project_of` entries in `backlinks`, most recently `updated` first; take their ids, types and dates from it, nothing else). For long notes, use the frontmatter and the latest sections only. A note the read withholds is left out of the eight and is not replaced by its file; take the next one in the order.
+5. **Load context.** Read the full text of at most **8** notes (decision 0013) with **one** `brain query --read`: read [references/sources.md](references/sources.md), "Load context in the meeting procedure", for the order and what to leave out.
 
 6. **Analyse.** Follow [references/extraction.md](references/extraction.md). Extract:
    - the meeting summary;
@@ -100,27 +100,21 @@ A meeting's Tasks are created once, by its ingest, from the meeting's own items 
 
    Keep every claim attached to its subject, and copy values verbatim. Hold the result in memory as two lists: **new notes** and **changes to existing notes**. *(Documents)* When the input is to be kept as a document (Document asked on its row, the drop folder's answer, or the user's words), add its **Documents** to the new notes: references/extraction.md, "Documents". The notes are extracted either way (decision 0049).
 
-   **A re-read** analyses only the changed lines, and a changed line **corrects** what the old line said (decision 0045, U-18): propose to replace the old statement (references/extraction.md "Re-reads": an `update_fact` for a fact, else an `add_to_note` worded as a correction), never to add the new wording as a second claim next to the old one, and never mark the pair ambiguous.
+   **A re-read** analyses only the changed lines, and a changed line corrects the old one: references/sources.md, "Re-reads in the meeting procedure".
 
 7. **Prepare the new notes** (nothing is written yet). One `brain note new` batch holds the source, the meeting, new people, new decisions and new questions (shapes in [references/cli-inputs.md](references/cli-inputs.md) §2; a complete batch in [references/example-batch.json](references/example-batch.json)).
    1. **Get ids** with `brain id new <type> --count <n>`, so the notes can reference each other by id. The meeting lists its `decisions` and `questions`, and each decision's `decided_in` and each question's `raised_in` names the meeting, so the pair is consistent.
    2. **Get paths:** run the batch with `--dry-run`, with bodies that contain **no links** between notes of this batch. Read each note's `path` from the result. Never guess a path: long titles are shortened, and taken names get `-2`.
-      **A person or org skipped as `WITHHELD_MATCH`** (CLI 0.13.1 and later): the brain already has them but withholds their name until the cleanup of content you excluded is done (their whole note is withheld, or part of it), so step 4 found no match. Never write them again under another title. Take the new item out of the batch and use the skip's `existing` id wherever the batch named them (the meeting's `attendees`, a decision's `deciders`, step 8's `add_link`). With `cite` in the skip, the note's title and path are withheld: write the name as plain text, with no link. Without `cite`, read the note with `brain query --read <existing>` and link it by the `path` that returns. Name each one under Check by its `cite` label, or by the title the read returned: "Dana Whitfield → person per-3k8m2q7x, title withheld: awaiting cleanup; not created again. If that's someone else, say so." If the user says it is someone else, send the item again with `"distinct_from": ["<existing>"]` and the CLI writes it. The skip gives an id, not content: it is never evidence for an answer or a proposal (spec/eligibility.md §7).
+      **A person or org skipped as `WITHHELD_MATCH`**: never write them again under another title; read [references/cli-inputs.md](references/cli-inputs.md), "A person or org skipped as WITHHELD_MATCH", before the next dry run.
    3. **Add the links** between batch notes using those paths (relative to each note's own folder), and run the dry run again until it passes.
    4. **On `INPUT_INVALID`:** read each detail's pointer and message, fix the item, and retry. Never drop a note silently to get past an error.
 
-   **A meeting's or Document's Area follows its projects** (decision 0105 §2; spec/schema.md §4 meeting and reference). When the meeting note, or a Document this run writes, has `projects` and no `area` (the user set no Area on the row, and the source has none), set its `area` from those projects' `area`:
-   - every project has the same `area`: that Area;
-   - the projects have different `area`s: no `area`, and one line in the report (with the input's lines in an unattended run, under Check in an attended one): `<meeting or Document title>: its projects are in different Areas (<Area>, <Area>), so no Area was set.`;
-   - a project written in this batch counts by its own `area`.
-
-   An `area` the user set (on the row, or already in the note) stays, whatever its projects' Areas. Nothing older is backfilled. The Area is what Notion's read-only Domain rollup reads, so a meeting or Document with no Area shows no Domain.
+   **A meeting's or Document's Area follows its projects** (decision 0105 §2): when the meeting note, or a Document this run writes, has `projects` and no `area`, read [references/cli-inputs.md](references/cli-inputs.md), "A meeting's or Document's Area", before the next dry run. An `area` the user set stays.
 
 8. **Prepare the changes, by subject.** Give every item a subject ([references/parts.md](references/parts.md), "Subjects"), then build **one** `brain proposal new` batch ([references/cli-inputs.md](references/cli-inputs.md) §3), every item with its part's `subject`:
-   - per part, **one `review_notes`**: `{ "kind": "review_notes", "source": "<mtg-id, or the src- id for any other input>", "subject": "<the part's note id, or its plain name>", "notes": [<the part's knowledge notes from step 7: the meeting, people, decisions, questions, `learned` and `part` Documents; never the source, and never a `whole` Document>], "note_passages": { … } }`, with `notes: []` when the part has no new note. It takes in what goes in with the part's yes, each sent as its own item with the same `source` and `subject`: a link → `add_link` (a person joining a project's `people`, an attendee missing from an existing meeting, a new alias, decision 0028); text added to a note → `add_to_note`; a fact the note doesn't have yet → `update_fact`. Mark what you are unsure of with `unsure`, `repeat` and `note_flags` (cli-inputs.md, "Unsure flags and repeats"): those items are asked in their part;
-   - every change that removes or replaces something the brain holds is a proposal of its own, asked in its part: a new value for a fact the brain holds → `update_fact` (the CLI sets `before`); two sources disagreeing → `contradiction`; a Document's new text from a new version of its file → `update_body` (references/extraction.md, "Documents"; never on a promoted Document); a new decision replacing an older one → `supersede` (the new decision is in step 7's batch); a likely duplicate → `merge`; a new decision or question for a meeting that existed before this run → `new_item`; the material answers an open question the brain already has → `answer` (the answer in one sentence, the quote as `why`, `answer_note` = the note that answers it, usually a decision of step 7).
+   - per part, **one `review_notes`** with what goes in with the part's yes, and every change that removes or replaces something the brain holds as a proposal of its own, asked in its part: read [references/cli-inputs.md](references/cli-inputs.md), "One part's items, and the dry run", before you build them.
 
-   Check the batch with `brain proposal new --dry-run`. `DUPLICATE_PENDING`, `ALREADY_LINKED` and `ALREADY_ANSWERED` skips are fine: the change already waits for a decision, is already made, or the question already has an answer; leave it out of the parts. `NOTHING_TO_REVIEW`: that part brings nothing new. `SOURCE_EXCLUDED` means the change rests on a passage that is no longer live: propose it again only from live passages, if they support it alone, and otherwise drop it; never reword it to get past the check. Name it under Check without its wording ("1 change left out: it rested on content you excluded").
+   Check the batch with `brain proposal new --dry-run`; what each skip means is in that same section. Never reword a change to get past the check.
 
 9. **The parts** *(attended)*. Ask them as [references/parts.md](references/parts.md) says: per subject, the short view, what is added, the questions, then "accept the rest of this part?". Hold the answers; write nothing yet. "Stop" ends here with nothing written. Unattended: skip this step (parts.md, "Unattended").
 
@@ -134,28 +128,14 @@ A meeting's Tasks are created once, by its ingest, from the meeting's own items 
 11. **Rebuild and check.** Run `brain index`, `brain views`, then `brain lint`. If lint reports an **error in a file this run wrote**, stop: report it and do not commit. Errors that were already there before the run are not yours to fix here; mention them. Then log and commit: `brain log ingest <mtg-id> created=<n> proposals=<n> tasks=<n>`, and `ingest: <meeting title> <date> (<n> new, <n> waiting)`. If this run does not publish, push now (step 12, "Push"); otherwise push after the publish commit.
 
 12. **Publish** *(Notion, per `settings.publish`: with `ask`, ask once before this step)*, following [references/notion.md](references/notion.md):
-    - publish the new and changed notes (`brain sync render --changed` → MCP → `brain sync record`): a concept or reference (a Document) gets its page once it is `reviewed` (accepted in its part), and no proposal is ever published;
-    - then *(Tasks)* the meeting's own action items as tasks (`brain sync tasks` → MCP → `brain sync record`), and each question its minutes track with `Track: Waiting On —` ([references/track.md](references/track.md));
-    - this sets the meeting's relations, Brain Status = Done and Ingested At, and never touches its title or body (decision 0007);
-    - **after a re-read**, or when an earlier publish already sent them, render has no Brain Status left to send (it goes out once): set the meeting's Brain Status back to **Done** through the MCP yourself (never Ingested, its name before 0.16.2), and nothing else on the page. Otherwise it stays Ready and the next run reads it again.
+    - read [references/notion.md](references/notion.md), "What step 12 publishes", before it: the new and changed notes, then *(Tasks)* the meeting's own tasks and tracked questions, and the meeting's Brain Status set to Done (by you after a re-read).
 
     Then commit again: `publish: <meeting title> <date>`.
 
     **Push** after the run's last commit, per `settings.push` (the brain's AGENTS.md, "Write path"), never off the working branch. The report then ends with the backup line (brain-setup references/backup.md, "The report's last line"): none after a push that succeeded; `<n> changes not backed up yet (Back up after each run: remind me).` with `remind`; `Not backed up: <reason>. Say "fix my backup".` when the push failed or wasn't made.
 
 13. **Report** in three lines (decision 0037), once per run however many inputs it took:
-    ```
-    Done: 2 meetings ingested · 9 notes in · 3 added to notes · 4 tasks created
-    Needs you: 2 decisions waiting (1 part left for later) · 1 meeting skipped (no date)
-    Next: say "what needs my decision"
-    ```
-    - **Done:** counts only, and only the ones that aren't zero: what went in ("Added to 3 notes", "Linked 2" when it helps), the tasks created.
-    - **Needs you:** everything waiting on the user, separated by `·`: the decisions still waiting (a part or a question left for later, everything an unattended run wrote), a changed version waiting for the user's check ("1 changed document to check: say *go*, or set it Ready"), what was skipped or failed and why in a few words, lint errors that were there before the run, an instruction found in a source and ignored, action items with no task. `Needs you: nothing` when there is none.
-    - **Next:** one action, or one question. With decisions waiting: "say *what needs my decision*". Without Notion, add connecting it ("connect the brain to Notion"), after which a sync publishes everything.
-
-    **Below the three lines, only what the parts didn't already show** (decision 0037): an unattended run lists, per input, what came in (every new project, decision, open question and risk, every changed fact old → new, new people with their role, each Document with what it keeps, a meeting or Document left without an Area because its projects are in different Areas; for a re-read, "Acme sync, read again: 1 change (launch 2027-02 → 2027-03)"); an attended run, which showed all of it in the parts, gives only **Check**: every assumption the user should verify (a date taken from today or from a month only, a fact marked ambiguous, a name left unlinked, a part of a document not analysed, a meeting or Document left without an Area because its projects are in different Areas), and the **action items** that didn't become tasks. For selected input, also what references/selection.md lists under Report.
-
-    Never include mechanics: ids, file paths, commands, commit names, or counts already on the Done line. In Markdown-only mode, the action items always appear, since there is no task database.
+    Read [references/report.md](references/report.md) before you write it: the three lines' shape, what each holds, and what goes below them.
 
 ## Stop conditions
 

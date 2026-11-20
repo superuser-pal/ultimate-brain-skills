@@ -94,6 +94,10 @@ The source records what the user asked to keep in `only_keep` (cli-inputs.md §1
 
 **A new version of a file that has a Document** (the source has `replaces`, sources.md "New versions"): never a second Document. Read the Document's body with `brain query --read <ref-id>`; when it is withheld or comes back with `restricted: true`, propose nothing for it and name it under Check ("the Acme requirements Document waits for cleanup; its new version's changes are not proposed yet"). Otherwise change only the lines the new version changes (`brain source diff` says which), and propose the result as an `update_body` on that Document: `content` = the whole new body, every unchanged line copied exactly, so the question shows only the lines that differ. `why` names what changed ("Requirement 4: deadline 1 Mar → 15 Mar"). It is its own proposal, asked in the new source's part. A `part` Document from before 0.16.0 is updated the same way, only for the lines it keeps; a new version that changes nothing it keeps proposes nothing for it.
 
+#### Promote to document (decision 0099 §9; SKILL.md)
+
+*(Documents)* "Promote the decision on … to a document" is asked here, in the session. Find the decision with `brain query --candidates "<the words>" --types decision` and `brain query --read`, say which one and that its Document will be seeded from it, and on the user's yes write one `promoted` Document as references/extraction.md "Documents" says. Then rebuild, commit (`documents: promote <title>`) and publish.
+
 ### Re-reads: only what changed (decision 0045)
 
 A corrected input read again (a meeting or an Inbox row set back to Ready, a new version of a document) is a new source with `replaces` (sources.md "Re-reads"). Analyse **only the lines `brain source diff` gives**, against what the brain already holds from the earlier version:
