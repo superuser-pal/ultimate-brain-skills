@@ -77,7 +77,7 @@ For a prompt about one page, open or reference that page so the assistant knows 
 | **Today** | Brain Assistant chat | **"Run Today"** shows due tasks and today's meetings. |
 | **Prep** | With a meeting page referenced | **"Run Prep"** gathers relevant meetings, questions, tasks and decisions before the meeting. |
 | **Check minutes** | A meeting page before it is Ready | **"Run Check minutes"** flags missing information and details to confirm. It fixes the text after your confirmation. |
-| **Weekly review** | Brain Assistant chat | **"Run Weekly review"** opens this week's review (the Inbox row **Week of …**), summarises it and explains its items. It decides nothing: you change the tasks in Notion and decide the rest with your agent (**“What needs my decision?”**). With no review this week, it says how to get one (say “weekly review” to your agent, or turn on the Monday schedule). |
+| **Weekly review** | Brain Assistant chat | **"Run Weekly review"** opens this week's review (the Inbox row **Week of …**), summarises **Your week** and goes through the **Actions** and **Clean-up** with you, item by item. It decides nothing: you **tick** what you agree with, write on an item's **Your note:** line to change it, and set the row **Ready**; the next catch-up applies it. **Waiting for you** is decided with your agent (**“What needs my decision?”**). With no review this week, it says how to get one (say “weekly review” to your agent, or turn on the Monday schedule). |
 | **Plan check** | Brain Assistant chat | **"Run Plan check"** finds gaps across Areas, goals and projects (projects without goals, goals without projects, overdue items). It suggests fixes for you to consider. |
 | **Tidy capture** | A **New** Inbox capture | **"Run Tidy capture"** proposes clearer wording and waits for confirmation. The **Tidy capture** button authorises the rewrite immediately. |
 | **Voice summary** | A **New** Inbox capture with a **Transcript** toggle | Say **“Summarize this voice note.”** Confirm the summary, check what should enter the brain, then set **Ready**. |
@@ -87,13 +87,13 @@ For a prompt about one page, open or reference that page so the assistant knows 
 
 **Meeting-summary prompt:** it is kept as **Write minutes**, the eleventh page of Brain Assistant's Skills database, so you can copy it from there; Brain Assistant doesn't run it, and asked to write minutes, it points you to these steps. Keep the transcript on the meeting page: a recorded meeting's is in the meeting-notes block's Transcript, and one you paste goes in the page body. Open the Notion AI chat on that page, paste the minutes prompt followed by the line **“Write the minutes on this page, below the transcript, and nothing else.”**, and send. Don't run it from Notion AI's settings: there it can replace the transcript. If the transcript is gone, put it back above the minutes (Notion's version history, or paste it again): without it the brain can't read the meeting. Then run **Check minutes**, correct the result and set the meeting **Ready**. Don't let Notion AI or a notetaker create Tasks from the meeting: the brain creates them, once, when it takes the meeting in. A notetaker (Granola, Fireflies) that writes to Notion: turn off its own export of tasks to the brain's Tasks database. If you cannot find the prompt, open **Write minutes** in your space's Skills database, or ask your agent **“Give me the minutes prompt.”** It is supplied with Ultimate Brain as `notion/minutes-format.md`; do not assume it is inside the meeting template.
 
-The weekly review itself is written by your agent ("weekly review", or every Monday on a schedule) and appears as an Inbox row; Brain Assistant's **Weekly review** reads it with you in Notion. Scheduling catch-up is a separate operation. Clicking **Refresh report** uses Notion pages; asking your agent to refresh a report uses the brain's canonical notes.
+The weekly review itself is written by your agent ("weekly review", or every Monday on a schedule) and appears as an Inbox row, **Week of …**, with **Your week** and **Clean-up**. Tick its Actions and clean-up items, then set the row **Ready**: the next catch-up applies them. An item with a note waits for a catch-up in Claude Code or Codex. Brain Assistant's **Weekly review** reads it with you in Notion. The daily catch-up is a separate scheduled job. Clicking **Refresh report** uses Notion pages; asking your agent to refresh a report uses the brain's canonical notes.
 
 ## Check meetings, then decide in the chat
 
 **For meetings:** the minutes start with **In one line**, your **Quick follow-ups** and the **Tasks for the brain**, each a heading with a divider under it, then a few bullets per subject, each starting with a bold **Decided:**, **Open:**, **Concern:**, **Waiting on <name>:** or **Idea:**; a collapsed **For the brain** toggle at the end holds the selection lines and the quotes behind each line. Check names, dates, figures, attendees, project and commitments before setting **Ready**. Tick the follow-ups you've done before **Ready**: each one still unticked becomes a Task with no due date; tick or delete one to keep it out. To leave a subject out of the brain, open **For the brain** and change its selection line to **`Selection: Meeting only`**. To leave out one item, write **`Meeting only:`** at the start of its quote line there, never on the summary line, where it blocks the meeting. Minutes written with an earlier prompt are read as before (**`Meeting only:`** goes at the start of the item), and their follow-ups never become Tasks. Check the actual Task's status in Notion after processing. To follow up a question or risk from the meeting as a task, write **`Track: Waiting On —`** at the start of its line.
 
-**Deciding** happens in your agent's chat, never in Notion. When you **Catch up**, each input is shown one subject at a time: a short view of what the brain has, what is added (`+` lines), the questions (each with options and a recommendation), then **“accept?”**. Answer **yes**, **“all except …”**, **no**, **later**, **“enough”** (the rest waits) or **“stop”** (nothing written; the input stays as it is). What you leave for later, and what a scheduled run brought in, waits for **“What needs my decision?”**: at most five questions a round, your edits in Notion to the brain's values first, as one question.
+**Deciding** happens in your agent's chat, not in Notion, except the weekly row's ticks (above). When you **Catch up**, each input is shown one subject at a time: a short view of what the brain has, what is added (`+` lines), the questions (each with options and a recommendation), then **“accept?”**. Answer **yes**, **“all except …”**, **no**, **later**, **“enough”** (the rest waits) or **“stop”** (nothing written; the input stays as it is). What you leave for later, and what a scheduled run brought in, waits for **“What needs my decision?”**: at most five questions a round, your edits in Notion to the brain's values first, as one question.
 
 **Your edits in Notion** to a value the brain owns (a Summary, a Role, a Key Fact) are asked before they go in, because the brain can't tell your edit from one made by Notion AI or another tool. Until you answer, the brain leaves your edit as it is in Notion.
 
@@ -105,9 +105,10 @@ The weekly review itself is written by your agent ("weekly review", or every Mon
 
 | I want to… | Say to your agent… |
 |---|---|
-| Schedule processing | **“Run catch-up every morning.”** |
-| Check or stop the schedule | **“What is scheduled?”** / **“Stop the scheduled catch-up.”** |
+| Schedule the brain, on a Mac or on Windows | **“Schedule my brain.”** / **“Run catch-up every morning.”** |
+| Check or stop the schedule | **“What is scheduled?”** / **“Stop the scheduled catch-up.”** / **“Stop the weekly review.”** |
 | Review your week | **“Weekly review.”** / **“Review my week every Monday.”** |
+| Undo something the weekly clean-up did | **“Undo clean-up U1.”** (or tick its line in the row, then set it Ready) |
 | Check optional capabilities | **“Which modules do I have?”** |
 | Enable a capability | **“Turn on documents.”** / **“Turn on reports.”** |
 | Connect a work folder to Notion | From that folder: **“Connect this work to Notion.”** |
@@ -117,7 +118,7 @@ The weekly review itself is written by your agent ("weekly review", or every Mon
 | Check or change the Notion structure | **“Check my Notion space.”** / **“Add a property to Projects …”** The agent follows the product's design process. |
 | Get help updating | **“Help me update Ultimate Brain and upgrade my brain.”** |
 
-Scheduled catch-up needs the configured computer and agent available. It decides nothing: it leaves its questions, and your edits from Notion, for your next attended session.
+A scheduled run needs its computer on and you logged in at that time (a Mac may be asleep; Windows is woken), and the agent you set the brain up with, Claude Code or Codex. A scheduled catch-up applies what you ticked in a Ready weekly row and decides nothing else: it leaves its questions, the items you wrote a note on, and your edits from Notion for your next attended session.
 
 ## When something seems stuck
 
