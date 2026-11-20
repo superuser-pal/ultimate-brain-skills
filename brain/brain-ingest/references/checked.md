@@ -2,6 +2,10 @@
 
 When the user wants a document changed before it goes in, you write the changed text to a **checked row**: a new Inbox row linked to the original. Nothing is taken in until the user has checked it. The contract is spec/capture-and-review.md §12, the command spec/cli.md §5.35 (`brain source check`).
 
+## When to use this page (SKILL.md)
+
+When the user wants a document changed before it goes in ("keep only the requirements, as a spec", "drop the appendix", "the depot count is 11, not 9"), or Keep as document has Only keep filled, take nothing in: record the original as a source, write the changed text to a new Inbox row for the user to check, and take that row in when they say **"go"** or set it Ready. Follow [references/checked.md](references/checked.md). Minutes and captures keep their own checks (Check minutes, Tidy capture).
+
 ## What it applies to
 
 An input of kind `document`, `email`, `chat` or `note`: a converted file (an attached file and a drop-folder file included), a web page, a pasted thread or a text given in the session. Never minutes or a capture, and never a task page (that is [task-document.md](task-document.md)):

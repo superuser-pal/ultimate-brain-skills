@@ -14,6 +14,10 @@ The CLI never calls Notion (spec/cli.md §1). You read and write Notion through 
    - **attachments:** file, PDF and image blocks in the body, and any Files property: [sources.md](sources.md), "Attachments". They are never part of the minutes text.
 3. **Put the Notion page id on the meeting note:** add `"notion": "<meeting page id>"` to the meeting's `frontmatter` in the `note new` batch. Publishing (step 11) updates that existing page and never creates a meeting page, so without the id `sync render` reports `MEETING_NOT_PUBLISHED`.
 
+### Which meetings (SKILL.md step 2)
+
+2. **Fetch** *(Notion)*. Query the Meetings database for pages with Brain Status = **Ready** (or **Reviewed**, its name before 0.16.2, decision 0109), oldest Date first, through its data source ([references/notion.md](references/notion.md)). Process them one at a time. Never take New or Skipped meetings (decision 0012; New was Not Reviewed before 0.16.2), nor a meeting whose Name starts with `Example · ` (the Notion template's invented rows, decision 0084: nothing in the brain is made from one; name how many you skipped once in the report, "1 example meeting skipped: delete it in Notion"). For each page, read its properties (Name, Date, Attendees, Project, Area) and the minutes: which parts of the page count as minutes is in references/notion.md.
+
 ### What counts as minutes
 
 The minutes are the page body **without the template parts**. Leave out:
@@ -74,6 +78,13 @@ Do these in order, after the ingest commit: pages first, so every task's project
    2. Create one Notion page per returned item **without** `pending_relations`, in its `database_id` with its `properties`. An item with `pending_relations` names a page not yet in Notion (a project, or the source's own Inbox row): **don't create it**: after step 1 that page is a project not in Notion yet, so leave the item out and list it in the report. An `owner` of type `person_name` is written as text, or resolved to a Notion user if the mapped property is a people property.
    3. Run `brain sync record` with `{ "records": [ { "id": "<mtg-id or src-id>", "synced_at": "<now, ISO 8601 UTC>", "tasks": ["<new task page id>", …] } ] }`. `synced_at` is required on every record (spec/cli.md §5.14.6). For an extract, the record also carries `task_items`: each Task's item id, or a follow-up's `q` id, mapped to its page id; a follow-up's Task is recorded on the meeting too (selection.md §6).
 3. **Commit:** `publish: <meeting title> <date>`. Then run `brain log publish <mtg-id> pages=<n>`, and commit it with the publish.
+
+### What step 12 publishes (SKILL.md step 12)
+
+- publish the new and changed notes (`brain sync render --changed` → MCP → `brain sync record`): a concept or reference (a Document) gets its page once it is `reviewed` (accepted in its part), and no proposal is ever published;
+- then *(Tasks)* the meeting's own action items as tasks (`brain sync tasks` → MCP → `brain sync record`), and each question its minutes track with `Track: Waiting On —` ([references/track.md](references/track.md));
+- this sets the meeting's relations, Brain Status = Done and Ingested At, and never touches its title or body (decision 0007);
+- **after a re-read**, or when an earlier publish already sent them, render has no Brain Status left to send (it goes out once): set the meeting's Brain Status back to **Done** through the MCP yourself (never Ingested, its name before 0.16.2), and nothing else on the page. Otherwise it stays Ready and the next run reads it again.
 
 ### Inbox bodies (decision 0043)
 

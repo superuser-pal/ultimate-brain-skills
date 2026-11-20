@@ -83,6 +83,25 @@ Written by `brain sync snapshot` (SKILL.md step 3, spec/cli.md §5.14.10) from t
   | rollup of a relation (Show original) | a relation: array of page ids, sorted; empty → `[]` |
 - A property you did not read is left out, and is then not compared.
 
+## Reading the tracked tasks and the tasks to keep as documents (SKILL.md step 2)
+
+**Tracked tasks** *(Tasks; decision 0101 §6)*: run `brain sync tracked`. For each entry, read its task **page by its id** (`page_id`, never a query, so a page in the trash is still found), and pass one `tasks` row (references/formats.md):
+- a page you can read and that isn't in the trash: its title and status properties (the mapped ones, `notion.tasks.properties`), `last_edited`, and `status_group`: the group of the status option (`todo`, `in_progress`, `complete`) for a Notion Status property, `null` for a select;
+- a page in the trash: the same, with `"gone": true`;
+- a page Notion can't find (deleted for good, or no longer shared with the integration; the brain can't tell which): `"unreadable": true`, `last_edited: null`, empty `properties`. Never pass it as `gone`.
+
+A read that fails for another reason (a timeout, an expired login) passes no row for that page.
+
+**Tasks to keep as documents** *(Tasks, Documents; decision 0100)*: with `notion.tasks.properties.document_asked` mapped (not `""`), query the Tasks data source for the rows whose Document asked box is ticked, and pass each with its title, Document asked, Project and Area under their mapped names (references/formats.md). A task that is also tracked is passed once, with the properties of both. Its body is read only when `sync plan` lists it in `task_documents`, by brain-ingest references/task-document.md. Nothing else of a task is read here.
+
+## Reading the Report rows (SKILL.md step 2)
+
+*(Reports)* Of Documents, the **Report rows** (Origin Report, a `vw-` Brain ID) whose **Refresh asked** box is ticked or whose **What to fix** is not empty, with Brain ID, Refresh asked and What to fix (decisions 0045, 0048, 0071); nothing else on them is compared. A space not yet migrated (migration 0010) has **Refresh** instead: send whichever the space has. `sync plan` turns them into `refresh_requests` and `report_fixes`. They are the brain-query skill's work ("Report mode", "Refresh" and "What to fix on a report"): run it for each after step 6, or leave them for the next catch-up and say so.
+
+## Example rows (SKILL.md step 2)
+
+**Example rows** (decision 0084): every row whose title starts with `Example · ` (the word `Example`, a space, the middle dot `·`, a space, matched exactly) is left out of the snapshot by `brain sync snapshot` (step 3): the Notion template's invented rows, which setup removes when it connects the brain. Left out, such a row is never imported, corrected or matched, and nothing in the brain is made from it. Leaving it out is not skipping a database. Name how many (`examples_left_out`) once in the report: "2 example rows left out: delete them in Notion, or say "set up my brain" to remove them".
+
 ## Inputs of `brain sync snapshot`
 
 `brain sync snapshot --input <folder or file> [--input …] --output <tmp>/snapshot.json`; a folder stands for every `.json` file in it. Each file is one of:
@@ -94,6 +113,10 @@ Anything else is `INPUT_INVALID`. The reply's `data` is `{ "output", "rows", "ex
 ## Plan (input to `brain sync apply` and `brain sync render --plan`)
 
 The `data` object of the `sync plan` reply. Not the whole reply. The one edit you make: each `accepted_wording` item gets a `verified` key, `{ "fingerprint": "<its fingerprint>", "page_edited_at": "<its page_edited_at>" }`, after you re-read its page just before applying (SKILL.md, "Accepted wording"). Add nothing else.
+
+## Ignored plan items (SKILL.md step 5)
+
+- **Ignored:** e.g. `NOT_CORRECTABLE`. "You changed a decision's Assessment in Notion; that can't be changed by editing. Tell me what's wrong and I'll propose it." `MODULE_OFF` (a row of a module that is off), `RETIRED` (a Full text box from before 0.6.0), `REVIEW_ROW` and `RETIRED_DATABASE` (a row of a database retired in 0.16.0, read before its migration ran) need no line; when there are any, say once: "The 0.16.0 Notion migration hasn't run yet: say "migrate my Notion space"".
 
 ## Record (input to `brain sync record`)
 
