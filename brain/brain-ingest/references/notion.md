@@ -16,7 +16,7 @@ The CLI never calls Notion (spec/cli.md §1). You read and write Notion through 
 
 ### Which meetings (SKILL.md step 2)
 
-2. **Fetch** *(Notion)*. Query the Meetings database for pages with Brain Status = **Ready** (or **Reviewed**, its name before 0.16.2, decision 0109), oldest Date first, through its data source ([references/notion.md](references/notion.md)). Process them one at a time. Never take New or Skipped meetings (decision 0012; New was Not Reviewed before 0.16.2), nor a meeting whose Name starts with `Example · ` (the Notion template's invented rows, decision 0084: nothing in the brain is made from one; name how many you skipped once in the report, "1 example meeting skipped: delete it in Notion"). For each page, read its properties (Name, Date, Attendees, Project, Area) and the minutes: which parts of the page count as minutes is in references/notion.md.
+2. **Fetch** *(Notion)*. Query the Meetings database for pages with Brain Status = **Ready** (or **Reviewed**, its name before 0.16.2, decision 0109), oldest Date first, through its data source ([references/notion.md](references/notion.md)). Process them one at a time. Never take New or Skipped meetings (decision 0012; New was Not Reviewed before 0.16.2), nor a meeting whose Name starts with `Example · ` (the Notion template's invented rows, decision 0084: nothing in the brain is made from one; name how many you skipped once in the report, "1 example meeting skipped: delete it in Notion"). For each page, read its properties (Name, Date, Attendees, Project, Area) and the minutes: which parts of the page count as minutes is in references/notion.md. A New meeting is never ingested, but one with a transcript and no minutes may get its minutes written for the user's review ([minutes.md](minutes.md)): that write sets no property and takes nothing in.
 
 ### What counts as minutes
 
@@ -42,7 +42,7 @@ What remains has two parts:
 
 When the user's notes and the minutes disagree on a fact, ask in the pre-check (SKILL.md step 3). The answer is an owner ruling ([extraction.md](extraction.md), decision 0031). Without an answer, mark the claim `^[ambiguous]`.
 
-**Read-only rule:** never change the meeting page's title, date or body (decision 0007). The ingest only sets relations and Brain Status / Ingested At, through `sync render`.
+**Read-only rule:** never change the meeting page's title, date or body (decision 0007). The ingest only sets relations and Brain Status / Ingested At, through `sync render`. The one exception, from 0.17.0, is minutes the brain writes on a New page with a transcript and no minutes, appended below the transcript and nothing else ([minutes.md](minutes.md) §3).
 
 ## Publish (SKILL.md step 11)
 
