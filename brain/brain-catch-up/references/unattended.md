@@ -2,6 +2,10 @@
 
 Read by brain-catch-up for an unattended run, before its first command; an attended run never reads it. Step numbers are those of brain-catch-up's SKILL.md ("Run step 3" is its section "3. Run, in this order"), and every rule there applies except what this file changes.
 
+SKILL.md's introduction of the unattended run, kept whole:
+
+The prompt a schedule runs (see "Run on a schedule"), or the user by hand. Nobody is there to ask: every question takes its default or skips its input, and the run interprets no text of the user's (decision 0051). **Before its first command, read [references/unattended.md](references/unattended.md)** and follow it: it says what changes in each step, the defaults that replace the batch, the budget, the report, the log line and the Catch-up row. An attended run never reads it.
+
 The prompt a schedule runs ([schedule.md](schedule.md)), or the user by hand. Nobody is there to ask, so every question of step 2 takes its default or skips its input, and the run goes on (decision 0051). It carries out what the user already decided word for word and interprets no text of theirs, because turning their words into changes is judgment nobody would check. It decides nothing (decision 0096 §4): what an attended run would ask, it writes as a pending proposal for the next session. It may quote a report's What to fix as written (in a report, to say what waits); it never works out what it means or acts on it. The 5-minute bar is for attended runs; a budget of inputs replaces it.
 
 **Off the working branch: stop at once** (decision 0086 §2, spec/cli.md §6.1). The run's first command is `brain status`. When its `branch` has `on_working` `false` (another branch checked out, or a detached `HEAD`) or `working` `null`, the run stops there: no read, no Notion call, no commit, no push and no log line, nothing written in the brain or in Notion. Its last line of output, which the scheduler's log keeps, is exactly:
