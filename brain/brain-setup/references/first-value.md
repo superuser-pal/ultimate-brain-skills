@@ -68,15 +68,20 @@ When the attempt's checks are done, or the user stops, write one line with each 
 
 **The first meeting** is checked later, by the first catch-up that ingests a Ready meeting once first value has passed: its report adds one line saying how it went. When first value passes, tell the user: "Your first meeting is the last check: set it Ready after it's summarised, and the next catch-up tells you how it went."
 
-## Step 8: the scheduled catch-up
+## Step 8: the schedule
 
-Offered only once first value passes (decision 0078 §2).
+Offered only once first value passes (decision 0078 §2), on macOS and on Windows alike (decision 0110 §8, §9; before 0.17.0 Windows wasn't offered it). A brain whose `schedule` line says `declined` with `reason=schedule-unsupported` (Windows before 0.17.0) is offered it once now.
 
-**On Windows** (decision 0097), `brain schedule` isn't available: don't ask. Say "Scheduled runs need macOS, so on Windows ask me for a catch-up or the weekly review when you want one.", then `brain config set settings.schedule '"off"'`, log `step=schedule result=declined reason=schedule-unsupported`, commit, and go on to the setup report.
+Follow brain-catch-up's [schedule reference](../../brain-catch-up/references/schedule.md) for **both jobs at once**, in one message:
+1. **The two slots, with their defaults:** `Run the weekly review on its own every Monday at 08:00, and a catch-up every day at 07:30? Keep them, change a time or a day, or say no to either.` A changed time or day is taken as said; a slot the user declines is `off`.
+2. **The agent and its model:** the agent is the one you are running setup in (Claude Code or Codex); offer its model as the reference says (with Claude Code a Sonnet full id, with Codex the model you are running as, by its full name); the user may name another.
+3. **The offers,** once each: `settings.publish: auto` when it is `ask`, and with Claude Code the allow list for the jobs kept, then the folder-trust step.
+4. **What the computer needs,** by platform, and that the schedule runs on this computer only.
 
-Ask: "Catch-up can run on its own at set times, taking in only what you've marked ready. Turn it on? (You can change this any time.)"
+Then install as the reference's step 4 says: `brain schedule install <job> --at … [--days …] --agent <agent> --model <id>` for each kept slot (the first with `--agent` and `--model`), `brain schedule remove <job>` for a declined one once the object exists, and with both declined `brain config set settings.schedule '"off"'`. Commit `brain.json` (and `.claude/settings.json` when it changed).
 
-- **On:** run the brain-catch-up skill's "Run on a schedule" (its times, days, model and allow list). When `brain schedule install` succeeds: `brain config set settings.schedule '"on"'`, log `step=schedule result=done`, commit. When it fails: say why, leave `settings.schedule` as it was, log nothing, and offer to try again or choose off.
-- **Off:** `brain config set settings.schedule '"off"'`, log `step=schedule result=declined`, commit. Never asked again; "run catch-up every morning" turns it on later.
+- **Done** (one slot or both installed): log `step=schedule result=done`, commit.
+- **Both declined:** log `step=schedule result=declined`, commit. Never asked again; "schedule my brain" turns it on later.
+- **An install fails:** say why in one line (the reference's "What `install` answers"), log `step=schedule result=failed reason=<code>` (`AGENT_NOT_FOUND`, `BRAIN_NOT_GIT`, or `schedule-not-loaded` for `SCHEDULE_NOT_LOADED`), and offer to try again or decline. The slots stay written in `brain.json`, so "schedule my brain" installs them once the cause is fixed.
 
 Then go on to the setup report (report.md).

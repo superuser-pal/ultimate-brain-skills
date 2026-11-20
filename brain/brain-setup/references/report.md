@@ -20,13 +20,13 @@ Time: 52 min (first setup line to the last)
 5 identities: done
 6 seeding: done (14 notes, 4 documents)
 7 first value: passed on attempt 2 · tasks pass · report pass · organised pass · answer pass
-8 schedule: off
+8 schedule: weekly review Mon 08:00 · catch-up 07:30 · Claude Code
 ```
 
 - **Header:** the CLI version (`brain --version`), the skills snapshot's name and version (`skills` in `brain status`), the agent (Claude Code or Codex), the platform (`node -p process.platform`).
 - **Plan and modules:** `notion_ai` and `custom_agents` from the latest `prerequisites` line; the modules that are on.
 - **Time:** from the first `setup` line to the last, in minutes (hours and minutes above 90).
-- **One line per step,** from all its lines in order, the latest deciding its state: `done`, `failed (<reason>)`, `failed <n> times (<reason>, <reason>), then done` (a step done, then failed on a re-check, then done again, counts its one failure), `declined` (shown as `off` for the schedule), or `not reached`. Add in brackets only what the examples show: the `markitdown` and `gh` settings, the template version (`unknown` when `template_version` is null) and the Example rows removed (from the latest `connect` line's `examples=`, left out when `0`), the seeding counts. Step 4b's brackets: the agent kind, `custom agent` or `personal instructions` (from the line's `agent=`, else the `prerequisites` line's `custom_agents`), then `mentions <pass|fail>` and `buttons <passed> of <applicable>` (`buttons skipped` with personal Instructions); a line written before these keys existed shows the agent kind alone. Step 7 has its own form, below.
+- **One line per step,** from all its lines in order, the latest deciding its state: `done`, `failed (<reason>)`, `failed <n> times (<reason>, <reason>), then done` (a step done, then failed on a re-check, then done again, counts its one failure), `declined` (shown as `off` for the schedule), or `not reached`. Step 8, when done, shows the kept slots and the agent from `brain status`'s `schedule` (`weekly review Mon 08:00 · catch-up 07:30 · Claude Code`; a declined slot left out; `Codex` for Codex), never the model's name. Add in brackets only what the examples show: the `markitdown` and `gh` settings, the template version (`unknown` when `template_version` is null) and the Example rows removed (from the latest `connect` line's `examples=`, left out when `0`), the seeding counts. Step 4b's brackets: the agent kind, `custom agent` or `personal instructions` (from the line's `agent=`, else the `prerequisites` line's `custom_agents`), then `mentions <pass|fail>` and `buttons <passed> of <applicable>` (`buttons skipped` with personal Instructions); a line written before these keys existed shows the agent kind alone. Step 7 has its own form, below.
 - **Step 7:** `passed on attempt <n>` or `unresolved after <n> attempts`, counting its `first-value` lines, then each check from the latest line (`not run` for a check left out, `skip (Tasks off)`). While first value is unresolved, step 8 reads `not offered (first value unresolved)`.
 - Without Notion AI, 4a and 4b read `not required (no Notion AI)`.
 - Asked before setup is finished, the steps not reached say so, and the Time line counts up to now.
@@ -51,7 +51,8 @@ The `reason=` of a `result=failed` line:
 |---|---|
 | `missing-prerequisite` | Node, Git or the agent is missing (step 1) |
 | `markitdown-missing` | `markitdown --version` fails (step 1; decision 0097) |
-| `schedule-unsupported` | step 8 on Windows, on a `result=declined` line (decision 0097) |
+| `schedule-unsupported` | step 8 on Windows, on a `result=declined` line, written from 0.15.2 to 0.16.x only (decision 0097); from 0.17.0 Windows is offered the schedule |
+| `schedule-not-loaded` | step 8: the scheduler refused the entry (`SCHEDULE_NOT_LOADED`; 0.17.0) |
 | `gh-missing` | `gh` is not installed: `gh --version` fails (step 1) |
 | `gh-signed-out` | `gh` is not signed in to github.com: `gh auth status --hostname github.com` fails (step 1) |
 | `notion-ai-missing` | the plan has no Notion AI and the user didn't choose the path without it (step 1) |

@@ -19,7 +19,7 @@ What the user reads calls the remote **the backup** and uses no Git word (decisi
 | 9 | Opening recall in linked repos | `settings.recall` (default `off`) | shown |
 | 10 | MarkItDown | `on`: step 1 checked it is installed | required for early access: shown, not changed |
 | 11 | GitHub CLI (`gh`) | `on`: step 1 checked it is signed in | required for early access: shown, not changed |
-| 12 | Scheduled catch-up | asked after the first-value check (step 8); on Windows, not available ("Item 12 on Windows" below) | optional |
+| 12 | The schedule: the weekly review and the daily catch-up | asked after the first-value check (step 8), on macOS and Windows: the weekly review Monday 08:00, the catch-up 07:30 | optional |
 | 13 | How the brain talks to you | the current `settings.style` (below); absent: Standard | optional |
 
 ## The screen
@@ -49,8 +49,8 @@ Your brain's settings. Say "keep these", or change any line ("drop folder ~/Inbo
     Turns PDFs, Word files and slides into exact text, so quotes are exact.
 11. GitHub CLI (gh): on
     Creates your backup, checks it stays private, and files your setup report for you.
-12. Scheduled catch-up: asked after your first check
-    Catch-up runs on its own at set times; it only takes in what you've marked ready.
+12. The schedule: asked after your first check
+    The weekly review and a catch-up run on their own at these times, with your agent; a catch-up only takes in what you've marked ready.
 13. How the brain talks to you: Standard
     Standard, Simple (plain words, short answers, the answer first) or Custom (you choose how much it explains, how long and how direct it is); change it any time by asking.
 
@@ -68,7 +68,7 @@ Still to do after this screen:
 - Item 8 is changed with the words shown ("back up: remind me", "back up: on"); the setting keeps its values `auto` and `remind`.
 - Item 11 is not a choice in early access: asked to turn it off, say "Early access needs the GitHub CLI: it keeps your backup working." and write nothing.
 - Item 10 is not a choice in early access either: asked to turn it off, say "Early access needs MarkItDown: it keeps quotes from your documents exact." and write nothing.
-- **Item 12 on Windows:** `brain schedule` runs on macOS only, so on Windows the screen shows `12. Scheduled catch-up: not available on Windows` with the line "Ask for a catch-up or the weekly review when you want one.", and step 8 isn't asked (references/first-value.md, "Step 8").
+- **Item 12 on Windows** (decision 0110 §9): shown and asked as on a Mac; the schedule runs as Task Scheduler tasks (references/first-value.md, "Step 8").
 - An item the user can't leave empty (an email, a language) is asked for before the yes: "Item 2 needs your email."
 - Without Notion AI (SKILL.md), add under the screen what is lost, and leave the minutes prompt and Brain Assistant out of "Still to do".
 
@@ -87,7 +87,7 @@ Two brains reading one drop folder take each other's files, so never propose a f
 - **`exists` true:** the folder is already there. Show `(already there: its files are read by the first catch-up)` instead of `(created)`.
 - **A change to a folder another brain reads** (a `folder` in `others`, compared after expanding `~`): don't apply it. Say "~/Documents/brain-dropbox/ is read by your brain at ~/GitHub/brain, so both brains would take each other's files. Choose another folder." and show the screen again with `proposed`. The same holds for "change my drop folder" later.
 
-The brains this machine knows are the default brain and each brain with a scheduled catch-up; `others` lists them. A brain known neither way can't be seen, which is why an existing folder is always named on the screen.
+The brains this machine knows are the default brain and each brain with a scheduled job; `others` lists them. A brain known neither way can't be seen, which is why an existing folder is always named on the screen.
 
 ## Item 13: how the brain talks to you
 
