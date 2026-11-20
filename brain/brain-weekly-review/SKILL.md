@@ -5,7 +5,7 @@ description: Write the weekly review, one short report on the week with at most 
 
 # Weekly review
 
-One report a week over the user's work and notes (decisions 0075, 0093): what changed since the last review, the state of their tasks and projects, and at most five decisions. The user decides a proposal in the session, with "what needs my decision" (brain-apply), and a task on the task itself in Notion; Brain Assistant's Weekly review reads the week's row with them in Notion and decides nothing (decision 0096 §7). A weekly run never decides anything and never applies a proposal, attended or not: it writes the report, the pending proposals its decisions need, and its state. A week with nothing new writes nothing at all.
+One report a week over the user's work and notes (decisions 0075, 0093): what changed since the last review, the state of their tasks and projects, and at most five decisions. The user decides a proposal in the session, with "what needs my decision" (brain-apply), and a task on the task itself in Notion; Notion Brain Assistant's Weekly review reads the week's row with them in Notion and decides nothing (decision 0096 §7). A weekly run never decides anything and never applies a proposal, attended or not: it writes the report, the pending proposals its decisions need, and its state. A week with nothing new writes nothing at all.
 
 The CLI does the deterministic half: `brain weekly plan` finds the candidates, `select` applies the weekly limits and the repetition rules, and `record` renders the report, checks its shape and writes the state. This skill reads Notion, judges what needs judgment (the reflection clusters and the correction targets), writes the prose of What changed and Task analysis, writes the proposals, and publishes.
 

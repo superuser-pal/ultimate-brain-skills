@@ -69,8 +69,8 @@ Does your Notion plan include Notion AI? And Custom Agents (Business or Enterpri
 
   A tool still not found after that: point to the guide's "A command isn't found on Windows" (docs/setup.md); the reason code stays the prerequisite's.
 
-- **Notion AI: yes.** Log `step=prerequisites result=done notion_ai=yes custom_agents=<yes|no>` with the user's Custom Agents answer, and go on to step 2. Custom Agents decides how Brain Assistant is set up in step 4b (a Custom Agent, or personal Instructions).
-- **Notion AI: no.** Say: "Early access needs Notion AI: the minutes and Brain Assistant run on it. You can add Notion AI to your plan and say "set up my brain" again. There is also a path without it, which becomes supported at 1.0; it drops the structured minutes and Brain Assistant. Add Notion AI, or set up without it?"
+- **Notion AI: yes.** Log `step=prerequisites result=done notion_ai=yes custom_agents=<yes|no>` with the user's Custom Agents answer, and go on to step 2. Custom Agents decides how Notion Brain Assistant is set up in step 4b (a Custom Agent, or personal Instructions).
+- **Notion AI: no.** Say: "Early access needs Notion AI: the minutes and Notion Brain Assistant run on it. You can add Notion AI to your plan and say "set up my brain" again. There is also a path without it, which becomes supported at 1.0; it drops the structured minutes and Notion Brain Assistant. Add Notion AI, or set up without it?"
   - "Add it" (or no choice): log `step=prerequisites result=failed reason=notion-ai-missing`, and stop.
   - "Without it": log `step=prerequisites result=done notion_ai=no custom_agents=no`, and go on with SKILL.md's "Without Notion AI".
 - **Unsure about the plan:** "Your plan is in Notion's settings, or ask your workspace's admin." Wait for the answer; log nothing until then.
