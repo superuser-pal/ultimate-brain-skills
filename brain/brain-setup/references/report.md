@@ -9,7 +9,7 @@ Counts and codes only, from the `setup` log lines, `brain status` and your own n
 ```text
 Ultimate Brain setup report
 CLI 0.14.0 · skills ultimate-brain-skills 1.4.0 · agent Claude Code · platform darwin
-Notion AI: yes · Custom Agents: yes · modules: orgs, documents, reports, tasks
+Notion credits: yes · meetings: notion-ai, files · modules: orgs, documents, reports, tasks
 Time: 52 min (first setup line to the last)
 1 prerequisites: done
 2 settings: done (markitdown on, gh on)
@@ -24,11 +24,11 @@ Time: 52 min (first setup line to the last)
 ```
 
 - **Header:** the CLI version (`brain --version`), the skills snapshot's name and version (`skills` in `brain status`), the agent (Claude Code or Codex), the platform (`node -p process.platform`).
-- **Plan and modules:** `notion_ai` and `custom_agents` from the latest `prerequisites` line; the modules that are on.
+- **Plan and modules:** `credits` and `meetings` from the latest `prerequisites` line (`Notion credits: yes|no · meetings: <list>`, the list with `, ` between its values); on a line from before 0.17.0, `Notion AI: yes|no · Custom Agents: yes|no` from its `notion_ai` and `custom_agents`; then the modules that are on.
 - **Time:** from the first `setup` line to the last, in minutes (hours and minutes above 90).
 - **One line per step,** from all its lines in order, the latest deciding its state: `done`, `failed (<reason>)`, `failed <n> times (<reason>, <reason>), then done` (a step done, then failed on a re-check, then done again, counts its one failure), `declined` (shown as `off` for the schedule), or `not reached`. Add in brackets only what the examples show: the `markitdown` and `gh` settings, the template version (`unknown` when `template_version` is null) and the Example rows removed (from the latest `connect` line's `examples=`, left out when `0`), the seeding counts. Step 4b's brackets: the agent kind, `custom agent` or `personal instructions` (from the line's `agent=`, else the `prerequisites` line's `custom_agents`), then `mentions <pass|fail>` and `buttons <passed> of <applicable>` (`buttons skipped` with personal Instructions); a line written before these keys existed shows the agent kind alone. Step 7 has its own form, below.
 - **Step 7:** `passed on attempt <n>` or `unresolved after <n> attempts`, counting its `first-value` lines, then each check from the latest line (`not run` for a check left out, `skip (Tasks off)`). While first value is unresolved, step 8 reads `not offered (first value unresolved)`.
-- Without Notion AI, 4a and 4b read `not required (no Notion AI)`.
+- A step the answers leave out reads `not taken (no Notion credits)` (4b) or `not taken (meetings without Notion AI)` (4a). On a line from before 0.17.0, `notion_ai=no` gives both 4a and 4b `not required (no Notion AI)`, as before.
 - Asked before setup is finished, the steps not reached say so, and the Time line counts up to now.
 
 **Never in the report:** a person, org, project, area or document name, a path, a Notion id or URL, an email, the user's words, or an error message as printed (only its code). Before showing it, check the text against the brain's titles and aliases (`brain index --json`) and drop any line that contains one.
@@ -54,7 +54,7 @@ The `reason=` of a `result=failed` line:
 | `schedule-unsupported` | step 8 on Windows, on a `result=declined` line (decision 0097) |
 | `gh-missing` | `gh` is not installed: `gh --version` fails (step 1) |
 | `gh-signed-out` | `gh` is not signed in to github.com: `gh auth status --hostname github.com` fails (step 1) |
-| `notion-ai-missing` | the plan has no Notion AI and the user didn't choose the path without it (step 1) |
+| `notion-ai-missing` | before 0.17.0 only: the plan had no Notion AI and the user didn't choose the path without it (step 1). From 0.17.0 no answer stops setup, so no new line has it |
 | `notion-unreachable` | no Notion tools in the session, or the MCP call failed |
 | `brain-data-not-found` | the search found no Brain Data page |
 | `database-missing` | a database of Core or of a module on is still missing after connect |

@@ -70,7 +70,7 @@ Still to do after this screen:
 - Item 10 is not a choice in early access either: asked to turn it off, say "Early access needs MarkItDown: it keeps quotes from your documents exact." and write nothing.
 - **Item 12 on Windows:** `brain schedule` runs on macOS only, so on Windows the screen shows `12. Scheduled catch-up: not available on Windows` with the line "Ask for a catch-up or the weekly review when you want one.", and step 8 isn't asked (references/first-value.md, "Step 8").
 - An item the user can't leave empty (an email, a language) is asked for before the yes: "Item 2 needs your email."
-- Without Notion AI (SKILL.md), add under the screen what is lost, and leave the minutes prompt and Notion Brain Assistant out of "Still to do".
+- **The two answers** (SKILL.md, "The two answers"): leave out of "Still to do" each step they leave out, the minutes prompt without `notion-ai` and Notion Brain Assistant with `credits=no`. With `credits=no`, add under the screen the buttons' line, word for word as SKILL.md gives it. Without `notion-ai`, add one line on where the minutes come from: "Your agent writes the minutes of a meeting that has a transcript, for you to check before you set it Ready." A brain whose `prerequisites` line is from before 0.17.0 with `notion_ai=no` leaves out both, as before.
 
 ## Item 4: one drop folder per brain
 

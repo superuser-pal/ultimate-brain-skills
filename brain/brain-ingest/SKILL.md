@@ -1,6 +1,6 @@
 ---
 name: brain-ingest
-description: Ingest meeting minutes, documents (PDF, Word, PowerPoint, Excel, HTML, images), web pages, pasted emails, chats and notes, the Notion Inbox, files attached in Notion and a linked repo's changed files into the brain. Use when the user says "ingest my meetings", "process the reviewed minutes", "ingest this PDF", "ingest this page" with a link, "ingest this email", "process my inbox", "process my drop folder", "keep only the … section", "go", "keep the … task as a document", "track it", "turn my to-do questions into tasks", "promote the decision on … to a document", or after setting meetings Ready. Shows each input part by part, one part per subject, and writes only after the parts are answered. Writes a document the user wants changed first to the Inbox as a changed version to check, and takes it in on "go"; keeps a task's page as a document; tracks a question or risk as a task.
+description: Ingest meeting minutes, documents (PDF, Word, PowerPoint, Excel, HTML, images), web pages, pasted emails, chats and notes, the Notion Inbox, files attached in Notion and a linked repo's changed files into the brain. Use when the user says "ingest my meetings", "ingest this PDF", "ingest this page" with a link, "ingest this email", "process my inbox", "process my drop folder", "keep only the … section", "go", "keep the … task as a document", "track it", "turn my to-do questions into tasks", "promote the decision on … to a document", "write the minutes for Acme sync", or after setting meetings Ready. Shows each input part by part, one part per subject, and writes only after the parts are answered. Writes a document to change first to the Inbox to check; keeps a task's page as a document; tracks a question or risk as a task; writes checked minutes for a meeting that has only a transcript.
 ---
 
 # Ingest into the brain
@@ -51,6 +51,10 @@ When the user wants a document changed before it goes in, or Keep as document ha
 
 *(Documents)* "Promote the decision on … to a document" is asked here, in the session: follow [references/extraction.md](references/extraction.md), "Promote to document".
 
+## Minutes the agent writes (decision 0101 §8)
+
+A New meeting with a transcript and no minutes gets its minutes from you, checked by `brain minutes check` before they are written on the page, and then waits for the user's review and Ready: nothing is read for the brain before then. Attended, you offer them in the run's one question; a scheduled run writes them. "Write the minutes for <meeting>" writes them on the user's ask, again if the brain wrote them before. A transcript file in the drop folder (its `meetings/` folder, or a `.vtt` or `.srt` file) becomes a Meetings row first. Follow [references/minutes.md](references/minutes.md).
+
 ## Only the ingest creates a meeting's Tasks (decision 0101 §5)
 
 A meeting's Tasks are created once, by its ingest, from the meeting's own items (step 12). A Task already in the Tasks database for the same commitment (one the user made, or one a notetaker exported) is not one of the meeting's: never link, reuse or match it by its title. If the user made one before the ingest, the ingest makes its own and the user deletes one of the two.
@@ -60,6 +64,8 @@ A meeting's Tasks are created once, by its ingest, from the meeting's own items 
 1. **Check the brain.** Run `brain status`. If `index_stale` is true, run `brain index`. Note the owner name and which Notion databases are configured. If Notion is configured and the brain has no area, project or person notes at all (all three counts are 0), run the brain-sync skill first (or ask the user to): without the synced Areas, Projects and People there is nothing to match against, and the ingest would create duplicates. **Off its working branch:** when `brain status` has the warning `BRAIN_OFF_WORKING_BRANCH`, say its message in one line and offer "fix my backup" before writing anything (brain-setup references/backup.md, "Off the working branch, at the start of a run"). Never create a branch, a worktree or a pull request in the brain (decision 0086).
 
 2. **Fetch** *(Notion)*. Read [references/notion.md](references/notion.md), "Fetch", before it: take the meetings with Brain Status = **Ready**, oldest Date first, one at a time; never New or Skipped meetings, nor an `Example · ` one.
+
+   **Meetings without minutes** *(Notion)*: before the Ready meetings, find the New ones with a transcript and no minutes and offer them in one question ([references/minutes.md](references/minutes.md), §1 and §2). Those written stay New for the user's review; this run doesn't ingest them.
 
    **Already ingested?** If a meeting note in `brain index --json` already has this page's id as `notion`, the user set it back to Ready: read [references/sources.md](references/sources.md), "Re-reads in the meeting procedure", before step 3.
 
