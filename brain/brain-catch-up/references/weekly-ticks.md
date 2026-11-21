@@ -66,4 +66,4 @@ When the user says "undo clean-up U2" (or names the item: "put back the draft yo
    - `UNDO_STALE`: a file it wrote changed since; nothing was written. Say which, and offer to restore it by hand in this session (a change you show and the user says yes to, as any change).
    - `ALREADY_UNDONE`: say it was undone already. `NOT_A_CLEANUP`: that item wasn't applied by the clean-up.
 3. `brain index`, `brain views`, `brain lint`, and commit what they change: `undo clean-up: <title>`. Push per `settings.push`.
-4. Say it in one line: `Undone: <title>. It won't be cleaned up alone again.` Nothing is written in Notion: the row keeps its `U` line, and the next publish of that row renders it as the brain now holds it.
+4. Say it in one line: `Undone: <title>. It won't be cleaned up alone again.` Nothing is written in Notion: the row keeps its `U` line as the user left it.
