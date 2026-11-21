@@ -27,7 +27,7 @@ Week of 9 Nov 2026
 
 Your reading is a proposal to the user, shown in full: apply only what they confirm ("go" confirms each default). A note you can't turn into a change shown in full (it asks for something else, or for a value you can't tell) has the default "leave it", and the item stays pending.
 
-## Run step 1c: apply the ticks
+## Run step 1d: apply the ticks
 
 After Run step 1's `sync apply` and its questions, for each Ready Weekly row, in week order:
 
@@ -56,7 +56,7 @@ On the Done line, one line per row: `Week of 9 Nov: 3 applied, 1 undone, 2 decli
 A scheduled run reads the Ready rows in its read-only pass the same way, and asks nothing:
 - `brain cleanup ticks --input <its file>` **without** `--attended`: plain ticks applied after the stale check, unticked items declined only when nothing else in the row waits, ticked `U` items undone. An item with a note is `waiting`: an unattended run interprets nothing the user wrote (decision 0051); name it under Needs you. With `settings.publish: ask`, a ticked new task or project status is `waiting` too (`PUBLISH_ASK`): nothing is written to Notion; name it.
 - With `publish: auto`, carry out the `notion_writes` and settle them, then step 4.1.1c publishes the row.
-- Commit as in Run step 1c, step 4. No second `ticks` run: the attended catch-up that answers the noted items runs it.
+- Commit as in Run step 1d, step 4. No second `ticks` run: the attended catch-up that answers the noted items runs it.
 
 ## Undo a clean-up, in a session
 
