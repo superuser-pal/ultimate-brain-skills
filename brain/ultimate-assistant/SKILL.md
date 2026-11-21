@@ -1,6 +1,6 @@
 ---
 name: ultimate-assistant
-description: Review the structure of the user's work (Areas, Domains, Projects and Tasks), place what the user talks through, and run Brain Assistant's skills by name. Use when the user says "review my projects", "what's stalled?", "anything misplaced?", "review again", talks through their work to get it placed, says "move these notes to …", or asks for a Brain Assistant skill ("prep my 3pm", "what's due today", "tidy that capture"). Finds what is overdue, stalled, missing a next step, finished but still open, misplaced or duplicated, recommends a change for each, and applies what the user says yes to, leaves a pending proposal ("propose 5"), or remembers a skip. Places a ramble as tasks, projects, Areas, Domains, Orgs, people and Inbox captures after a yes, moves notes to another Area on one yes, and guides setup's seeding. With "report only" in the request it only reports and changes nothing.
+description: Review the structure of the user's work (Areas, Domains, Projects and Tasks), place what the user talks through, and run Notion Brain Assistant's skills by name. Use when the user says "review my projects", "what's stalled?", "anything misplaced?", "review again", talks through their work to get it placed, says "move these notes to …", or asks for one of those skills ("prep my 3pm", "what's due today", "tidy that capture"). Finds what is overdue, stalled, missing a next step, finished but still open, misplaced or duplicated, recommends a change for each, and applies what the user says yes to, leaves a pending proposal ("propose 5"), or remembers a skip. Places a ramble as tasks, projects, Areas, Domains, Orgs, people and Inbox captures after a yes, moves notes to another Area on one yes, and guides setup's seeding. With "report only" in the request it only reports and changes nothing.
 ---
 
 # Ultimate Assistant
@@ -9,9 +9,9 @@ A review session over the user's work: read Notion live, compute the findings, s
 
 Run every CLI command as `brain <command> --brain <brain> --json`. Exit 1 means some items need attention; read them. Exit 2 or 4 means your command or input was wrong: fix it. Exit 3 or 5 means stop and report. Exit 10: report a bug. If `brain` is not found (`command not found`), install it with `npm install -g ultimate-brain`, then retry. Keep working files (`snapshot.json`, `exclude.json`, inputs) in a folder of your own from `mktemp -d`, outside the brain.
 
-## Brain Assistant's skills, by name (0.17.0)
+## Notion Brain Assistant's skills, by name (0.17.0)
 
-When the user asks for one of Brain Assistant's skills ("prep my 3pm", "what's due today", "tidy that capture", "run Today") rather than a review, this isn't a review session: follow [references/brain-assistant-skills.md](references/brain-assistant-skills.md) instead of the steps below. It runs the skill from `<product.path>/notion/brain-assistant.md`, the one copy of its text, writes nothing to Git and logs nothing.
+When the user asks for one of Notion Brain Assistant's skills ("prep my 3pm", "what's due today", "tidy that capture", "run Today") rather than a review, this isn't a review session: follow [references/brain-assistant-skills.md](references/brain-assistant-skills.md) instead of the steps below. It runs the skill from `<product.path>/notion/brain-assistant.md`, the one copy of its text, writes nothing to Git and logs nothing.
 
 ## Which run this is
 

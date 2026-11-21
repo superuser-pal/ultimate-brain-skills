@@ -1,6 +1,6 @@
 ---
 name: brain-setup
-description: Guide a new user through the first-time setup of their brain, once and in order, resuming at the first unfinished step when asked again. Use when the user says "set up my brain", "continue setup", "fix my backup", "where am I in setup?", "show my setup report", "check the minutes prompt again", "check Brain Assistant again", after `brain init`, or when `brain status` starts with a Setup line; or, any time, "talk to me more simply", "shorter answers", "go back to normal". Covers the prerequisites (gh, MarkItDown) and two questions (Notion credits, where meetings come from), one settings screen with defaults, the Notion template and connection, the brain's databases, the minutes prompt and Brain Assistant when the answers call for them, the owner's identities, seeding through one preview, the first-value check, the scheduled catch-up, and a setup report with no names, filed after a yes.
+description: Guide a new user through the first-time setup of their brain, once and in order, resuming at the first unfinished step when asked again. Use when the user says "set up my brain", "continue setup", "fix my backup", "where am I in setup?", "show my setup report", "check the minutes prompt again", "check Notion Brain Assistant again", after `brain init`, or when `brain status` starts with a Setup line; or, any time, "talk to me more simply", "shorter answers", "go back to normal". Covers prerequisites (gh, MarkItDown) and two questions (Notion credits, where meetings come from), one settings screen with defaults, the Notion template and connection, the brain's databases, the minutes prompt and Notion Brain Assistant when the answers need them, the owner's identities, seeding through one preview, the first-value check, the scheduled catch-up, and a setup report without names, filed on a yes.
 ---
 
 # Set up my brain
@@ -45,7 +45,7 @@ On "set up my brain" (or "continue setup"):
    - **The Example rows,** in a duplicate of the template (`notion.template_version` set) whose latest `connect` line isn't `result=done`: step 4 is unfinished, even when `checks.databases` passes, and runs again to remove what is left ([references/notion.md](references/notion.md), "The Example rows").
    - **The backup is private** (`gh` is required, references/prerequisites.md): `gh repo view --json isPrivate` in the brain folder, when `origin` is set. `false`: step 2 is unfinished again, logged with reason `remote-public` ("Your backup is a public repository. Make it private? I'll run `gh repo edit --visibility private --accept-visibility-change-consequences`."). `gh` missing or signed out: step 1 is unfinished again, and its message (`gh-missing`, `gh-signed-out`) is the fix.
    - **A recorded step whose online check fails now** is logged `failed` with its reason (`notion-unreachable`, `brain-data-not-found`, `remote-failed`, `remote-public`, `gh-missing`, `gh-signed-out`), then `brain status` is run again, so the count below is the one after the checks.
-   - **Never re-run a by-hand check recorded as done** (the minutes prompt, Brain Assistant): its log line is the proof. The user can ask for it again ("check the minutes prompt again"), and then it runs and logs again.
+   - **Never re-run a by-hand check recorded as done** (the minutes prompt, Notion Brain Assistant): its log line is the proof. The user can ask for it again ("check the minutes prompt again"), and then it runs and logs again.
 3. **Find the first unfinished step,** in this order:
 
    | # | Step | Done when | Guide |
@@ -55,7 +55,7 @@ On "set up my brain" (or "continue setup"):
    | 3 | Notion template and connection | `notion-mcp` is recorded and the search above finds Brain Data once | [references/notion.md](references/notion.md), "Step 3" |
    | 4 | Connect the brain to Notion | `checks.databases` passes and, in a duplicate of the template, the latest `connect` line is `result=done`, written only once no Example row is left (in a space built from the prompts, log `connect` done with `examples=0` when it has no line yet) | [references/notion.md](references/notion.md), "Step 4" |
    | 4a | The minutes prompt, only when `meetings` holds `notion-ai` | `minutes-prompt` is recorded | [references/notion.md](references/notion.md), "Step 4a" |
-   | 4b | Brain Assistant, only with `credits=yes` | `brain-assistant` is recorded | [references/notion.md](references/notion.md), "Step 4b" |
+   | 4b | Notion Brain Assistant, only with `credits=yes` | `brain-assistant` is recorded | [references/notion.md](references/notion.md), "Step 4b" |
    | 5 | Identities | `checks.owner_person` passes (log `identities` done when it has no line yet) | [references/notion.md](references/notion.md), "Step 5" |
    | 6 | Seeding | `seeding` is recorded | [references/seeding.md](references/seeding.md) |
    | 7 | First value | first value passes: the latest `first-value` line is `result=done`, every applicable check `pass` (`tasks` `skip` only with Tasks off). An attempt that didn't pass is unresolved: resume runs only the checks not passed | [references/first-value.md](references/first-value.md) |
@@ -76,21 +76,21 @@ Notion AI is optional. Step 1 asks two questions ([references/prerequisites.md](
 
 | Answer | Installs | Leaves out |
 |---|---|---|
-| Credits: yes | step 4b, Brain Assistant as a Custom Agent with its three buttons | nothing |
-| Credits: no | nothing | step 4b. The personal-Instructions path is not installed. **The buttons' line**, said once on the settings screen and once with the setup report: "Tidy capture, Write up and Refresh report message Brain Assistant, so they do nothing on your plan. Ask me instead: "tidy that capture", "write up this document", "refresh this report"." Brain Assistant's skills run from this session by name ("prep my 3pm", "what's due today": the ultimate-assistant skill) |
+| Credits: yes | step 4b, Notion Brain Assistant as a Custom Agent with its three buttons | nothing |
+| Credits: no | nothing | step 4b. The personal-Instructions path is not installed. **The buttons' line**, said once on the settings screen and once with the setup report: "Tidy capture, Write up and Refresh report message Notion Brain Assistant, so they do nothing on your plan. Ask me instead: "tidy that capture", "write up this document", "refresh this report"." Notion Brain Assistant's skills run from this session by name ("prep my 3pm", "what's due today": the ultimate-assistant skill) |
 | Meetings hold `notion-ai` | step 4a, the minutes prompt walked through and checked in the Notion AI chat | nothing |
 | Meetings without `notion-ai` | nothing | step 4a. Say once where the minutes come from instead: the agent writes them for a meeting that has a transcript and none, for the user to check before Ready ("catch up" offers them); with `tool`, give the minutes prompt's text (`<product.path>/notion/minutes-format.md`'s text block) and the guide for other tools (`<product.path>/docs/setup.md`), to use in that tool, unchecked and not a step; with `files`, say where transcript files go: the drop folder's `meetings/` folder (or any `.vtt` or `.srt` file in the drop folder) |
 
-- **The count.** `brain status` counts 7 required items, plus the minutes prompt with `notion-ai`, plus Brain Assistant with `credits=yes`. Say the count it gives ("Setup: 4 of 8 done"), never a fixed number.
+- **The count.** `brain status` counts 7 required items, plus the minutes prompt with `notion-ai`, plus Notion Brain Assistant with `credits=yes`. Say the count it gives ("Setup: 4 of 8 done"), never a fixed number.
 - **Changing an answer later** ("ask me the setup questions again", or "I have Notion credits now"): ask the two questions again and log a new `prerequisites` line; the latest counts. A step newly taken (credits now yes) is next. A step newly left out stays recorded but no longer counts. Nothing installed in Notion is removed.
 - **Meetings without Notion AI** come from any tool, a paste or a file, and are read the same way: minutes in the format with selection, the agent's minutes for a transcript with none, and a summary not in the format taken in whole when the user sets it Ready (brain-ingest references/minutes.md).
-- **How-to questions** go to the agent (brain-howto), with or without Brain Assistant.
+- **How-to questions** go to the agent (brain-howto), with or without Notion Brain Assistant.
 
 ## Asked outside the steps
 
 - **"Show my setup report":** [references/report.md](references/report.md), at any point, also while first value is unresolved. Showing or filing it marks nothing done and unlocks nothing.
 - **"Check the report again"** (or any first-value check): run that check (references/first-value.md) and log a new attempt.
-- **"Check the minutes prompt again"** or **"check Brain Assistant again":** run that check (references/notion.md) and log it again, whatever was recorded.
+- **"Check the minutes prompt again"** or **"check Notion Brain Assistant again":** run that check (references/notion.md) and log it again, whatever was recorded.
 - **"Ask me the setup questions again"** (or the user says their plan or their meetings changed): step 1's two questions only, then a new `prerequisites` line ("The two answers", above).
 - **"Back up: remind me"**, **"change my drop folder":** the settings screen's item, applied alone (references/settings.md, "Changing one setting later"). **"Turn off gh"** or **"turn off markitdown"**: early access needs it (references/settings.md, items 10 and 11); nothing is written.
 - **"Fix my backup"**, at any point, also after setup: [references/backup.md](references/backup.md). It is not a setup step and writes no `setup` line.

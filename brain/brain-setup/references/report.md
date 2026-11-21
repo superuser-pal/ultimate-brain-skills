@@ -62,7 +62,7 @@ The `reason=` of a `result=failed` line:
 | `shape-wrong` | the minutes check found the shape wrong |
 | `transcript-missing` | the minutes check found the minutes but not the sample's transcript on the page |
 | `assistant-reads-outside` | Today returned something from outside the brain's databases (another space, or elsewhere in the workspace) |
-| `assistant-missing` | the user has no Brain Assistant of their own to ask yet (step 4b) |
+| `assistant-missing` | the user has no Notion Brain Assistant of their own to ask yet (step 4b) |
 | `mentions-outside` | a mention in a Skills page opens a page outside the user's space, or one the MCP can't open (step 4b) |
 | `button-unbound` | a button's sample page didn't change as its check expects (step 4b) |
 | `samples-left` | a button check's sample page couldn't be moved to the trash (step 4b) |
