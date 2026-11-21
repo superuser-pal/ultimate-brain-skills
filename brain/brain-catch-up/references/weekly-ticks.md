@@ -44,7 +44,7 @@ After Run step 1's `sync apply` and its questions, for each Ready Weekly row, in
 
 ## Step 4.1.1c: publish the row
 
-After the pages (step 4.1.1), for each Weekly row read this run: read its to-dos again (row.md: just before), write them as the row state, and `brain sync render --ids <the week's report id> --row-state <file> --plan plan.json`. Write the item, then `brain sync record`. Render sets Brain Status `Done` when nothing in the row waits, and keeps every tick and note. The run's `sync render --changed` skips a Weekly row with `ROW_STATE_REQUIRED`: that is expected, and this step publishes it. The report's id is the Brain ID the row carries.
+After the pages (step 4.1.1), for each Weekly row read this run: read its to-dos again (row.md: just before), write them as the row state, and `brain sync render --ids <the week's report id> --row-state <file> --plan plan.json`. Write the item, then `brain sync record`. Render sets Brain Status `Done` when nothing in the row waits, and keeps every tick and note. No item for the row means it has nothing new to write (something in it still waits, and its body is as published): the row stays Ready, as the user left it, and needs no write. The run's `sync render --changed` skips a Weekly row with `ROW_STATE_REQUIRED`: that is expected, and this step publishes it. The report's id is the Brain ID the row carries.
 
 ## The report
 
