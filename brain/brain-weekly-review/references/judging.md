@@ -1,12 +1,12 @@
 # Judging, and the prose
 
-Step 6 of a run (the correction targets, then the reflection clusters, within the budget) and the two sections of step 9 the skill writes. Everything here reads only what `plan` gave and what `brain query --read <id>,<id>,… --json` returns (at most 20 ids a call); count every note you read in `notes_read`.
+Step 6 of a run (the correction targets, then the reflection clusters, within the budget, then the next steps) and the prose of Your week that step 9 writes (In short, the Highlights, Focus first). Everything here reads only what `plan` gave and what `brain query --read <id>,<id>,… --json` returns (at most 20 ids a call); count every note you read in `notes_read`.
 
 **The budget comes first.** Before each correction target and each cluster: when `date +%s` is `settings.weekly.minutes` × 60 past the run's start, or the targets and clusters judged reach `settings.weekly.max_judged`, stop judging and go to step 7 with what you have. Omitted targets and clusters are counted by the CLI and carried to next week; don't list them as judged.
 
 ## 1. The correction targets
 
-The plan's `corrections` lists the **claims**: facts, superseded decisions, titles and rules that changed (`claim`, `kind`, `note`, `title`, `old`, `new`, `date`, `source`, `why`, `passages`), oldest first, each with its candidate `targets` (`note`, `title`, `field`, `line`, `line_after`, `before_hash`, `pending`). Judge them in that order, claim by claim, target by target. Skip a target whose `pending` is set: it is already in Review, and judging it again is refused.
+The plan's `corrections` lists the **claims**: facts, superseded decisions, titles and rules that changed (`claim`, `kind`, `note`, `title`, `old`, `new`, `date`, `source`, `why`, `passages`), oldest first, each with its candidate `targets` (`note`, `title`, `field`, `line`, `line_after`, `before_hash`, `pending`). Judge them in that order, claim by claim, target by target. Skip a target whose `pending` is set: it already waits for a decision in the session, and judging it again is refused.
 
 Read the target note, and judge its `line` (or, with `field` set and `line` null, its fact) as one of:
 - **`restatement`:** the line asserts the old value as current, and nothing else in the note supports it. Only when the fix is the new value in place of the old one with nothing else changed: `line_after` is set, or the target is a fact (`field` set). A target with `line_after` null and no `field` is never a restatement.
@@ -36,13 +36,37 @@ Each finding is one entry of `judged.findings`:
 
 Keep, in the run record, the whole proposal each finding would write (brain-reflect's judging.md, "The proposal's fields", with `fingerprint` and `evidence`): step 8 writes it when `select` makes the finding an item. A contradiction keeps both values: the run never picks one.
 
-## 3. The prose
+## 3. The next steps
 
-`record` checks both sections and refuses what doesn't fit (`INPUT_INVALID` with a pointer, `WEEKLY_TOO_LONG` over 450 words). Links are relative to the report, which lives in `reports/`: a note at `knowledge/decisions/x.md` is `../knowledge/decisions/x.md`. A task is linked by its `url` from the plan.
+The plan's `findings` with the kind `project_no_next_step` (a live project with no open task) can become an **Action**, "Add the next step "<words>" to <project>", but only when the project's own notes and inputs give a next step you can cite (decision 0110 §2, weekly-review.md §6.1). Otherwise the project stays in Focus first only. They are not counted in `weekly.max_judged`, but the time budget still applies: stop when it runs out.
 
-### What changed
+For each such finding, in the plan's order, read the project and the inputs its evidence names (`brain query --read`), and look for a step someone said would come next, or the one the project's open question or last decision calls for. When you find one, add to `judged.next_steps`:
 
-One bullet for each change of `changes` with `bullet: true`, at most 8, grouped by label in this order: `Decided:` (`decided`), `Changed:` (`changed`), `Open:` (`open`), `Answered:` (`answered`), `Next:` (`next`); within a label, newest first. Each bullet is one line:
+```json
+{ "key": "project_no_next_step:prj-4k8m2q7x", "task_title": "Draft the talk outline", "why": "no next step since 30 Oct; the 28 Oct call agreed the outline comes first (Talk prep call, 28 Oct)" }
+```
+
+- `task_title`: one line, the task's words, as the user would write a task: a verb first, at most 80 characters. Only what a note or an input says; never a step you made up to fill the line.
+- `why`: the finding's evidence in a few words, then the note or input the step comes from, with its title and date.
+- With nothing you can cite, leave the finding out: `select` keeps it in Focus first only.
+
+`select` makes an Action only of a finding listed here, and hands over its `new_task` as `proposal_input` (proposals.md).
+
+## 4. The prose
+
+`record` checks Your week and refuses what doesn't fit (`INPUT_INVALID` with a pointer, `WEEKLY_TOO_LONG` when Your week is over 450 words, its to-dos and link targets not counted). Links are relative to the report, which lives in `reports/`: a note at `knowledge/decisions/x.md` is `../knowledge/decisions/x.md`. A task is linked by its `url` from the plan. You write three things; `record` renders the rest (Done this week, the Actions, Waiting for you, the Clean-up).
+
+### In short (`in_short`)
+
+One or two sentences on the week, from the Highlights and the plan's `done`, citing nothing new. With nothing new: `Nothing new in your notes this week.`
+
+```text
+Harbor's launch moved to March and Quarry's budget grew to 18k; Conference talk proposal has no next step.
+```
+
+### Highlights (`highlights`)
+
+One bullet for each change of `changes` with `bullet: true`, at most 6, grouped by label in this order: `Decided:` (`decided`), `Changed:` (`changed`), `Open:` (`open`), `Answered:` (`answered`), `Next:` (`next`); within a label, newest first. Each bullet is one line:
 
 ```text
 - **Decided:** launch the Harbor app in March, not January ([Launch Harbor app in March](../knowledge/decisions/2026-11-04-launch-harbor-app-in-march.md), 4 Nov).
@@ -56,27 +80,20 @@ One bullet for each change of `changes` with `bullet: true`, at most 8, grouped 
 - A change with `draft: true` ends ` *(not reviewed)*` before the final full stop.
 - With no bullet to write: the one line `- Nothing new this week.`. The changes not shown are counted by `record` in the header; never list them.
 
-### Task analysis
+### Focus first (`focus_first`)
 
-From the plan's `task_analysis`: `overdue`, `stalled`, `blocked`, `no_next_step` (each up to 3 subjects with `title`, `url` and `evidence`) and `order` (up to 3, in the assistant's rank).
+From the plan's `task_analysis`: its `order` (up to 3 subjects, in the assistant's rank, each with `title`, `url` and `evidence`), over the open work problems (overdue, stalled, blocked, no next step).
 
 ```text
-- **Overdue:** "Send the logo proposals", 8 days late; "Update the case studies", 3 days late.
-- **Stalled:** Pinecrest signage (project): nothing done or mentioned for 40 days.
-- **Blocked:** "Get the tiler's quote" has waited since 20 Oct.
-- **No next step:** Conference talk proposal.
-
-Order of attention:
-1. Send the logo proposals: the client meeting on Thursday depends on them.
-2. Pinecrest signage: 40 days without movement.
-3. Conference talk proposal: the call for papers closes on 30 Nov.
+1. Send the Quarry estimate: the client meeting on Thursday depends on it.
+2. Get the tiler's quote: it has waited on Sam since 20 Oct.
+3. Conference talk proposal: no next step since 30 Oct.
 ```
 
-- One bullet per category that has subjects, in the order Overdue, Stalled, Blocked, No next step, each listing its subjects with their evidence in few words. A task's title is in quotes.
-- Then an empty line, `Order of attention:`, and one numbered line per `order` subject (1 to 3): `<title>: <reason>`. Write the reason from evidence this run read: a due date, a meeting that depends on it, a decision. Don't estimate anyone's time or capacity. With no reason you can support, the line keeps the subject and its `evidence` text.
-- With no subject in any category: the one line `- No overdue, stalled or blocked work.`, and no order.
-- These lines change nothing: no priority, date or status.
+- One numbered line per `order` subject, 1 to 3: `<title>: <reason>`. A task's title links its `url`. Write the reason from evidence this run read: a due date, a meeting that depends on it, a decision. Don't estimate anyone's time or capacity. With no reason you can support, the line keeps the subject and its `evidence` text.
+- With no subject: the one line `- No overdue, stalled or blocked work.`
+- These lines change nothing: no priority, date or status. A task's own date, status or Won't Do is set on the task in Notion.
 
 ### Shorter, when `record` says it is too long
 
-Shorten your own lines and run `record` again: fewer words in each bullet and in each reason of the order of attention. Keep every What changed bullet: a change marked `bullet: true` that you drop would be neither shown nor counted. Never touch What needs your decision: `record` renders it.
+Shorten your own lines and run `record` again: fewer words in In short, in each Highlight and in each reason of Focus first. Keep every Highlight: a change marked `bullet: true` that you drop would be neither shown nor counted. Never touch an item: `record` renders them.

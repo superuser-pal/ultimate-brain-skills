@@ -11,7 +11,7 @@ Notion is the user's view of the brain. The brain is canonical (Markdown + Git),
 - the **Notion-owned** fields: status, priority, dates, progress, archived, email and so on;
 - *(Tasks)* the **tasks that follow up open questions**, to ask about a finished one (0101 §6).
 
-Then it publishes what the brain changed. **Always pull before you push**, so the user's edits are read before the brain republishes over them (spec/cli.md §5.14). Nothing is decided in Notion: what needs the user is asked in the session (brain-apply).
+Then it publishes what the brain changed. **Always pull before you push**, so the user's edits are read before the brain republishes over them (spec/cli.md §5.14). Nothing is decided in Notion but a Weekly row's ticks, which a catch-up applies once the row is Ready (decision 0110 §4): what needs the user is asked in the session (brain-apply).
 
 Run CLI commands as `brain <command> --brain <brain> --json`. Database ids come from `brain config get notion.databases`. Query each through its data source (retrieve the database, then use its `data_sources[0].id`). If `brain` is not found (`command not found`), install it with `npm install -g ultimate-brain`, then retry.
 

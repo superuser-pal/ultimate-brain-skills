@@ -96,7 +96,7 @@ Meeting minutes (notion/minutes-format.md; ask Notion Brain Assistant to "check 
 
 ## Deciding in the chat
 
-**Every decision is made in your agent's chat** (Claude Code or Codex), never in Notion (since 0.16.0). Accepting makes the brain's notes **trusted**: accepted notes appear in your Briefs and in the brain's answers; until then the brain treats them as unconfirmed. The brain never changes what it already knows without your yes.
+**Decisions are made in your agent's chat** (Claude Code or Codex), not in Notion (since 0.16.0). The one exception is the weekly row: there you tick its Actions and clean-up items and set it Ready, and a catch-up applies them ("The weekly review", below). Accepting makes the brain's notes **trusted**: accepted notes appear in your Briefs and in the brain's answers; until then the brain treats them as unconfirmed. The brain never changes what it already knows without your yes.
 
 **When something comes in** (a meeting, a capture, a document), the agent shows it **one subject at a time**, for example a project:
 
@@ -331,54 +331,76 @@ It runs only when you ask. When nothing needs tidying it says "Nothing to tidy."
 
 ## The weekly review
 
-Once a week, one short report on your work and your notes: what changed since the last review, where your tasks stand, and at most five decisions. Say "weekly review" to your agent, or have it run every Monday at 08:00 (below). It reads Tasks, Projects and Areas live from Notion and your brain's notes, and saves the review in your brain under `reports/`, one file per week, published as one Inbox row, **Week of 9 Nov 2026** (Kind Weekly):
+Once a week, one Inbox row on your work and your notes, **Week of 9 Nov 2026** (Kind Weekly), with two parts: **Your week** and **Clean-up**. Say "weekly review" to your agent, or have it run every Monday at 08:00 (below). It reads Tasks, Projects and Areas live from Notion and your brain's notes, and keeps each week's review in your brain under `reports/`, one file per week:
 
 ```text
 Week of 9 Nov 2026 · changes since Mon 2 Nov 08:04 · Notion read live
-Covered: 14 changes from 6 meetings and 3 sources. 2 more decisions wait from earlier weeks.
+Covered: 14 changes from 6 meetings and 3 sources.
 
-## What changed
-- **Decided:** launch the Harbor app in March, not January (Launch Harbor app in March, 4 Nov).
-- **Changed:** Quarry website's budget is 18k, was 12k (Quarry kickoff, 5 Nov) *(not reviewed)*.
-- **Next:** send the Quarry estimate (task, 13 Nov).
+## Your week
+In short: Harbor's launch moved to March and Quarry's budget grew to 18k; Conference talk proposal has no next step.
 
-## Task analysis
-- **Overdue:** "Send the logo proposals" (Harbor app), 8 days late.
-- **Stalled:** Pinecrest signage (project): nothing done or mentioned for 40 days.
+Highlights
+- Decided: launch the Harbor app in March, not January (Launch Harbor app in March, 4 Nov).
+- Changed: Quarry website's budget is 18k, was 12k (Quarry kickoff, 5 Nov) (not reviewed).
 
-Order of attention:
-1. Send the logo proposals: the client meeting on Thursday depends on them.
+Done this week
+- "Send the logo proposals" (Harbor app), done 6 Nov.
 
-## What needs your decision
-1. Correction · Quarry budget 12k → 18k · 3 notes restate 12k → decide in the session (2 of 3 shown)
-2. Overdue · "Send the logo proposals" · new date, Done or Won't Do → the task
-3. Stalled · Pinecrest signage · set On Hold? → decide in the session
+Actions
+- [ ] A1 · Add the next step "Draft the talk outline" to Conference talk proposal (no next step since 30 Oct)
+- [ ] A2 · Set Riverside fit-out On Hold (nothing done or mentioned for 40 days)
 
-5 more findings wait for next week. Say "weekly review more" in a session for the rest.
+Focus first
+1. Send the Quarry estimate: the client meeting on Thursday depends on it.
+
+Waiting for you: 3 decisions wait in the session: say "what needs my decision" in Claude Code or Codex.
+
+## Clean-up
+Already cleaned
+- [ ] U1 · Archived the draft "Old vendor shortlist" (never reviewed, no link to it, 74 days old) · tick to undo
+
+For you to tick
+- [ ] C1 · Merge "Acme Corp" into "Acme" · recommended: yes · Show the change
+- [ ] C2 · Move Quarry website to Clients · recommended: yes · Show the change
 ```
 
-**It decides nothing.** A proposal is decided with your agent: say "what needs my decision" (right after the review, or any time). A **task** item is set on the task itself in Notion (a new date, Done or Won't Do): by you, or by Notion Brain Assistant. In Notion, the week's Inbox row says "decide in Claude Code or Codex" for each proposal, and Notion Brain Assistant's "Run Weekly review" reads it with you: it asks about each task item in numbered options and sets the ones you pick ("1a") after your answer, and decides nothing for you.
+**Your week** says what happened (In short, at most 6 Highlights, each with the note it rests on and its date), what you finished, at most **5 Actions** the brain can carry out for you (a next step for a project that has none, a project status, a Document on a theme your meetings keep discussing), what to look at first, and how many decisions wait in the session.
 
-**Five at most, and no nagging.** A week shows at most five decisions, five new proposals and five notes or tasks they would change, across your work and your notes, corrections first, then overdue and stalled work, then tidying. The rest waits for next week ("weekly review more" shows it now). A finding shown before comes back only when its evidence changed, it became overdue, it got much later, or it is a contradiction in a reviewed note that is still open. What you skipped or rejected stays skipped. A week with nothing new writes nothing at all: no empty page.
+**Clean-up** has two kinds of items:
+- **Already cleaned:** small, mechanical fixes the run made on its own, each in its own change you can undo: the missing half of a link the brain keeps on both sides, a link to a file that moved, a value repeated in a list, two notes that are exact copies (never two people or two organizations with one name), and a draft nobody reviewed or linked in 60 days, archived (nothing is deleted). "Don't clean up on your own" turns this off: these then come as items to tick.
+- **For you to tick:** at most **10** changes the brain isn't sure enough to make alone: a fact that looks out of date, a rule worth adding to a project, two notes that look like duplicates, a project in the wrong Area. Each has the brain's recommendation, a **Show the change** toggle with the before and after, and a **Your note:** line.
 
-**Corrections.** When you approve a corrected fact (a budget, a date, a renamed project), the next review finds the notes that still say the old value and proposes fixing them together, as one question whose changes you pick one by one. Meetings, decisions and sources are never changed: they are the record. A line it can't settle is named as needing clarification, not changed. "weekly review corrections" goes through every waiting check at once.
+**You decide in the row: tick, then set it Ready.** Tick each Action and clean-up item you agree with, then set the row's Brain Status to **Ready**. The next catch-up (yours, or a scheduled one) applies the ticks. Before it applies one, it checks that nothing it touches changed since the review; if something did, it doesn't apply it and tells you. An item you leave unticked is declined for now and comes back only when something new supports it. To undo something the run cleaned, tick its `U` line before setting Ready, or say "undo clean-up U1" to your agent.
+- **To change an item first,** write on its **Your note:** line ("call the task 'Outline the talk'", "only if the client signs"). That item then waits for a catch-up in Claude Code or Codex, which shows you how it reads your note and asks before applying it. A scheduled run never acts on what you wrote.
+- **Don't tick in a hurry?** A row you never set Ready carries its open items into next week's row, once; the old row says where they went.
+- The row turns **Done** once nothing in it waits.
 
-**Review my week every Monday.** Say "review my week every Monday" and the agent sets it up: the time (Monday 08:00 unless you say otherwise), the Claude model (Sonnet unless you pick another), what a run may use, and once, publish automatically. Each week's review appears in Notion as the week's Inbox row (with publish automatically on; otherwise at your next session), and your next session tells you it's ready: "This week's review is ready: 4 decisions (Inbox, Week of 9 Nov 2026)." A run is capped (3 USD on Sonnet), and if it runs out of time it says what it didn't check, and checks that first next week. Before the first run, open Claude Code in your brain folder once and accept its trust dialog. "Stop the weekly review" removes it.
+**What stays in the session.** A contradiction between two notes, a correction to notes that still say an old value, and the questions of an ingest are decided with your agent ("what needs my decision"): the row counts them under Waiting for you. A task's own date, status or Won't Do is set on the task in Notion. In Notion, Notion Brain Assistant's "Run Weekly review" reads the row with you, explains each item and what Show the change holds, and decides nothing in the row: it never ticks, writes your notes or sets Ready. For each task Focus first names, it offers a) Due → a date you name, b) Done, c) Won't Do or d) leave it, with none marked as the review's suggestion, and sets what you pick only after your answer.
+
+**At most 5 Actions and 10 items to tick, and no nagging.** The rest waits for next week ("weekly review more" shows it now). A finding shown before comes back only when its evidence changed, it became overdue, it got much later, or it is a contradiction in a reviewed note that is still open. What you declined or skipped stays declined. A week with nothing new writes nothing at all: no empty row.
+
+**Corrections.** When you approve a corrected fact (a budget, a date, a renamed project), the next review finds the notes that still say the old value and proposes fixing them together, as one question in the session whose changes you pick one by one. Meetings, decisions and sources are never changed: they are the record. A line it can't settle is named as needing clarification, not changed. "weekly review corrections" goes through every waiting check at once.
+
+**Every Monday.** Setup asks whether to run the weekly review on its own every Monday at 08:00 (and a catch-up every morning); "review my week every Monday" sets it later ("Run the brain on a schedule", below). Each week's row appears in Notion (with publish automatically on; otherwise at your next session), and your next session tells you: "This week's review is ready: 2 actions and 2 clean-up items to tick, 1 cleaned." With Claude Code a run is capped (3 USD on Sonnet); if it runs out of time it says what it didn't check, and checks that first next week. "Stop the weekly review" removes it.
 
 ---
 
-## Run catch-up on a schedule
+## Run the brain on a schedule
 
-Say "run catch-up every morning" (or "twice a day", "on weekdays") and the agent sets it up with you: the times, the Claude model to pin, and what a scheduled run may use. On a Mac it installs a background job; on other systems it gives you a line to add with `crontab -e`. The job runs `claude -p "catch up unattended"` in your brain folder, so your computer has to be on and Claude Code signed in at that time.
+Two jobs can run on their own: a **catch-up** every day (07:30 unless you choose another time) and the **weekly review** every Monday at 08:00. Setup asks both once your first check passes; later, say "schedule my brain" (or "run catch-up every morning", "twice a day", "on weekdays", "review my week every Monday"). The agent asks the times, uses the agent you set the brain up with, Claude Code or Codex, and pins the model it runs (Sonnet unless you pick another, with Claude Code). The times are kept in your brain, so installing them on another computer gives the same schedule.
 
-**What a scheduled run does.** It takes in what is waiting, up to 10 inputs a run, oldest first (change it with "raise the scheduled budget to 20"), and the rest waits for the next run. It decides nothing: what it takes in waits for your yes, and so do your edits in Notion to the brain's values. Your next "catch up" (or "what needs my decision") asks them, one question per source. A What to fix on a report waits for your next "catch up" too, because turning words into changes is a judgment nobody would check. A meeting or capture that needs a question answered stays where it is (Ready). A run with nothing waiting writes nothing.
+**On a Mac** each job is a background job (launchd). Your Mac must be on (asleep is fine) and you logged in: a run missed while it was asleep runs when it wakes; one missed while it was off waits for the next time. **On Windows** each job is a Task Scheduler task: your computer is woken for it, and you must be logged in. **Elsewhere** you get a line to add with `crontab -e`. The schedule runs on one computer at a time: to move it, say "schedule my brain" on the new one, and "stop scheduling the brain here" on the old one. With Claude Code, open Claude Code in your brain folder once and accept its trust dialog before the first run.
+
+**What a scheduled catch-up does.** It takes in what is waiting, up to 10 inputs a run, oldest first (change it with "raise the scheduled budget to 20"), and the rest waits for the next run. It applies what you ticked in a Ready weekly row; an item with a note waits for you. It decides nothing else: what it takes in waits for your yes, and so do your edits in Notion to the brain's values. Your next "catch up" (or "what needs my decision") asks them, one question per source. A What to fix on a report waits for your next "catch up" too, because turning words into changes is a judgment nobody would check. A meeting or capture that needs a question answered stays where it is (Ready). A run with nothing waiting writes nothing.
 
 **Where you find out what it did.**
 - Your next **"catch up"** opens with one line: "Since last time: 4 scheduled runs, 6 inputs in, 1 skipped, 3 decisions waiting, 1 failed: Notion login". It also warns "Backlog growing" when three runs in a row left inputs over: run it more often or raise the budget.
 - With **Reports** on and **publish: auto**, a run that needs you or failed also adds one row to the Inbox, of Kind Catch-up ("Catch-up 29 Oct: 2 in, 1 needs you"). A run that went well adds nothing.
-- With publish **ask** (the default), a scheduled run saves your brain and backs it up (or reminds you to) but publishes nothing to Notion; your next catch-up publishes. Say "publish automatically" to change that.
+- With publish **ask** (the default), a scheduled run saves your brain and backs it up (or reminds you to) but publishes nothing to Notion, so the weekly row waits for your next session too; your next catch-up publishes. Say "publish automatically" to change that.
+- A run's own output is kept on your computer: on a Mac in `~/Library/Logs/ultimate-brain/`, on Windows in `%LOCALAPPDATA%\ultimate-brain\logs\`.
 
-**Check or stop it:** "what is scheduled?" lists it, "stop the scheduled catch-up" removes it, and asking again with other times replaces it. If Claude Code's login to Notion expires, scheduled runs can't read Notion: that shows as a failure in the summary, and signing in again fixes it.
+**Check or stop it:** "what is scheduled?" lists the jobs on this computer, "stop the scheduled catch-up" or "stop the weekly review" removes one, and asking again with other times replaces it. If your agent's login to Notion expires, scheduled runs can't read Notion: that shows as a failure in the summary, and signing in again fixes it.
 
 ---
 
@@ -445,7 +467,7 @@ Run these in Claude Code or Codex, from your brain's folder.
 | You want to | Say |
 |---|---|
 | Do everything that's waiting: reviewed meetings, new captures, the drop folder, your edits in Notion | "catch up". It asks what blocks first, then each input's subjects, then what is waiting |
-| Have it run by itself | "run catch-up every morning" (or "twice a day", "on weekdays"); "what is scheduled?"; "stop the scheduled catch-up" |
+| Have it run by itself, on a Mac or on Windows | "schedule my brain"; "run catch-up every morning" (or "twice a day", "on weekdays"); "what is scheduled?"; "stop the scheduled catch-up"; "stop scheduling the brain here" |
 | Get reviewed meetings into the brain | "ingest my reviewed meetings" |
 | Get minutes for a meeting that only has a transcript | "catch up" (it offers them), or "write the minutes for <meeting>" |
 | Run one of Notion Brain Assistant's skills without Notion credits | ask for it by name: "prep my 3pm", "what's due today", "tidy that capture", "run Plan check". Your agent runs the same skill, from the same text, and changes a page only after your yes |
@@ -470,7 +492,7 @@ Run these in Claude Code or Codex, from your brain's folder.
 | See what's overdue, stalled, missing a next step or misplaced, and decide what to do | "review my projects", "what's stalled in Clients?", then "yes 1, 2b", "propose 5", "skip 4 because …", "done" (or `claude --agent ultimate-assistant`) |
 | Get what's on your mind into tasks, projects and captures | tell Ultimate Assistant in a few sentences, then "yes to all" |
 | Find contradictions, out-of-date facts, duplicate notes and recurring themes, and decide what to do | "tidy the brain", "any duplicates?", then "yes 2", "1a", "later 4", "skip 5 because …", "done" |
-| Get one short review of your week: what changed, your tasks, at most five decisions | "weekly review"; "weekly review more" for the rest; "weekly review corrections"; "review my week every Monday", "stop the weekly review" |
+| Get one short review of your week, with Actions and a clean-up to tick | "weekly review"; "weekly review more" for the rest; "weekly review corrections"; "undo clean-up U1"; "review my week every Monday", "stop the weekly review"; "don't clean up on your own" |
 | Ask how the system works | "how do I …?", "why didn't … ?" (or ask Notion Brain Assistant) |
 | Change how the agent talks to you | "talk to me more simply", "shorter answers", "more detail", "get to the point", "go back to normal" |
 | Change the Notion structure (a property, an option, a view) | "add a property to Projects …". Structure is changed in the product first, then in Notion |

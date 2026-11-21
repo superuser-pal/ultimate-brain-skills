@@ -13,7 +13,7 @@ Run every CLI command as `brain <command> --brain <brain> --json`. Exit 1 means 
 
 **Off its working branch:** when `brain status` (run it first) has the warning `BRAIN_OFF_WORKING_BRANCH`, say its message in one line and offer "fix my backup" before writing anything (brain-setup references/backup.md, "Off the working branch, at the start of a run"). Never create a branch, a worktree or a pull request in the brain (decision 0086). A catch-up has already checked it.
 
-**Attended only.** A run without the user (a scheduled catch-up, the weekly review) decides nothing and asks nothing: every proposal stays pending for the next session (decision 0096 §4). The one thing such a run carries out is a decision the user already gave: the Notion write of an approved `notion_change` ("Notion writes", below).
+**Attended only.** A run without the user (a scheduled catch-up, the weekly review) decides nothing and asks nothing: every proposal stays pending for the next session (decision 0096 §4). The one thing such a run carries out is a decision the user already gave: the Notion write of an approved `notion_change` ("Notion writes", below), and what the user ticked in a Ready Weekly row (brain-catch-up, decision 0110 §4). A proposal a Weekly row offers (its `weekly` set) is decided by its tick, never asked here: `proposal list --waiting` leaves it out.
 
 ## 1. What waits
 
