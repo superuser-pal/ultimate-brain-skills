@@ -58,7 +58,7 @@ Still to do after this screen:
  - Duplicate the Notion template and connect your agent to Notion
  - Connect the brain to its Notion databases
  - Paste the minutes prompt, and check it
- - Create your own Brain Assistant, and check it and its buttons
+ - Create your own Notion Brain Assistant, and check it and its buttons
  - Say which names you appear under
  - Describe your work, so the brain starts with it
  - Check the first results
@@ -70,7 +70,7 @@ Still to do after this screen:
 - Item 10 is not a choice in early access either: asked to turn it off, say "Early access needs MarkItDown: it keeps quotes from your documents exact." and write nothing.
 - **Item 12 on Windows:** `brain schedule` runs on macOS only, so on Windows the screen shows `12. Scheduled catch-up: not available on Windows` with the line "Ask for a catch-up or the weekly review when you want one.", and step 8 isn't asked (references/first-value.md, "Step 8").
 - An item the user can't leave empty (an email, a language) is asked for before the yes: "Item 2 needs your email."
-- Without Notion AI (SKILL.md), add under the screen what is lost, and leave the minutes prompt and Brain Assistant out of "Still to do".
+- Without Notion AI (SKILL.md), add under the screen what is lost, and leave the minutes prompt and Notion Brain Assistant out of "Still to do".
 
 ## Item 4: one drop folder per brain
 
