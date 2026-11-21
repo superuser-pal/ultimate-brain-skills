@@ -1,6 +1,6 @@
 # The proposals of step 8
 
-For each item of `select`'s `items` whose `write` is true, in item order, write its proposal with `brain proposal new --input <base>.proposal.json`, the file holding `{ "proposals": [ … ] }`. Every proposal stays `pending`: never `brain apply` it, never decide it. Keep `{ "key": <item key>, "proposal": <id> }` for `record`. Items with `write` false need nothing: an item that links an existing proposal already has its `proposal`.
+For each item of `select`'s `items` whose `write` is true, in item order, write its proposal with `brain proposal new --input <base>.proposal.json`, the file holding `{ "proposals": [ … ] }`. Every proposal stays `pending`: never `brain apply` it, never decide it. Keep `{ "key": <item key>, "proposal": <id> }` for `record`. Items with `write` false need nothing: an item that links an existing proposal already has its `proposal`. That includes a **carried** item (`because: carried`, with `carried_from`, the week of the row it came from): its pending proposal moves to this week's row as it is.
 
 `record` then sets `weekly` (the week of the row) on each `A` and `C` item's proposal, so the session doesn't ask it: the user decides it by its tick (decision 0110 §4). Don't set `weekly` yourself.
 

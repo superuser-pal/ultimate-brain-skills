@@ -32,8 +32,8 @@ After Run step 1's `sync apply` and its questions, for each Ready Weekly row, in
 
 1. `brain cleanup ticks --input <its file> --attended`. Each item comes back with its `result`:
    - `applied`: a plain tick applied after the stale check (`decided_by: tick`);
-   - `stale`: not applied, because its note or file changed since the row was written; its proposal is closed. Name it under Check: `C3 not applied: <its subject> changed since the review.`;
-   - `undone` (a ticked `U`): restored. `failed` with `UNDO_STALE`: a file it wrote changed since; nothing was written. Say which paths changed and offer to put it back by hand in this session;
+   - `stale`: not applied, because its note or file changed since the row was written; its proposal is closed. Name it under Check: `C3 not applied: <its subject> changed since the review.` (a `U` item: see `undone`);
+   - `undone` (a ticked `U`): restored, staged with this step's other writes. `stale` with reason `UNDO_STALE`: a file the clean-up wrote changed since, and nothing was restored. Say which paths changed and offer to put it back by hand in this session;
    - `ask`: an item with a note. Apply the batch's answer with `brain apply`, `decided_by: chat`, `note` = the Your note text, then the user's answer (brain-apply, step 3: approve, a fix with its words, or reject). An item the user left for later gets no decision;
    - `kept` (an unticked `U`: the clean-up stays), `already` (decided before), `open` (unticked while something else in the row waits), `skipped` (`UNKNOWN_LABEL`, a to-do the row's state doesn't know: name it under Check), `failed` (a failure of the run: name it, and the item stays pending).
 2. Once every `ask` item has its decision, run `brain cleanup ticks` again with the **same file** and `--attended`: the items now decided are `already`, and an item still unticked is `declined` (rejected with `decided_by: tick`; it comes back only on new evidence).
