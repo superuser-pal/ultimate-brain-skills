@@ -8,7 +8,8 @@ A tick is the user's yes to the change it shows (a tick on a `U` item asks for i
 
 For each Inbox row of Kind Weekly with Brain Status **Ready** (with a Brain ID): read its to-dos as brain-weekly-review [references/row.md](../../brain-weekly-review/references/row.md) says, and write the `cleanup ticks` input for it in the run's temporary folder: `{ "week", "page", "read_at", "items" }`. Note, for the batch:
 - the items with a note (`note` not empty);
-- the plain ticks, by label, for the opening line ("I'll apply what you ticked in Week of 9 Nov: A1, C2, C4; undo U1").
+- the plain ticks not done yet, by label, for the opening line ("I'll apply what you ticked in Week of 9 Nov: A1, C2, C4; undo U1"): an `A` or `C` tick whose proposal is still pending, a `U` tick whose clean-up is still applied. A tick a scheduled run already applied is left out of that line; say it once ("A2 and C1 were applied by Monday's scheduled run").
+- the unticked items that the second `ticks` run will decline once nothing else in the row waits, so the opening line says so ("Not ticked, so declined: A1, C3").
 
 **Does the row wait?** It counts as waiting work (for "nothing waiting", and for the unattended no-op rule) when one of its items is not decided yet: `brain proposal list --status pending` holds a proposal whose `weekly` is the row's week, or a `U` to-do is ticked whose clean-up is not undone yet (its proposal, named in `_weekly/state.json` under `weeks.<week>.row.<label>`, is still `applied`). A Ready row with nothing undecided waits only for its publish (step 4.1.1c), which sets it Done.
 
@@ -44,7 +45,7 @@ After Run step 1's `sync apply` and its questions, for each Ready Weekly row, in
 
 ## Step 4.1.1c: publish the row
 
-After the pages (step 4.1.1), for each Weekly row read this run: read its to-dos again (row.md: just before), write them as the row state, and `brain sync render --ids <the week's report id> --row-state <file> --plan plan.json`. Write the item, then `brain sync record`. Render sets Brain Status `Done` when nothing in the row waits, and keeps every tick and note. No item for the row means it has nothing new to write (something in it still waits, and its body is as published): the row stays Ready, as the user left it, and needs no write. The run's `sync render --changed` skips a Weekly row with `ROW_STATE_REQUIRED`: that is expected, and this step publishes it. The report's id is the Brain ID the row carries.
+After the pages (step 4.1.1), for each Weekly row read this run: read its to-dos again (row.md: just before), write them as the row state (the same shape as the `cleanup ticks` file; its `week` and `read_at` may stay), and `brain sync render --ids <the week's report id> --row-state <file> --plan plan.json`. Write the item, then `brain sync record`. Render sets Brain Status `Done` when nothing in the row waits, and keeps every tick and note. No item for the row means it has nothing new to write (something in it still waits, and its body is as published): the row stays Ready, as the user left it, and needs no write. The run's `sync render --changed` skips a Weekly row with `ROW_STATE_REQUIRED`: that is expected, and this step publishes it. The report's id is the Brain ID the row carries.
 
 ## The report
 
