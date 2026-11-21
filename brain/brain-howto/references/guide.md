@@ -70,6 +70,8 @@ Every meeting moves through **Brain Status**:
 
 The brain only ingests meetings you set **Ready**, and only when you ask: nothing runs on its own. It never edits the meeting page itself. Meetings use the Inbox's names, New, Ready and Done; a space set up before 0.16.2 called them Not Reviewed, Reviewed and Ingested until its 0.16.2 migration renamed them, and the brain reads either.
 
+**Without Notion AI** (0.17.0), the meeting page holds a transcript from anywhere: a notetaker (Granola, Fireflies) through its Notion integration or an automation, a transcript you paste under a heading or in a toggle titled **Transcript**, or a transcript file you put in your drop folder's `meetings/` folder (or any `.vtt` or `.srt` file in the drop folder), which becomes a Meetings row, New. When a New meeting has a transcript and no minutes, "catch up" offers to write them: your agent writes them with the same minutes prompt, checks that every quote is in the transcript, and adds them below it, changing nothing else on the page. It writes a page's minutes once; to have them written again, say "write the minutes for <meeting>". A scheduled catch-up writes them without asking when it publishes on its own. The meeting stays **New**: check the minutes, mark what stays out, and set it **Ready** as in step 3. Pasted text with no **Transcript** heading is a summary unless you tell the agent it is a transcript; a summary, and minutes another tool wrote in its own shape, are taken in whole when you set the meeting Ready, with nothing to leave out. Minutes you wrote with the prompt in another tool and pasted on the page are read like Notion AI's.
+
 **Why isn't my meeting in "To review"?** Meetings dated in the future stay in Upcoming until their date has passed.
 
 ---
@@ -445,6 +447,9 @@ Run these in Claude Code or Codex, from your brain's folder.
 | Do everything that's waiting: reviewed meetings, new captures, the drop folder, your edits in Notion | "catch up". It asks what blocks first, then each input's subjects, then what is waiting |
 | Have it run by itself | "run catch-up every morning" (or "twice a day", "on weekdays"); "what is scheduled?"; "stop the scheduled catch-up" |
 | Get reviewed meetings into the brain | "ingest my reviewed meetings" |
+| Get minutes for a meeting that only has a transcript | "catch up" (it offers them), or "write the minutes for <meeting>" |
+| Run one of Brain Assistant's skills without Notion credits | ask for it by name: "prep my 3pm", "what's due today", "tidy that capture", "run Plan check". Your agent runs the same skill, from the same text, and changes a page only after your yes |
+| Change your answers about Notion credits or your meetings | "ask me the setup questions again" |
 | Ingest a file, web page, email or chat | "ingest this PDF: <path>", "ingest this page: <url>", "ingest this email" (then paste it) |
 | Process quick captures | "process my inbox" |
 | Process the files in your drop folder | "process my drop folder" |

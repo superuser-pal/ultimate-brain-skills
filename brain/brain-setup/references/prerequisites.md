@@ -1,6 +1,6 @@
 # Step 1: prerequisites, all at once
 
-Check everything at once, show one list, and ask the one thing no command can read: the Notion plan.
+Check everything at once, show one list, and ask the two things no command can read: the Notion plan, and where the user's meetings come from (spec/setup.md §13, decision 0101 §7 and §8).
 
 | Prerequisite | How to check | Required |
 |---|---|---|
@@ -11,7 +11,7 @@ Check everything at once, show one list, and ask the one thing no command can re
 | The Notion MCP connection | a Notion tool is available in this session | yes, but connected in step 3 when missing |
 | `gh`, signed in | `gh --version`, then `gh auth status --hostname github.com` | yes, for early access: it creates the backup (decision 0086) |
 | Python and MarkItDown | `markitdown --version`; when it fails, `python3 --version` (`py --version` on Windows) and `pipx --version` (`py -m pipx --version` on Windows), only to choose the message's steps | yes, for early access: it turns documents into exact text (decision 0097) |
-| The Notion plan | asked: "Does your Notion plan include Notion AI? And Custom Agents?" | Notion AI: yes, for early access |
+| Notion credits, and the meetings | asked, the two questions below | no: each answer only decides whether step 4a or 4b is taken |
 
 Show the results as one list, then the question:
 
@@ -24,16 +24,29 @@ Before we start, here is what your machine has:
 ✗ Notion connection: set up in step 3
 ✓ gh, signed in
 ✓ MarkItDown
-? Notion AI: asked below
+? Notion credits and your meetings: asked below
 
-Does your Notion plan include Notion AI? And Custom Agents (Business or Enterprise, with Notion credits)?
+Do you have Notion's Business or Enterprise plan with Notion credits? (yes / no / not sure)
+Notion's page on credits: <the link>
 ```
+
+Ask the second question once the first is answered, as its own message:
+
+```text
+Where do your meeting transcripts come from? Pick all that apply:
+1. Notion AI meeting notes
+2. Another tool that writes into your Meetings (Granola, Fireflies, an automation)
+3. You paste a transcript or minutes on a meeting page
+4. Files you put in your drop folder
+```
+
+`<the link>` is the Notion help page on credits that the template's Start here callout links: take it from `<product.path>/docs/notion-space-design.md` (the Start here callout's "Notion credits" link, §10), never from memory.
 
 ## What the answers decide
 
 - **The platform** is the one this agent runs on: `darwin` (macOS), `win32` (Windows) or another. Give the commands of "Install commands" below for it, exactly as written, one per line; another platform gets the links.
 - **Fix everything missing in one message,** in the table's order below, so the user installs once and restarts once; end it with the restart line. Never edit the user's `PATH` or shell profile yourself.
-- **A missing required prerequisite that no later step sets** (Node older than 22.6, no Git, an agent other than Claude Code or Codex; `gh`, MarkItDown and Notion AI below) stops setup with its fix, never a path under `npm root -g`:
+- **A missing required prerequisite that no later step sets** (Node older than 22.6, no Git, an agent other than Claude Code or Codex; `gh` and MarkItDown below) stops setup with its fix, never a path under `npm root -g`:
   - Node: "Install Node 22.6 or later: <Node's command>."
   - Git: "Install Git: <Git's command>."
   - Agent: "Open Claude Code or Codex in your brain folder and say "set up my brain" there."
@@ -69,11 +82,11 @@ Does your Notion plan include Notion AI? And Custom Agents (Business or Enterpri
 
   A tool still not found after that: point to the guide's "A command isn't found on Windows" (docs/setup.md); the reason code stays the prerequisite's.
 
-- **Notion AI: yes.** Log `step=prerequisites result=done notion_ai=yes custom_agents=<yes|no>` with the user's Custom Agents answer, and go on to step 2. Custom Agents decides how Brain Assistant is set up in step 4b (a Custom Agent, or personal Instructions).
-- **Notion AI: no.** Say: "Early access needs Notion AI: the minutes and Brain Assistant run on it. You can add Notion AI to your plan and say "set up my brain" again. There is also a path without it, which becomes supported at 1.0; it drops the structured minutes and Brain Assistant. Add Notion AI, or set up without it?"
-  - "Add it" (or no choice): log `step=prerequisites result=failed reason=notion-ai-missing`, and stop.
-  - "Without it": log `step=prerequisites result=done notion_ai=no custom_agents=no`, and go on with SKILL.md's "Without Notion AI".
-- **Unsure about the plan:** "Your plan is in Notion's settings, or ask your workspace's admin." Wait for the answer; log nothing until then.
+- **The two answers** (spec/setup.md §13). Neither stops setup: each only decides which steps are taken.
+  - **Credits:** yes, no, or not sure. "Not sure" is answered as no: say "Check under Settings → Billing in Notion. If you have credits later, say "ask me the setup questions again"." and go on.
+  - **Meetings:** one or more of `notion-ai` (1), `tool` (2), `paste` (3), `files` (4). All four are offered whatever the plan: a Business plan without credits still has Notion AI meeting notes. Nothing checks the answer here: step 4a's check does.
+  - Log `step=prerequisites result=done credits=<yes|no> meetings=<list>`, the list in that order joined by commas (`meetings=notion-ai,files`), and go on to step 2. Nothing else records the answers: no `brain.json` key, no Notion change. SKILL.md, "The two answers", says what each one installs or leaves out.
+- **A brain whose latest `prerequisites` line is from before 0.17.0** (it has `notion_ai` and no `credits`) keeps it: `brain status` reads it as before (7 required items with `notion_ai=no`, else 9). Ask the two questions only when step 1 runs again, or when the user says "ask me the setup questions again"; the new line then counts.
 
 ### Install commands
 

@@ -40,7 +40,7 @@ A row the user renamed, so its title no longer starts with `Example · `, is the
 
 ## Step 4a: the minutes prompt
 
-Notion AI writes each meeting's minutes with this prompt; the brain reads that shape (decisions 0055, 0067, 0079).
+Notion AI writes each meeting's minutes with this prompt; the brain reads that shape (decisions 0055, 0067, 0079). Taken only when the meetings answer holds `notion-ai` (SKILL.md, "The two answers"); otherwise the brain's agent writes the minutes (brain-ingest references/minutes.md), and this step is skipped.
 
 **Where it runs** (`<product.path>/notion/pasting-the-minutes-prompt.md`, spec/capture-and-review.md §3.4): in the **Notion AI chat on the meeting page**, never from Notion AI's settings. The transcript stays on the page: in the meeting-notes block's Transcript when Notion recorded the meeting, or in the page body when it was pasted. The prompt is always followed by this line:
 
@@ -102,14 +102,14 @@ Ask once: "Does this space already have a Brain Assistant you created, that answ
 
 The items are those of First things first. Their wording, and the Instructions to paste, come from the "Setup" and "Instructions" of `<product.path>/notion/brain-assistant.md`, their only source: read the file and give each item as its matching step says it, as text in the chat. What each item must make clear:
 
-1. **The plan.** With `custom_agents=no` on the `prerequisites` line, there is no Custom Agent: give the personal-Instructions path instead (below), and skip items 2, 3 and 6.
+1. **The plan.** Step 4b runs only with `credits=yes` on the latest `prerequisites` line (SKILL.md, "The two answers"): that is a Custom Agent. On a line from before 0.17.0 with `custom_agents=no`, keep the personal-Instructions path (below) that brain already has, and skip items 2, 3 and 6.
 2. **Create the agent:** Agents → New Custom Agent, named **Brain Assistant**, with no triggers.
 3. **Tools and access:** "Add **Brain Data**, **How it works** and **Skills** under <top page>, and nothing else. In the picker each result shows the page it sits under; pick only those under <top page>, and if a result doesn't show it, paste the page's link instead." ("Brain Assistant Skills" in a space built before 0.14.0.) Say that a mention in the Instructions doesn't give the agent access: only Tools and access does.
 4. **The Instructions:** the block of brain-assistant.md's "Instructions" to paste, and each `[@Brain Data]` and `[@How it works]` in it replaced with a mention of that page under <top page>.
 5. **The mentions in the skills:** each page of **Skills** under <top page>; every mention of Brain Data or How it works must open the page under <top page>.
 6. **The buttons:** **Tidy capture** (Inbox), **Write up** and **Refresh report** (Documents; each there with its module on). For each: open the database as a full page → ••• → Properties → the button, and in **Send message to** select their own Brain Assistant. Keep the message as it is: its skill name, its "I confirm" and its **@This page**. Selecting the agent says who receives the message; @This page says which page it is about. One never replaces the other.
 
-**Personal Instructions** (`custom_agents=no`): the same Instructions text in the user's personal Notion AI Instructions, and the skills as personal skills. Say once that the three buttons won't work on this plan: they message a Custom Agent.
+**Personal Instructions** (`custom_agents=no`, a `prerequisites` line from before 0.17.0 only): the same Instructions text in the user's personal Notion AI Instructions, and the skills as personal skills. Say once that the three buttons won't work on this plan: they message a Custom Agent. From 0.17.0 setup no longer installs this path (it stays documented by hand in `<product.path>/notion/brain-assistant.md`): a user without credits asks this session for the same skills by name.
 
 ### The checks
 
