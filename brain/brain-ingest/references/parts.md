@@ -70,4 +70,4 @@ Hold every answer in the session while the parts are asked. After the last part,
 
 ## Unattended
 
-No part is asked. The run writes what an attended ingest writes, by subject: the source, the notes as `draft`, and per part a `review_notes` with its `subject` and each change that needs a yes, all pending, and applies none of them. A later session asks them as one question per source (brain-apply). Quick follow-ups and questions carrying `Track: Waiting On —` still become tasks (the user's own instruction), and the report counts them.
+No part is asked. The run writes each input on its own, with its own batches, log line and commit (SKILL.md steps 10 and 11), before it starts the next. It writes what an attended ingest writes, by subject: the source, the notes as `draft`, and per part a `review_notes` with its `subject` and each change that needs a yes, all pending, and applies none of them. A later session asks them as one question per source (brain-apply). Quick follow-ups and questions carrying `Track: Waiting On —` still become tasks (the user's own instruction), and the report counts them.
