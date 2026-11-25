@@ -59,7 +59,7 @@ node -e 'const fs=require("fs");fs.writeFileSync(process.argv[2],JSON.stringify(
 
 ## Issues
 
-The same data goes to `brain repo tasks <name> --input <file>` and, with each item's `closed_at` (brain-workflow's [references/overview.md](../../brain-workflow/references/overview.md), "Issues"), to `brain factory read` and `factory overview` as `--issues`: `{ "fetched_at": "<UTC now>", "items": [{ "number", "title", "state", "state_reason"?, "labels": [names], "url" }] }`:
+The same data goes to `brain repo tasks <name> --input <file>` and, with each item's `closed_at` (brain-workflow's references/overview.md, "Issues"), to `brain factory read` and `factory overview` as `--issues`: `{ "fetched_at": "<UTC now>", "items": [{ "number", "title", "state", "state_reason"?, "labels": [names], "url" }] }`:
 - **GitHub:** `gh issue list --repo <owner/name> --state all --limit 1000 --json number,title,state,stateReason,labels,url`. `state` `OPEN`/`CLOSED` → `open`/`closed`; `stateReason` `COMPLETED`/`NOT_PLANNED` → `completed`/`not_planned`, anything else left out; `labels[].name` → `labels`.
 - **GitLab:** `glab issue list --repo <group/name> --all --per-page 100 --page <n> --output json`, page by page until one is empty; `iid` → `number`, `state` as given (`opened`/`closed`), `labels`, `web_url` → `url`.
 - At most 1,000 issues: pass the first 1,000.

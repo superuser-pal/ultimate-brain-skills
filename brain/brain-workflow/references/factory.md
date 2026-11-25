@@ -13,7 +13,7 @@ Everything in SKILL.md section 4 holds in a Factory, with these differences. The
 4. **Paused** (Workflow is Standard or empty on the row, or the row is archived): say once that this Factory is paused and how to resume (**Workflow: Connected** on its row). When the record still says `connected`, `brain workflow set` with `{ "state": "paused" }`. Read and change no task, reconcile nothing, write no overview, and work from the user's request.
 
 **A task of the user's**
-5. **Agree how, in the session.** Propose how you would do it: its scope, and the points that make it done. Build only after the user's yes to exactly that. A yes that asks for a change is not the agreement: show the changed how and ask again. No approval step in Notion.
+5. **Agree how, in the session.** Propose how you would do it: its scope, and the points that make it done. Build only after the user's yes to exactly that. A yes that asks for a change is not the agreement: show the changed how and ask again. The agreement is the user's, here in the session; Notion gets no step for it.
 6. **Take it,** in one command, then claim it (SKILL.md step 4). Say it is saved only after both returned:
 
    ```json

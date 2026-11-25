@@ -26,12 +26,12 @@ Without Notion (Markdown-only), only part 1 is asked.
 
 ## Part 3: connect its work
 
-brain-workflow's [references/factory.md](../../brain-workflow/references/factory.md), "Connect a folder", from "It needs": this message is its yes, and the Area, the Projects and the plan come from the kit. Its last steps are the link back and the overview. The kit's `tasks` doesn't change.
+brain-workflow's references/factory.md, "Connect a folder", from "It needs": this message is its yes, and the Area, the Projects and the plan come from the kit. Its last steps are the link back and the overview. The kit's `tasks` doesn't change.
 
 ## Publishing a Factory's row
 
 Whenever a link, a change or an unlink moves what the row shows (Name, Area, Projects, Archived):
 1. For a Factory with no page yet, look its `fac-` id up in the Factories database's Brain ID, the trash too. A hit is the page: record it, never a second one.
-2. `brain sync render --ids <fac id>`, the MCP (a `create` from the default template: brain-sync's [references/writes.md](../../brain-sync/references/writes.md)), `brain sync record`, and commit (`publish: factory <name>`).
+2. `brain sync render --ids <fac id>`, the MCP (a `create` from the default template: brain-sync's references/writes.md), `brain sync record`, and commit (`publish: factory <name>`).
 
 Never write its Workflow, Domain or Tasks, and never take a row made by hand in. With Factories off, publish nothing.

@@ -1,4 +1,4 @@
-# The Domains and Factories modules
+# The Domains and Factories modules, and Document asked on a mapped Tasks database
 
 Detail for SKILL.md step 5 and "Turning a module on or off". Decisions 0113 and 0114; spec/setup.md §6.2.3, spec/linked-repos.md §1.1.
 
@@ -14,6 +14,10 @@ Detail for SKILL.md step 5 and "Turning a module on or off". Decisions 0113 and 
 - **The default Tasks database** has **Factory**, a relation to Factories: found, `brain config set notion.tasks.properties.factory '"Factory"'`; missing, step 2 of `<product.path>/notion/modules/factories.md` adds it.
 - **The user's own:** a relation to Factories already there is mapped under its own name, without asking. Otherwise ask once: "Add a Factory property to your tasks database?" On a yes, add the two-way relation through the MCP (or the user by hand), read it back and map it. On a no, leave `factory` as `""`: rows and overviews work, and no work can be connected to a Factory.
 
+## Document asked on the user's own tasks database (step 5)
+
+**Document asked and Keep as document** (decision 0100; spec/setup.md §6.2.2), once, in the same questions. A checkbox named Document asked already there: map it without asking (`brain config set notion.tasks.properties.document_asked '"Document asked"'`), and ask only about the button. Otherwise ask: "Add a Keep as document button to your tasks, so the brain keeps a task's page as a document at the next catch-up? a) yes, add it (recommended) b) no: ask me in the session instead". On a), add the checkbox through the MCP with the user's yes, read it back, then map it. The button is added by hand (an API can't create one): give the steps: "open the database, add a property of type Button named **Keep**, label it **Keep as document**, and set its action to edit Document asked on this page to checked". On b), or when the write fails, leave `document_asked` as `""`: the user keeps a task as a document by asking in the session. Ask again only when the user asks to change the mapping.
+
 ## Domains turned on
 
 In "turn on domains", and for setup's seeding, after the module is on:
@@ -27,8 +31,8 @@ Off in a new space, and never in the module checklist of step 0 or in setup: lin
 1. **Say what it does, and ask** (a link's or a connection's message is that yes): "Turn on Factories in Notion: each linked folder gets a row with your tasks for it and an overview of what is being built. A repo's Repo tasks list on its Project or Area page goes: the overview holds its counts. Yes or no?" A no from a link's or a connection's message is recorded as those skills say.
 2. `brain modules on factories`, committed (`modules: factories on`). Every linked repo gets its Factory (`data.factories`); run again, only the missing ones.
 3. **Its Notion steps:** `<product.path>/notion/modules/factories.md`, from its first step that isn't done, each by whom it says (agent, Notion AI, by hand). A space duplicated from a template that has them needs none. Then `brain config set notion.databases.factories '"<id>"'` and "Factory on Tasks", and `brain modules` (its `factories` item's `missing` is empty). Commit (`connect: Factories`).
-4. **The rows:** `brain sync render --ids <fac id>,…` gives each Factory its `create`; write them as brain-sync's [references/writes.md](../../brain-sync/references/writes.md) says (Brain ID looked up first, the trash too), `brain sync record`, commit (`publish: factories`). With a page of the row's Area or Project not in Notion yet, publish that first (`pending_relations`).
-5. **The first overviews:** each Factory, by [brain-workflow's references/overview.md](../../brain-workflow/references/overview.md). Each repo's `Repo tasks · <name>` toggle goes with its first overview.
+4. **The rows:** `brain sync render --ids <fac id>,…` gives each Factory its `create`; write them as brain-sync's references/writes.md says (Brain ID looked up first, the trash too), `brain sync record`, commit (`publish: factories`). With a page of the row's Area or Project not in Notion yet, publish that first (`pending_relations`).
+5. **The first overviews:** each Factory, by brain-workflow's references/overview.md. Each repo's `Repo tasks · <name>` toggle goes with its first overview.
 
 The steps that stay by hand (the limits, the template, the layouts, the tab) may wait: the rows and overviews work without them. Stopped halfway, "turn on factories" goes on from the first thing missing.
 
