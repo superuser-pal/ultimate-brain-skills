@@ -65,7 +65,7 @@ Then do the read-only pass (step 1), but never interpret a What to fix: in step 
    | *(Tasks)* The task that tracks an open question is Done, Won't Do, in the trash or unreadable | **Waits**: written as a pending `tracked_task`; the next attended session asks whether the question is answered (0101 §6) |
    | Lifecycle, Status, Priority, Dates and the other fields the user owns | **Applied** |
    | A row the user created in Notion (area, goal, project, person, org) | **Applied**: an addition |
-   | A What to fix on a report | **Waits**: counted, and named ("1 report fix waiting for you") |
+   | A What to fix on a report | **Waits**: named ("1 report fix waiting for you") |
    | An `ignored` item (`NOT_CORRECTABLE`, `NOT_A_REPORT`, `MODULE_OFF`, …) | Nothing is done, as in an attended run, and a change the user made that the brain can't take (`NOT_CORRECTABLE`) goes under **Check** with the same line brain-sync step 5 gives, so it doesn't disappear from the report |
 
 3b. **Your ticks.** Then, for each Ready Weekly row read in the pass, `brain cleanup ticks --input <its file>` without `--attended`, its Notion writes with `settings.publish: auto` only, then `brain index`, `brain views`, `brain lint` and a commit of its own before the first input: weekly-ticks.md, "Unattended". It is not an input and doesn't count in the budget. With `publish: auto` the row is published with its row state in the publish step (weekly-ticks.md, "Step 4.1.1c").
