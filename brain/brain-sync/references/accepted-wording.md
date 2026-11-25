@@ -28,10 +28,12 @@ The one rule for every read of a page's text (spec/cli.md §5.14.7, "Date mentio
 | Markdown read | Written as |
 |---|---|
 | `<mention-date start="2026-11-14"/>` | `2026-11-14` |
-| `<mention-date start="2026-11-14" startTime="10:30" timeZone="Etc/GMT-1"/>` | `2026-11-14T10:30:00.000+01:00`: start, `T`, startTime, `:00.000`, then the offset with the zone's sign **reversed** (`Etc/GMT-1` is `+01:00`, `Etc/GMT+5` is `-05:00`) |
+| `<mention-date start="2026-11-14" startTime="10:30" timeZone="Etc/GMT-1"/>` | `2026-11-14T10:30:00.000+01:00`: start, `T`, startTime, `:00.000`, the offset |
 | `<mention-date start="2026-11-14" end="2026-11-16"/>` | `2026-11-14 → 2026-11-16` |
+| `<mention-date start="2026-11-14" startTime="22:00" end="2026-11-15" endTime="01:15" timeZone="Etc/GMT-1"/>` | `2026-11-14T22:00:00.000+01:00 → 2026-11-15T01:15:00.000+01:00` |
 
-- **Any other tag** (a range with times, a zone that isn't `Etc/GMT` and a number from 1 to 14, an attribute the table doesn't hold): never work it out. Read the block that holds it with the block read and write the item's `plain_text`. If that block can't be read, a Document's or report's body is `unconvertible: true`; in any other reading the tag stays as it is.
+- **The offset:** an `Etc/GMT` name has its sign **reversed** (`Etc/GMT-1` is `+01:00`, `Etc/GMT+5` is `-05:00`); `UTC` is `+00:00`. For a **named zone** (`Europe/Madrid`) never work it out from memory: read the block that holds the mention with the block read and write the item's `plain_text`. Only for a block the block read doesn't reach, use the zone's offset on that day, each end its own.
+- **A tag with any other attribute:** write its block's `plain_text` the same way. If that block can't be read, a Document's or report's body is `unconvertible: true`; in any other reading the tag stays as it is.
 - `<date …/>` with `start-time`, `end-time` and `time-zone` is the same tag in Notion's newer Markdown. Emphasis on a mention stays around its text (`**2026-11-14**`). A date typed as text (`14 Nov 2026`) and a tag inside code stay as they are.
 
 **A page read before.** A page read before 0.18.0 may be recorded with the tags, and a date's form alone is never an edit. When such a page holds a date mention and its text doesn't match the record, make the text once more with each date mention as the Markdown read gives it (the tag, byte for byte; nothing else different) and compare again:
