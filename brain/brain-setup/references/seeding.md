@@ -62,7 +62,7 @@ The answers work as in the ramble: "yes to all", "yes 1–7, 9", "N: <change>", 
 
 ## 3. The writes, after the yes
 
-1. **Domains first, when there are any:** `brain modules on domains` (the CLI refuses a Domain note while the module is off).
+1. **Domains first, when there are any:** `brain modules on domains` (the CLI refuses a Domain note while the module is off). With Tasks on, also the brain-connect-notion skill's references/modules.md, "Domain on Tasks".
 2. **The description is a source.** One owner-ruling source note (decision 0031, as brain-connect-notion's identities step makes), as an item of the batch below: `"type": "source"`, `"title": "Setup: my work (owner ruling)"`, `"file_date"` today (next to `title`, not in `frontmatter`), `frontmatter` `{ "source_key": "agent:<agent>/<YYYY-MM-DD>-setup-seeding", "kind": "note" }`, body = the user's description and their answers to the preview, verbatim. Every seeded note lists its `source_key` in `sources`.
 3. **The notes,** as the ramble's rows write each kind, in this order so each relation names an existing id: Orgs, Domains, Areas, Projects, People. One `brain note new --input <file>` batch (`{ "notes": [ { "type", "title", "frontmatter", "body" } ] }`) holds the source and every note, since a batch may reference notes in the same batch; ids from `brain id new <type> --count <n>` go at the item's top level. Check it with `--dry-run` first.
    - Every note: `title`, `summary` (one line, in the user's words where they gave one), `sources: [<the source>]`.
@@ -72,7 +72,7 @@ The answers work as in the ramble: "yes to all", "yes 1–7, 9", "N: <change>", 
 4. **Rebuild and commit:** `brain index`, `brain views`, `brain lint`, then one commit `setup: seed my work`.
 5. **One publish** of every seeded note and the setup's source, whatever `settings.publish` says, since the preview's yes covers it: `brain sync render --ids <every seeded id and the source's>`, create each page through the MCP, `brain sync record`, and a render again for any pending relations, as the brain-sync skill's Push says, with its `publish` log line and commit. Then, under the same yes, set what Notion owns on the new pages through the MCP: each Project's Status from the preview. Never set a Type on a Domain. The next sync pulls them into the brain. **A publish that fails** (Notion unreachable, a CLI error): the notes stay in Git; log `step=seeding result=failed reason=<code>` and stop with the fix. On resume, the preview shows every item `already in the brain`, so nothing is written again: publish the seeded notes that have no page yet (`brain sync render --ids <their ids>`), then go on.
 6. **Key documents** (below).
-7. **Log** `step=seeding result=done notes=<seeded notes, the source not counted> documents=<Documents kept>`, commit.
+7. **Log** `step=seeding result=done notes=<seeded notes, the source not counted> documents=<Documents kept>`, commit. With Notion, in a space duplicated from the template, the report of the seeding ends with one line (nothing checks it). Domains on: "On Home, delete the tabs Areas and Projects: your Domains tab replaces them." Domains off: "On Home, ignore or delete the Domains tab."
 
 ## Key documents
 
