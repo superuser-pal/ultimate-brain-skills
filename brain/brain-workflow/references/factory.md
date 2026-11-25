@@ -2,7 +2,7 @@
 
 spec/connected-workflows.md §3.5, §8.4, §15 (decision 0113). A **Factory** is a working folder with a row in Notion's Factories database: a linked repo, or any other folder connected to the brain. What the user wants next there is a Task whose **Factory** relation names it, written by hand. The folder's detailed plan stays in the folder: no plan item becomes a task, and no plan item's status is synced, either way. The CLI refuses both.
 
-Everything in SKILL.md section 4 holds in a Factory, with these differences. The overview is in [overview.md](overview.md), and [notion.md](notion.md) has the snapshot and the operations.
+Everything in SKILL.md section 4 holds in a Factory, with these differences. The overview is in overview.md, and notion.md has the snapshot and the operations.
 
 ## A session
 
@@ -33,7 +33,7 @@ Everything in SKILL.md section 4 holds in a Factory, with these differences. The
 9. **Work that had no task:** offer a task for it, with the title it would have, so the Factory shows it. On a yes, one `item put` (no `id`) with `"approve": true`, and with `"status": "done"` and `"accepted": { "statement": "<their words>" }` when the user accepts it as done, else its own status; its Notion task comes from the next reconcile's `create_task`. On a no, pass it to the overview (`done`, or `building_now`).
 10. **Follow-up work you found:** offer it in one question, each with its title. On a yes, `brain sync tasks --direct --input <file>` with `{ "items": [ { "title": "…", "factory": "<fac id>" } ] }`, leaving out any title an open task of the Factory already has, then create each returned page through the MCP in its `database_id` with its `properties` (leave out `pending_relations`). A plain To Do task: nothing is recorded, no `sync record`. With Tasks' Factory property unmapped (`INPUT_INVALID`), say so and list the titles in the report.
 11. **Statuses** of the tasks this session took: through their items and operations only. Done only when the user accepts it, or its PR is merged and every point is met. Never past the user's value: Done set in Notion wins with no question, and is recorded as their acceptance.
-12. Release the claims of items you stop working on, reconcile again, run the `ops`, then write **the overview** ([overview.md](overview.md)), and report (SKILL.md section 6), naming the Needs you and what isn't in Notion yet.
+12. Release the claims of items you stop working on, reconcile again, run the `ops`, then write **the overview** (overview.md), and report (SKILL.md section 6), naming the Needs you and what isn't in Notion yet.
 
 **Notion unreachable:** say so, and work from the user's request, or from a taken task's saved record when the user names it. Write records only: no task listed or taken, none created, no overview. The next run reconciles.
 
@@ -67,7 +67,7 @@ A "no" records it with `brain modules off factories` (commit it: `modules: facto
 3. On the row, set `Workflow` = Connected through the MCP, and read it back.
 4. `brain workflow new`, as setup.md section 3 says, with `"destination": { "factory": "<fac id>" }`; for a linked repo also `"folder": { "repo": "<name>" }`.
 5. `brain link <folder> --area <area>` (`--repo-name <name>` for a linked repo; `--project <id>` only when it has exactly one). It writes the link back with the Factory paragraph. Tell the user to commit what it wrote when the folder is a Git repo. Failing alone, it leaves a connected Factory without the paragraph: say so.
-6. Its first overview ([overview.md](overview.md)).
+6. Its first overview (overview.md).
 
 **Refusals:** `DESTINATION_TAKEN` (this Factory has an open workflow: continue there), `INPUT_INVALID` at `/folder_path` (not the Factory's folder), `MODULE_OFF` and `BRAIN_CONFIG_INVALID` (what it needs, above).
 

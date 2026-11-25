@@ -134,4 +134,4 @@ When the user says "undo clean-up U2" (or names an item the weekly review cleane
 
 ## Run on a schedule
 
-When the user says "schedule my brain", "run catch-up every morning" (or "twice a day", "on weekdays"), "what is scheduled?" or "stop the scheduled catch-up", read [references/schedule.md](references/schedule.md) and follow it: the one procedure for the daily catch-up and the weekly review, on macOS and Windows, with Claude Code or Codex. The schedule is kept in `brain.json`; what to ask once (the slots, the agent and a full model id), what to offer, `brain schedule install`, what the computer needs, and how to check, move and stop it. Other schedulers are there too.
+When the user says "schedule my brain", "run catch-up every morning" (or "twice a day", "on weekdays"), "what is scheduled?" or "stop the scheduled catch-up", read [references/schedule.md](references/schedule.md) and follow it: the one procedure for the daily catch-up and the weekly review, on macOS and Windows, with Claude Code or Codex.
