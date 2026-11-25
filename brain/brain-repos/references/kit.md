@@ -10,11 +10,12 @@ Write the keys in this order (absent keys skipped); lists keep their order:
 {
   "kit_version": 1,
   "name": "acme-api",
-  "placement": { "area": "area-2m7c4h8n", "domain": "dom-5k8p2r7t", "project": "prj-9x4t1b7e" },
+  "placement": { "area": "area-2m7c4h8n", "domain": "dom-5k8p2r7t", "projects": ["prj-9x4t1b7e"] },
   "knowledge": {
     "patterns": ["decisions/**", "docs/**/*.md", "CHANGELOG.md"],
     "never_read": [".env*", "secrets/**", "docs/clients/**"]
   },
+  "plan": ["docs/roadmap.md"],
   "tasks": {
     "mode": "tracked-in-repo",
     "source": { "kind": "markdown", "path": "TASKS.md", "format": "checklist" },
@@ -28,10 +29,11 @@ Write the keys in this order (absent keys skipped); lists keep their order:
 ```
 
 - `name`: lowercase kebab-case, the repo's name in the brain (usually the folder name).
-- `placement.area` (required): an `area-` id. `project` (optional): a `prj-` id of that Area; the rollup and the workflow summary go on it, and catch-up files the repo's notes under it. `domain` (optional): only the Area's own Domain, as a check; leave it out when unsure.
-- `knowledge.patterns` (required, non-empty) and `never_read`: Git glob pathspecs from the repo root. `*` stops at `/`; `**/` is any depth; `docs/**` is everything under `docs/`; `.env*` matches only the root (`**/.env*` for any depth). Case-sensitive. `never_read` wins over `patterns`, for ingest, the rollup and the methodology files. The kit itself is never ingested.
+- `placement.area` (required): an `area-` id. `projects` (optional, non-empty, no repeats): the `prj-` ids of the Projects the repo serves, in that Area or another. With exactly one, catch-up files the repo's notes under it, `brain link` gets it, and the rollup (Factories off) goes on it. With several, the rollup goes on the Area's page, `brain link` gets only the Area, and each note is linked to those Projects it is about. `project` (one id) is the same key as kits before 0.18.0 wrote it: read it as a list of one, write `projects`, never both. `domain` (optional): only the Area's own Domain, as a check; leave it out when unsure.
+- `knowledge.patterns` (required, non-empty) and `never_read`: Git glob pathspecs from the repo root. `*` stops at `/`; `**/` is any depth; `docs/**` is everything under `docs/`; `.env*` matches only the root (`**/.env*` for any depth). Case-sensitive. `never_read` wins over `patterns`, for ingest, the rollup, the overview and the methodology files. The kit itself is never ingested.
+- `plan` (optional): repo-relative paths of the files that say what the plan is, without repeats, not under `never_read`. The overview reads them at `HEAD`, with the Markdown task source when there is one. They are ingested only when a pattern also matches them.
 - `tasks` (optional; absent means knowledge only, no rollup and no workflow):
-  - `mode`: `connected` (Notion owns the tasks, through a connected workflow; `source` is `{ "kind": "notion" }` and there is no `status_map`) or `tracked-in-repo` (the repo owns them; the brain shows a read-only rollup).
+  - `mode`: `connected` (Notion owns the tasks, through a connected workflow; `source` is `{ "kind": "notion" }` and there is no `status_map`) or `tracked-in-repo` (the repo owns them; the brain shows a read-only rollup, or with Factories on their counts in the overview). It doesn't say whether the repo's work is connected to its Factory.
   - `source`, key order `kind`, then `path`, `format`, `pattern` (markdown), `repo` (GitHub, `owner/name`) or `project` (GitLab, `group/name`).
   - `status_map`: raw status → `todo`, `in_progress`, `waiting`, `review`, `done` or `dropped`, added to the source's defaults: checklist `" "` → `todo`, `"x"`/`"X"` → `done`; GitHub `open` → `todo`, `closed:completed` → `done`, `closed:not_planned` → `dropped`; GitLab `opened` → `todo`, `closed` → `done`. Map a label as `label:<name>` (an open issue takes its first mapped label's meaning). Map every other status the source uses, so nothing is "not mapped".
   - A `pattern` source: a JavaScript regular expression (flag `u`) with a named group `title`, and optionally `status` and `id`; without `status`, map `""`.
@@ -50,13 +52,14 @@ node -e 'const fs=require("fs");fs.writeFileSync(process.argv[2],JSON.stringify(
 
 - `patterns`: decision records (`decisions/**`, `adr/**`), docs that say what the work is (`docs/**/*.md`), `README.md`, `CHANGELOG.md`. Never code, tests, generated files or the task file.
 - `never_read`: `.env*`, `secrets/**`, and any folder of client, personal or credential material you saw.
+- `plan`: the roadmap, plan or vision file that says what is being built and in what order, when there is one besides the task file. None: leave it out.
 - Tasks: a `TASKS.md` or `PLAN.md` checklist → `tracked-in-repo` with that file; issues in use → that tracker; the user wants Notion to own them → `connected`.
 
 **Starter** (`repo new`): `patterns` `["decisions/**", "docs/**", "README.md"]`, `never_read` `[".env*", "secrets/**"]`, tasks `tracked-in-repo` with `{ "kind": "markdown", "path": "TASKS.md", "format": "checklist" }` (the only source `repo new` accepts for that mode), and `methodology.summary` `"Record decisions in decisions/ before acting on them; plans in docs/; tasks in TASKS.md."` (the end becomes `tasks in Notion.` for connected, and is left out with no tasks). The user may change any of it before the yes.
 
-## Issues (rollup input)
+## Issues
 
-`brain repo tasks <name> --input <file>` with `{ "fetched_at": "<UTC now>", "items": [{ "number", "title", "state", "state_reason"?, "labels": [names], "url" }] }`:
+The same data goes to `brain repo tasks <name> --input <file>` and, with each item's `closed_at` (brain-workflow's [references/overview.md](../../brain-workflow/references/overview.md), "Issues"), to `brain factory read` and `factory overview` as `--issues`: `{ "fetched_at": "<UTC now>", "items": [{ "number", "title", "state", "state_reason"?, "labels": [names], "url" }] }`:
 - **GitHub:** `gh issue list --repo <owner/name> --state all --limit 1000 --json number,title,state,stateReason,labels,url`. `state` `OPEN`/`CLOSED` → `open`/`closed`; `stateReason` `COMPLETED`/`NOT_PLANNED` → `completed`/`not_planned`, anything else left out; `labels[].name` → `labels`.
 - **GitLab:** `glab issue list --repo <group/name> --all --per-page 100 --page <n> --output json`, page by page until one is empty; `iid` → `number`, `state` as given (`opened`/`closed`), `labels`, `web_url` → `url`.
 - At most 1,000 issues: pass the first 1,000.
@@ -77,9 +80,10 @@ node -e 'const fs=require("fs");fs.writeFileSync(process.argv[2],JSON.stringify(
 | `PATTERN_MATCHES_NOTHING` (warning) | A pattern finds no file: fix or remove it (a change) |
 | `NEVER_READ_INGESTED` (warning) | Knowledge came from a path now never-read: nothing is removed; offer to archive those notes |
 | `METHODOLOGY_FILE_MISSING` (warning) | Remove or fix that path in `methodology.files` |
+| `PLAN_FILE_MISSING` (warning) | A `plan` file isn't in the repo's last commit: fix or remove the path (a change), or commit the file |
 | `TASK_SOURCE_MISSING` (error) | The task file isn't in the repo's last commit: fix the path, or commit the file |
 | `STATUS_UNMAPPED` (warning) | Map that status in the kit's `status_map` (a change) |
 | `CONNECTED_WITHOUT_WORKFLOW` (warning) | Tasks are meant for Notion but no workflow runs: adopt them (brain-workflow-adopt) or switch the mode |
-| `WORKFLOW_WITHOUT_CONNECTED` (warning) | A connected workflow runs but the kit says otherwise: set `mode: connected`, or end the workflow |
-| `BRAIN_LINK_STALE` (info) | The repo's `.brain` names another Project or Area: run `brain link` again with the kit's placement |
-| `ROLLUP_STALE` (warning) | Rebuild the rollup |
+| `WORKFLOW_WITHOUT_CONNECTED` (warning) | A connected workflow on a Project or an Area runs but the kit says otherwise: set `mode: connected`, or end the workflow |
+| `BRAIN_LINK_STALE` (info) | The repo's `.brain` names another Area, or a Project that isn't one of its Projects: run `brain link` again with the kit's placement |
+| `ROLLUP_STALE` (warning) | Rebuild the rollup (Factories off only) |
