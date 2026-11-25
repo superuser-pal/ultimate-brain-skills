@@ -2,7 +2,7 @@
 
 spec/connected-workflows.md §3.5, §8.4, §15 (decision 0113). A **Factory** is a working folder with a row in Notion's Factories database: a linked repo, or any other folder connected to the brain. What the user wants next there is a Task whose **Factory** relation names it, written by hand. The folder's detailed plan stays in the folder: no plan item becomes a task, and no plan item's status is synced, either way. The CLI refuses both.
 
-Everything in SKILL.md section 4 holds in a Factory, with these differences. The overview is in overview.md, and notion.md has the snapshot and the operations.
+Everything in SKILL.md section 4 holds in a Factory, with these differences. The overview is in overview.md, and notion.md has the snapshot and the operations. A skill named here that this folder doesn't have (brain-connect-notion, brain-sync) is read in the brain's own `.agents/skills/` (every command's reply gives the brain's path, `brain`).
 
 ## A session
 
@@ -10,7 +10,7 @@ Everything in SKILL.md section 4 holds in a Factory, with these differences. The
 1. Read the row first: its **Workflow** decides between this and step 4. Connected: read the Factory's tasks through the MCP, and run `brain workflow reconcile <wf> --input <snapshot> --start` (notion.md). Ask the Needs you batch and run `ops`, as in any run. `open_tasks` in the reply is the list to choose from, in its order: Doing first, then To Do. A plain task, one nobody has taken, is the user's: change nothing on it.
 2. **No request from the user:** list `open_tasks` by title, each with who has it when it is claimed or `elsewhere` ("taken from another clone of the brain"), and ask which one, **before you plan anything**. With none open, say so and ask what to do.
 3. **A direct request** ("make the login faster"): compare it with `open_tasks`, and stop only if one might be it: "This looks like your task *Speed up login*. Is it that one?" Name several in the one question. A yes: that task. A no, or no match: do the request.
-4. **Paused** (Workflow is Standard or empty on the row, or the row is archived): say once that this Factory is paused and how to resume (**Workflow: Connected** on its row). When the record still says `connected`, `brain workflow set` with `{ "state": "paused" }`. Read and change no task, reconcile nothing, write no overview, and work from the user's request.
+4. **Paused** (Workflow is Standard or empty on the row, or the row is archived): say once that this Factory is paused and how to resume (**Workflow: Connected** on its row). When the record still says `connected`, `echo '{ "state": "paused" }' | brain workflow set <wf> --rev <n> --input -`. Read and change no task, reconcile nothing, write no overview, and work from the user's request.
 
 **A task of the user's**
 5. **Agree how, in the session.** Propose how you would do it: its scope, and the points that make it done. Build only after the user's yes to exactly that. A yes that asks for a change is not the agreement: show the changed how and ask again. The agreement is the user's, here in the session; Notion gets no step for it.
