@@ -13,12 +13,13 @@ You never edit the Markdown by hand. You work in Notion and talk to your agent.
 
 | Module | Adds | On for a new brain |
 |---|---|---|
-| **Domains** | Group Areas by work or life context; a Domain's page lists its Areas and the Projects, Meetings and Documents in them | no |
+| **Domains** | Group Areas by work or life context; each Domain's page is that Domain's home, and Home opens with one card per Domain ("Domain homes", below) | no |
 | **Orgs** | Client and partner organizations | yes |
 | **Documents** | A document, or part of one, kept as a page you can read, and what the brain learned (ideas, methods, definitions) | no |
 | **Reports** | Ask the brain in the Inbox, and get a report in Documents you can refresh (needs Documents) | no |
 | **Tasks** | Action items as Notion tasks, and the questions and risks you follow up | no |
 | **Planning** | Goals and Key Results | no |
+| **Factories** | A row for each folder where agents build (a linked repo or a connected folder), with the tasks you want done there and an overview of what is being built ("Factories", below) | no: offered once, when you link your first repo or connect your first folder |
 
 Decisions and open questions are in every brain: they show in each project's and Area's **Brief** and **Decision log**, and have no database of their own (since 0.16.0). Change the modules any time by asking your agent: "turn on documents", "I don't use goals, turn planning off", "which modules do I have?". Turning one on walks you through its Notion steps; turning one off deletes nothing, and the brain simply stops reading and writing its databases. This guide describes every module; skip what you haven't turned on.
 
@@ -32,10 +33,10 @@ The navigation on the left of every page lists the Spaces. Each one has tabs tha
 
 | Space | Use it to | Tabs |
 |---|---|---|
-| **Home** | Start your day | Buttons (Quick capture, Ask the brain, New meeting, New project, New task) · "What's on today?" (Areas: one line per area, like "Agency · 4 to review · 1 meeting", or "all clear"; Tasks; Meetings; Projects; Inbox: captures New or Ready) · "Needs you": minutes to review · "What did the brain take in?" (Came in, Meetings) |
+| **Home** | Start your day | Buttons (Quick capture, Ask the brain, New meeting, New project, New task) · "What's on today?" (Areas: one line per area, like "Agency · 4 to review · 1 meeting", or "all clear"; Tasks; Meetings; Projects; Inbox: captures New or Ready; with Domains on, a Domains tab with one card per Domain takes the place of Areas and Projects) · "Needs you": minutes to review · "What did the brain take in?" (Came in, Meetings) |
 | **Tasks** | Do the work | Today · Upcoming · No date · Waiting On · Someday · Questions · Risks · Done |
 | **Meetings** | Prepare meetings and get minutes into the brain | Upcoming · To review · Ready for the brain · Ingested this week · Calendar |
-| **Projects** | Keep projects moving | Active · By area · Deadlines · Gone quiet |
+| **Projects** | Keep projects moving | Active · By area · Deadlines · Gone quiet · Factories (where is work being built?) |
 | **Plan** | Check that your work serves your goals | Goals · Key results · Areas · Projects by goal |
 | **Knowledge** | Find what the brain knows, and everything that came in | Documents · People · Orgs · Inbox (What came in?: everything ingested, with what it produced; the captures still waiting are in Home's Inbox tab) |
 | **Archive** (linked from System) | Find finished and archived records | One tab per database |
@@ -44,7 +45,43 @@ The navigation on the left of every page lists the Spaces. Each one has tabs tha
 
 **Project pages** show the Brief (with the open questions and risks) and Decision log (written by the brain), then the project's tasks, meetings and people, "What came in?" (every input filed under the project), "What do we know?" (its Documents) and **Reports** (the project's reports), then your own "My notes".
 
+**A Domain's page** is that Domain's home ("Domain homes", next). **A Factory's page** shows its Overview (written by the brain), then "What should happen next here?", a board of your tasks for it, then your own "My notes" ("Factories", below).
+
 **A Brief shows only what you accepted.** Decisions and questions still in Draft stay out of it until you accept them in your agent's chat. When a section has nothing accepted yet, it says how many notes are waiting.
+
+---
+
+## Domain homes
+
+With the **Domains** module on, each Domain's page is that Domain's home: everything of one part of your work on one page. Say "turn on domains" to your agent. Each part shows when its module is on, in this order:
+
+| On the page | What it lists |
+|---|---|
+| **What needs me here?** | Today (tasks due today or earlier) · Meetings to review · Inbox (New or Ready) |
+| **How are my areas?** | This Domain's areas, each with its counts |
+| **What's on my plate here?** | Your To Do and Doing tasks: Due · Upcoming · No date (by project) |
+| **What's active here?** | Active and Planned projects |
+| **What am I working toward here?** | Active goals, by deadline |
+| **Where is work being built?** | Factories |
+| **Which meetings?** | Upcoming · Past |
+| **What do we know?** | Documents, reports left out |
+| **My notes** | Yours |
+
+The Brief, What came in and Reports stay on each Area's page.
+
+**Example.** Your Domain *Studio* holds the Area *Clients*. A task in *Clients* due today is under Today on Studio's home, and in Home's Tasks tab with the tasks of your other Domains.
+
+**What is on it:** a row whose Area has that Domain. A row with no Area, or whose Area has no Domain, is on no Domain's home. A meeting or a capture the brain hasn't taken in has only the Area you set. A Waiting On or Someday task shows there only when it is due today or earlier.
+
+**A task's Area.** Tasks, Inbox rows and goals show their Domain from their Area; you never edit it. The brain fills a task's empty Area when it creates the task, and at each catch-up that publishes, for your unfinished tasks:
+- from the task's **Project**. When its projects are in different Areas, it stays empty and the report names the task;
+- with no Project, from its **Factory**.
+
+It never changes an Area you set, it asks nothing, and the report says `Areas set on tasks: 2`. So a task you add with only a Project is on its Domain's home after the next "catch up". To keep it elsewhere, set another Area.
+
+**Adding a row.** A row added in a list of a Domain's home has no Area, so it leaves that list. Open the Area instead, add it there, and look at its **Area**: set it if it is empty.
+
+**Home with Domains on.** Its first tab is **Domains**, one card per Domain, and under the cards "Which areas have no domain?". A card opens that Domain's home. Your active projects are on the Domain homes and in the Projects Space. Today's tasks, today's meetings and the Inbox stay on Home, every Domain together. In a duplicate of the template, Home has the tabs of both cases: with Domains on, delete the tabs Areas and Projects; with Domains off, ignore or delete Domains. With Domains off, nothing else changes.
 
 ---
 
@@ -153,12 +190,13 @@ Hover over a property name to see its owner. Each description starts with "Owner
 
 | Owner | Examples | What happens when you edit it |
 |---|---|---|
-| **You** | Status, Priority, Dates, Lifecycle, Archived, a report's What to fix, Brain Status on meetings, Project, Area, Kind and Only keep on an Inbox row, the text of a changed version (Kind Changed) before it goes in, the buttons and the boxes they tick (Document asked; Refresh asked, ticked by hand), Accepted and Accepted at (set by the Accept button) | Your value stands. The brain reads it but never overwrites it; it unticks a button's box and clears a report's What to fix once it has acted on them, and sets a row it took in to Done. It fills Kind only when you left it empty |
+| **You** | Status, Priority, Dates, Lifecycle, Archived, a Factory's Workflow, a task's Factory, a task's Area (the brain fills it only when it is empty), a report's What to fix, Brain Status on meetings, Project, Area, Kind and Only keep on an Inbox row, the text of a changed version (Kind Changed) before it goes in, the buttons and the boxes they tick (Document asked; Refresh asked, ticked by hand), Accepted and Accepted at (set by the Accept button) | Your value stands. The brain reads it but never overwrites it; it unticks a button's box and clears a report's What to fix once it has acted on them, and sets a row it took in to Done. It fills Kind only when you left it empty |
 | **Brain** | Summary, Role, Client, Key Facts, Why, Assessment | The next sync reads your edit as a **correction** and your agent asks you before it goes in (the brain can't tell your edit from one made by Notion AI or another tool). Once accepted, names, summaries and relations change in place and a key fact gets a dated history entry; turned down, the brain's value goes back. Judgments such as Assessment can't be edited: tell your agent |
 | **System** | Brain ID, Last Synced, Ingested At | Don't edit. The brain uses them to match records |
 
 **Page text:**
 - **Brief and Decision log** on project pages, and the **Brief** on area pages, are rewritten by the brain on every sync. Anything you type inside them is lost.
+- **Overview** on a Factory's page is rewritten by the brain and never read back. The rest of the row but Workflow is the brain's too: change it through the folder's link, in a session.
 - **My notes**, and everything else on a page, is yours.
 - Decisions and questions have no page of their own: they show in the project's or Area's Brief and Decision log, written by the brain. A Document's page is written by the brain too, except a promoted one ("Buttons" below): its text is yours once it's made.
 - A capture's text is yours; the brain only adds its Kind, Summary and what it produced. An Ask row's text is yours too.
@@ -233,9 +271,10 @@ Meetings have Check minutes and captures have Tidy capture. A document (a file, 
 | A document (PDF, Word, PowerPoint, Excel, saved HTML page, image) | Put it in your drop folder and tell your agent "process my drop folder". It lists the files and asks once which to take, and, with Documents on, whether to **keep each as a document**: "no" (the default: the brain only reads it), "all", or "only the requirements" (only that part goes in, after you check it: "Changing a document before it goes in"). A new version of a document later proposes only the lines that changed. Then, each ingested file moves to `processed/` inside the folder, so what's left at the top is what the brain hasn't read yet. Or name one file: "ingest this PDF: ~/Documents/brain-dropbox/proposal.pdf". Word, PowerPoint, Excel and HTML files need MarkItDown installed once: `pipx install 'markitdown[all]'` |
 | A web page | Give your agent the link: "ingest this page: https://…". For a page behind a login, save it as a PDF in your drop folder instead |
 | A file from your phone | Attach it to a **Quick capture** (or to the meeting page), with Project set if you know it. To keep the file itself as a Document, click **Keep as document** (and write in **Only keep** if you want just a part: that part comes back as a changed version for you to check first). The row is Ready; the next catch-up reads the file with the row. Files on project and area pages are not read |
-| A repo's knowledge (decisions, docs, changelog) | "link the repo at ~/code/acme-api". The agent proposes a link kit (what to read and never read, where the repo's tasks live, its Area and Project) and writes it into the repo only after your yes ("Projects in other folders" below). Each catch-up then reads the files changed since the last one; the first time, it asks which to take. Apart from the kit, the brain never writes to the repo |
+| A repo's knowledge (decisions, docs, changelog) | "link the repo at ~/code/acme-api". The agent proposes a link kit (what to read and never read, where the repo's tasks live, its Area and Projects) and writes it into the repo only after your yes ("Projects in other folders" below); the same message can show it in Notion as a Factory and connect its work. Each catch-up then reads the files changed since the last one; the first time, it asks which to take. Apart from the kit, the brain never writes to the repo |
 | A question for a full report | **Ask the brain** on Home: type the question as the Name ("Where do we stand with the Acme launch?"). The next catch-up answers with a report in **Documents**, linked from yours, and on the project's or area's page under **Reports**. To bring it up to date later, click **Refresh report** on it ("Correcting what came in"). Needs the Reports module (and Documents) |
 | An email, chat thread or note | Paste it into a **Quick capture** (keep who sent it and when). For a thread, set the row to **New** (Quick capture makes it Ready, and Clean email works only on a New capture, since the brain may already be taking a Ready one in), then ask Notion Brain Assistant to **Run Clean email** on the page: Notion Brain Assistant gives each message a heading with names and date ("Tomás Vidal → Lucía Fernández · 3 Dec 2026"), its own text word for word below it, and a divider before the next, newest first. It drops addresses, signatures, disclaimers, quoted copies and Teams, Zoom or Meet blocks, and rewrites the page right away (the page history keeps the original), asking first only when something is truly unclear. Then set the row to **Ready** and "catch up". Or paste it straight to your agent: "ingest this email" |
+| Work you want done in a linked or connected folder | Add a **Task** and set its **Factory** ("Factories" below) |
 | A task | Add it in Tasks. Action items from meetings, and your own from documents, emails and captures, are created for you |
 
 **Tasks:**
@@ -404,30 +443,80 @@ Two jobs can run on their own: a **catch-up** every day (07:30 unless you choose
 
 ---
 
+## Factories
+
+A **Factory** is a working folder where agents build: a repo you linked, or any other folder you connected. With the **Factories** module on, each one is a row in Notion with its Area, the Projects it serves, the tasks you want done there and an overview of what is being built. The module is off until you link your first repo or connect your first folder, which offers it once. Later, say "turn on factories": each repo already linked gets its row.
+
+**Link a repo.** "link the repo at ~/code/acme-api". Under the kit's whole content the agent asks one message, and you answer part by part:
+
+```text
+1. Link acme-api: the brain reads the files named above and writes brain-kit.json there.
+2. Show it in Notion: turn on Factories. Each linked folder gets a row with your tasks for it and an overview of what is being built.
+3. Connect its work: sessions in acme-api start from the tasks you write for it. Level: Tasks only. Work type: Software. Statuses: To Do, Doing, Waiting On, Done, Won't Do. It also writes .brain, a block in AGENTS.md and the brain skills there.
+Answer: all / 1 / 1, 2 / no
+```
+
+Part 2 is asked only the first time, and part 3 needs it. A repo you already linked can be connected later: say "connect acme-api" in your brain's folder. Connecting needs the Tasks module, with a Factory property on your tasks (the agent offers to add it to a Tasks database of your own).
+
+**Connect any other folder.** In a session in that folder, "connect this work to Notion". The agent asks for its Area, the Projects it serves and its plan files, and connects it after your yes. Nothing connects by itself, and the brain's own folder is never a Factory.
+
+**The row.** You change its name, Area and Projects by changing the link in a session ("change what the brain reads in acme-api"); an edit on the row is never read, and a row you make by hand is never taken in. A Factory has one Area and any number of Projects, and a Project may have several Factories. **Workflow** is yours: Standard pauses its sessions' work with Notion, Connected resumes it. The work type and the logging level are kept in the session: "log the plans too". "show my factories" lists them.
+
+**What you want next.** Add a **Task** and set its **Factory**, with a Project too if you like: *Speed up login*, Factory *acme-api*. Keep them few and coarse. Someday and To Do are the backlog, then Doing, then Done, and the board on the Factory's page shows them. It is on your Today lists only when you give it a due date. **The detailed plan stays in the folder:** its items are never copied into Notion, and no status of theirs is synced.
+
+**How a session starts.** Open Claude Code or Codex in the folder of a connected Factory:
+- **With no request,** the agent lists the Factory's tasks in Doing and To Do and asks which one you mean, before it plans anything.
+- **With a request,** it stops only if one of those tasks might be it: "This looks like your task *Speed up login*. Is it that one?" Otherwise it does what you asked.
+- **A task:** it proposes how it would do it and builds after your yes. What you agreed is saved, so a later session goes on from it, and two sessions can't take the same task. The task shows Doing, then Done when you accept it, or when its PR is merged and every agreed point is met. A status you set in Notion wins.
+- **Work with no task:** it is done, and at the close the agent offers a task for it, so the Factory shows it. Follow-up work it found is offered too, and added only after your yes.
+- **Notion out of reach:** it says so and works from your request; the next session brings Notion up to date.
+
+**The overview** opens the Factory's page:
+
+```text
+As of 23 Nov 2026, 18:40 · from the last session
+Plan: Make login fast, then open the API to partners. Kept in TASKS.md, docs/roadmap.md.
+Building now: Speed up login
+Next: Partner keys; Rate limits; Audit log; Docs site
+Done lately: Error pages (20 Nov)
+12 completed · 5 open (1 in progress, 4 to do) · 71%
+```
+
+**It is as fresh as the last session or catch-up,** and "As of" says which. A session writes it at its close; a catch-up writes it when the folder or the tasks changed, so a session that ended without closing leaves it at most one catch-up old. A scheduled catch-up writes it only when publishing is automatic. For a repo it reads the last commit, never uncommitted changes; for another folder, the plan files you named and no other file. Don't edit it: the brain never reads it back. When it says "Plan: not found", say in a session in that folder where the plan is. With Factories on it takes the place of the **Repo tasks · acme-api** toggle.
+
+**Unlink, end, turn off.** "unlink acme-api" stops reading the repo and archives its row; its tasks, its last overview and what the brain learnt stay. "end the workflow" ends the connection; a folder that isn't a linked repo is archived with it. "turn off factories" deletes nothing: rows, tasks and overviews stay as they are, sessions work locally, and the Repo tasks toggles come back at the next catch-up.
+
+**Work already connected to a Project or an Area** stays there, with the Factory's Workflow empty, until you say "move acme-api's work to its Factory". Nothing moves back.
+
+**In Codex,** its sandbox may refuse to save in the brain from another folder: approve the command, or add the brain's folder to Codex's writable roots. Everything else is the same in Claude Code and Codex, on a Mac and on Windows.
+
+---
+
 ## Projects in other folders
 
-Your work often lives outside the brain: a software repo, or a folder of documents for a workshop. Two things connect it to the brain, and you choose each one.
+Your work often lives outside the brain: a software repo, or a folder of documents for a workshop. Two things join it to the brain, and you choose each one: linking lets the brain read a repo, and connecting puts a folder's work in Notion. With the Factories module on, each such folder is a Factory (above).
 
 **Linked repos** give the brain a repo's knowledge. Say "link the repo at ~/code/acme-api". The agent reads the repo and proposes a **link kit**, a small file `brain-kit.json` in the repo saying:
 - what the brain reads (decision records, docs) and what it never reads (`.env` files, secrets, client folders), even when a pattern matches;
 - where the repo's tasks live: **in the repo** (a `TASKS.md` checklist, or GitHub or GitLab issues), or **in Notion**, through a connected workflow;
 - how work is done there, in a sentence or two;
-- its Area, and its Project when it serves one.
+- its plan files, which a Factory's overview reads;
+- its Area, and the Projects it serves, in that Area or another.
 
-You see the whole file before it is written, and the agent writes it only after your yes, again for every later change. The kit is the only file the brain ever writes in a linked repo; you commit it there yourself. The agent then asks once whether the repo should also read the brain (it adds `.brain`, a block in AGENTS.md, and the brain-query, brain-workflow and brain-workflow-adopt skills there).
+You see the whole file before it is written, and the agent writes it only after your yes, again for every later change. The kit is the only file the brain writes in a linked repo, besides the link back when you accept it and, once its work is connected, `.brain-workflow.json`; you commit them there yourself. The link back lets the repo read the brain: it adds `.brain`, a block in AGENTS.md, and the brain-query, brain-workflow and brain-workflow-adopt skills there. It comes with connecting the work (the message in "Factories"); with Factories declined, the agent asks it once on its own. Ask for it alone any time: "let acme-api read the brain too".
 
-When the tasks stay in the repo, the Project or Area page gets a toggle **Repo tasks · acme-api**: a read-only count of done, open and waiting tasks, with the open ones listed. It changes nothing in the repo. "check my linked repos" finds a repo that moved, a kit that changed, a pattern that matches nothing or a rollup that is out of date, with the fix for each. "unlink acme-api" stops reading it; what the brain already learnt from it stays. "start a new repo for <project>" creates one from a simple starter (README, AGENTS.md, decisions/, docs/, `TASKS.md`), with its kit, after your yes.
+With Factories off, and the tasks kept in the repo, the Project or Area page gets a toggle **Repo tasks · acme-api**: a read-only count of done, open and waiting tasks, with the open ones listed. It changes nothing in the repo. "check my linked repos" finds a repo that moved, a kit that changed, a pattern that matches nothing or a rollup that is out of date, with the fix for each. "unlink acme-api" stops reading it; what the brain already learnt from it stays. "start a new repo for <project>" creates one from a simple starter (README, AGENTS.md, decisions/, docs/, `TASKS.md`), with its kit, after your yes.
 
 **Connected work** puts a folder's tasks in Notion. Nothing connects by itself: tracking stays **standard** (the folder's own issues or checklist, with no brain and no Notion needed) until you say "connect this work to Notion" in that folder. The agent asks for the gaps only:
-- the existing **Project or Area** the work belongs to;
+- the folder's **Factory**, offered first ("Factories" above), or with Factories off, after a no, or when you ask for one, the existing **Project or Area** the work belongs to;
 - the **work type**: Software (ready for review when the checks pass and a PR is open; done when it is merged and its criteria are met) or General (ready for approval when its criteria are met; done when you accept it);
 - the **logging level**, which says what besides the tasks reaches Notion: **Tasks only**, **Tasks + final outputs** (the suggestion: final deliverables once you approve them), **Full durable record** (also briefs, plans, specifications and decisions), or **Custom**. Drafts and logs stay local unless you say "publish this one"; "keep this one local" holds back a single item.
 
-These settings are the **Workflow**, **Work type**, **Logging level** and **Log artifacts** properties on the Project or Area: change them there at any time, and they apply to future work. Setting **Workflow** to Standard pauses the connection; Connected resumes it.
+These settings are the **Workflow**, **Work type**, **Logging level** and **Log artifacts** properties on the Project or Area: change them there at any time, and they apply to future work. On a Factory's row there is only Workflow; say the others in a session. Setting **Workflow** to Standard pauses the connection; Connected resumes it.
 
-A project that already has a plan, issues or Notion tasks is **adopted**: say "adopt this project". The agent shows one preview (what it will create, what stays where it is, how each status maps, what happens to the originals, and any of the project's rules that clash) and applies it only after your yes. Done work stays in the plan unless you ask for it. The plan file is never edited, issues are kept unless you choose to mark them transferred, and running adoption again creates nothing twice.
+A project that already has a plan, issues or Notion tasks is **adopted**: say "adopt this project". The agent shows one preview (what it will create, what stays where it is, how each status maps, what happens to the originals, and any of the project's rules that clash) and applies it only after your yes. Done work stays in the plan unless you ask for it. The plan file is never edited, issues are kept unless you choose to mark them transferred, and running adoption again creates nothing twice. In a Factory only Notion tasks are adopted: its plan and its issues stay in its folder.
 
-While you work, Notion owns each task's status: what you set there wins. Each task page has a **Work record** toggle (scope, acceptance criteria, recent progress), and the Project or Area page a **Workflow** toggle with a dated summary: done, open and waiting, what isn't in Notion yet, and what needs you. If Notion is down or a write fails, the work is kept and retried in the next session without creating a second task; until then the summary says "not yet in Notion". "end the workflow" stops it for good; the history stays in the brain.
+While you work, Notion owns each task's status: what you set there wins. Each task page has a **Work record** toggle (scope, acceptance criteria, recent progress), and the Project or Area page a **Workflow** toggle with a dated summary: done, open and waiting, what isn't in Notion yet, and what needs you (a Factory has its overview instead, and its session's report says the rest). If Notion is down or a write fails, the work is kept and retried in the next session without creating a second task; until then the summary says "not yet in Notion". "end the workflow" stops it for good; the history stays in the brain.
 
 ---
 
@@ -456,7 +545,7 @@ Your agent knows how your work is organised from the start of every session. You
 
 **What belongs to a Project or an Area.** Ask "what's in Acme website?" or "what's open in Clients?". The agent reads the page's **Brief**, which lists its recent decisions, open questions, meetings and, when Documents is on, its Documents (an Area's Brief also lists its Projects), and reads the tasks live from Notion each time, so you always get today's status.
 
-**Linked folders** show only their own place: the Project, its Area and the Area's Domain. The block there is committed in that repository, which other people may read, so the rest of your structure stays in your brain.
+**Linked folders** show only their own place: the Project (when the folder serves exactly one), its Area and the Area's Domain. The folder of a connected Factory also says that a session starts from its tasks, and names none of them. The block there is committed in that repository, which other people may read, so the rest of your structure stays in your brain.
 
 ---
 
@@ -484,10 +573,12 @@ Run these in Claude Code or Codex, from your brain's folder.
 | Change a document before it goes in | "take in this PDF, but keep only the pilot section", "drop the appendix", "the depot count is 11, not 9"; then check the changed version in your Inbox and say "go" |
 | Keep a task's page as a document | "keep the go-live task as a document" (or click **Keep as document** on the task) |
 | Turn a decision into a page you write in | "promote Use Supabase for auth to a document" |
-| Turn a module on or off | "turn on documents", "turn planning off", "which modules do I have?" |
+| Turn a module on or off | "turn on documents", "turn on domains", "turn on factories", "turn planning off", "which modules do I have?" |
 | Read a repo into the brain | "link the repo at <path>"; "what is linked?", "check my linked repos", "show the repo's tasks", "change what the brain reads in <repo>", "unlink <repo>" |
 | Start a new repo for a project | "start a new repo for <project> at <path>" |
-| Track a folder's work in Notion | "connect this work to Notion" (new work), "adopt this project" (a project with a plan or issues already), from the folder of the work |
+| See the folders where work is being built | "show my factories" (or Projects → Factories) |
+| Say what you want next in a folder | a Task in Notion with that **Factory**; then, in a session in the folder, "let's work on the next task" or "which tasks are open here?" |
+| Track a folder's work in Notion | "connect this work to Notion" (new work), "adopt this project" (a project with a plan or issues already), from the folder of the work; "move this work to its Factory" |
 | Work on it | "let's work on the next task", "publish the plan", "keep this one local", "end the workflow" |
 | See what's overdue, stalled, missing a next step or misplaced, and decide what to do | "review my projects", "what's stalled in Clients?", then "yes 1, 2b", "propose 5", "skip 4 because …", "done" (or `claude --agent ultimate-assistant`) |
 | Get what's on your mind into tasks, projects and captures | tell Ultimate Assistant in a few sentences, then "yes to all" |
@@ -509,6 +600,14 @@ Run these in Claude Code or Codex, from your brain's folder.
 | A meeting you created for next week sits in Upcoming | Future meetings stay out of the review queue | Nothing; it moves to To review after its date |
 | Text you typed in a project's Brief disappeared | The brain rewrites Brief and Decision log on every sync | Put your notes in **My notes** |
 | Tidy capture, Write up or Refresh report does nothing | The button isn't sending to your own Notion Brain Assistant | In the button's settings, select your Notion Brain Assistant in **Send message to** and keep its message (First things first), then "check Notion Brain Assistant again" |
+| A task isn't on its Domain's home | It has no Area, or its Area has no Domain; or it is Waiting On or Someday and not due | Give it a Project or a Factory, then "catch up"; or set its Area |
+| A task's Area stays empty after a catch-up | Its projects are in different Areas (the report names it), it has neither a Project nor a Factory, it is Done or Won't Do, or the catch-up didn't publish | Set its Area in Notion |
+| A row added on a Domain's home disappeared from the list | It has no Area, so no Domain | Find it in its Space and set its Area |
+| A task you wrote for a Factory isn't listed in the folder's session | Its **Factory** isn't set, its status isn't To Do or Doing, or the folder's work isn't connected | Set its Factory and status; or "connect this work to Notion" in the folder |
+| A session says the Factory is paused | Its **Workflow** is Standard or empty | Set Workflow to **Connected** on its row |
+| A Factory's overview is old | It is as fresh as the last session or catch-up; nothing changed since, its last changes aren't committed, or the folder isn't on this computer | "catch up" on the computer that has the folder |
+| A Factory's overview says "Plan: not found" | It knows no plan file, or the one it knows isn't there | Say where the plan is, in a session in that folder |
+| A **Repo tasks** toggle is gone | Factories is on: its counts are in the Factory's overview | Open the Factory, or "show the repo's tasks" |
 | A meeting or Document shows no Domain | It has no Area: its projects are in different Areas, or it hasn't been ingested yet | Set its Area in Notion |
 | Your edit to a Summary or Role changed back | You turned the correction down, or it was never synced | "sync with Notion", then accept it when your agent asks |
 | Your edit to a Summary or Role isn't in the brain yet | Corrections wait for your yes | "what needs my decision" |

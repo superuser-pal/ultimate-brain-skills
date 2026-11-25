@@ -39,6 +39,7 @@ Ready makes an input available for processing. Processing happens when an agent 
 | Get or update a report | **“Report on …”** / **“Refresh the … report.”** |
 | Keep a readable document | **“Keep this as a document.”** / **“Only keep the budget section as a document.”** / **“Promote the decision on … to a document.”** A part comes back to your Inbox to check first. |
 | Change a document before it goes in | **“Take in this PDF, but keep only the pilot section.”** It writes the changed version to your Inbox, Brain Status New. Check or edit it there, then say **“Go”**, or set it **Ready**. |
+| Say what you want next in a work folder | Add a **Task** in Notion and set its **Factory**. A session in that folder lists it and agrees with you how to do it. |
 | Keep a task's page as a document | **“Keep the … task as a document.”** It then asks what to add **From the brain**. |
 | Find overdue or stalled work | **“Review my projects.”** / **“What's stalled in …?”** |
 | Find conflicting or outdated knowledge | **“Tidy the brain.”** |
@@ -118,13 +119,26 @@ The weekly review itself is written by your agent ("weekly review", or every Mon
 | Check optional capabilities | **“Which modules do I have?”** |
 | Enable a capability | **“Turn on documents.”** / **“Turn on reports.”** |
 | Connect a work folder to Notion | From that folder: **“Connect this work to Notion.”** |
+| See the folders where work is being built | **“Show my factories.”** / **“Turn on factories.”** |
+| Give each part of your work its own home page | **“Turn on domains.”** |
+| Move connected work to its folder's Factory | **“Move this work to its Factory.”** |
 | Bring an existing plan into connected work | **“Adopt this project.”** |
-| Work on a connected project | **“Let's work on the next task.”** / **“Publish the plan.”** / **“Keep this one local.”** |
-| Let the brain learn from a repository | **“Link the repo at …”** / **“Check my linked repos.”** |
+| Work on a connected project | **“Let's work on the next task.”** / **“Which tasks are open here?”** / **“Publish the plan.”** / **“Keep this one local.”** |
+| Let the brain learn from a repository | **“Link the repo at …”** / **“Check my linked repos.”** / **“Unlink …”** |
 | Check or change the Notion structure | **“Check my Notion space.”** / **“Add a property to Projects …”** The agent follows the product's design process. |
 | Get help updating | **“Help me update Ultimate Brain and upgrade my brain.”** |
 
 A scheduled run needs its computer on and you logged in at that time (a Mac may be asleep; Windows is woken), and the agent you set the brain up with, Claude Code or Codex. A scheduled catch-up applies what you ticked in a Ready weekly row and decides nothing else: it leaves its questions, the items you wrote a note on, and your edits from Notion for your next attended session.
+
+## Your folders and your Domains
+
+**Factories.** A Factory is a working folder where agents build: a repo you linked, or a folder you connected. Its page in Notion (Projects → Factories) shows an **Overview** of what is being built and a board of your tasks for it.
+1. **Link it:** say **“Link the repo at ~/code/acme-api”** and answer the one message part by part: link it, show it in Notion, connect its work (**“all”**, **“1”**, **“1, 2”** or **“no”**). For a folder that isn't a repo, say **“Connect this work to Notion”** in a session there.
+2. **Write what you want next:** a Task with that **Factory**. For example, *Speed up login*, Factory *acme-api*. Keep them few: the detailed plan stays in the folder. It shows in Today only with a due date.
+3. **Open a session in the folder.** It lists those tasks and asks which one; if you open with a request, it stops only when one of them might be it. It agrees with you how, then builds. At the close it sets the status, and offers a task for work that had none.
+4. **Read the Overview:** the plan, what is being built, what is next and what was done lately. It is as fresh as the last session or catch-up, and its first line says when. Don't edit it.
+
+**Domains.** With Domains on, Home opens with one card per Domain, and a card opens that Domain's home: what needs you, its areas, tasks, projects, goals, factories, meetings and documents. For example, a task in the Area *Clients* of your Domain *Studio* is on Studio's home. Today's tasks and meetings stay on Home, every Domain together. A task needs an Area to be on a Domain's home: **“Catch up”** fills an empty one from its Project, or with no Project from its Factory. In a duplicate of the template, delete Home's tabs Areas and Projects when Domains is on.
 
 ## When something seems stuck
 
@@ -133,12 +147,15 @@ A scheduled run needs its computer on and you logged in at that time (a Mac may 
 | A capture was ignored | Check that it is **Ready**, then say **“Catch up.”** |
 | A meeting was ignored | Check that it is **Ready**, then say **“Catch up.”** |
 | You corrected an already processed meeting | Set it back to **Ready**, then say **“Catch up.”** |
+| A task isn't on its Domain's home | Say **“Catch up”**; if its Area is still empty, set it. |
+| A folder's session doesn't list your task | Check its **Factory** and that it is **To Do** or **Doing**; check that the Factory's **Workflow** is **Connected**. |
+| A Factory's Overview is old | Say **“Catch up”** on the computer that has the folder. |
 | Something waits for your decision | Say **“What needs my decision?”** |
 | A button request is still waiting | Say **“Catch up”**; check whether its module is enabled. |
 | Tidy capture, Write up or Refresh report does nothing | In the button's settings, select your own Notion Brain Assistant in **Send message to** (First things first), then say **“Check Notion Brain Assistant again.”** |
 | A changed version sits as **New** | It waits for your check: say **“Go,”** or set it **Ready**. |
 
-Put your own project notes in **My notes**. The brain refreshes generated sections such as **Brief** and **Decision log**.
+Put your own project notes in **My notes**. The brain refreshes generated sections such as **Brief**, **Decision log** and a Factory's **Overview**.
 
 For more detail, open **How it works** in Notion, read the [full guide](guide.md), or ask **“How do I …?”**
 
