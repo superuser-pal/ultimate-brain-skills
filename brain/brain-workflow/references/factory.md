@@ -77,7 +77,7 @@ A "no" records it with `brain modules off factories` (commit it: `modules: facto
 
 A workflow already on a Project or an Area stays there when its folder gets a Factory, with the row's Workflow empty. It moves only when the user asks ("move acme-api's work to its Factory"), after showing what changes. On the yes:
 1. `echo '{ "destination": { "factory": "<fac id>" } }' | brain workflow set <wf> --rev <n> --input -`. Items, artifacts and operations keep their ids.
-2. In Notion: set the Factory relation on each item's task page, leaving its Project and Area; set the row's `Workflow` to Connected and the old destination's to Standard; remove the **Workflow** toggle from the old destination's page.
+2. In Notion: on each item's task page, set the Factory relation and, only while it is empty, the Area, from `brain workflow render <wf> --item <wi>`'s `properties`, leaving its Project; set the row's `Workflow` to Connected and the old destination's to Standard; remove the **Workflow** toggle from the old destination's page.
 3. The first overview, then `brain link` again (step 5 above) for the paragraph.
 
 Nothing moves back: a move to a Project or an Area is refused.

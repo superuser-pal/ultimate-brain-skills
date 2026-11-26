@@ -114,7 +114,7 @@ A read that fails for another reason (a timeout, an expired login) passes no row
 
 `brain sync snapshot --input <folder or file> [--input …] --output <tmp>/snapshot.json`; a folder stands for every `.json` file in it. Each file is one of:
 - **A query reply**, saved as the MCP returned it: `{ "object": "list", "results": [ <pages> ], "has_more": …, "next_cursor": … }`, one page of results. The row's database comes from each page's `parent.database_id`.
-- **`rows.json`:** `{ "rows": [ <rows in the snapshot format above> ] }`, nothing else at the top. A row whose page also came from a query reply joins it only when it is a tracked task (onto that task's Document-asked row) or carries `wording` (onto its Documents row); the same property must have the same value in both.
+- **`rows.json`:** `{ "rows": [ <rows in the snapshot format above> ] }`, nothing else at the top. A row whose page also came from a query reply joins it only when it is a tracked task (onto that task's Document-asked row) or carries `wording` (onto its Documents row); the same property must have the same value in both. A task whose status changed between the Tasks query and its page read is `INPUT_INVALID`: read both again, then run `sync snapshot` again.
 
 Anything else is `INPUT_INVALID`. The reply's `data` is `{ "output", "rows", "examples_left_out", "databases" }`.
 
