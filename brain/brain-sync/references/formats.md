@@ -24,7 +24,7 @@ Written by `brain sync snapshot` (SKILL.md step 3, spec/cli.md §5.14.10) from t
 }
 ```
 
-- `database`: the `brain.json` key: `domains`, `areas`, `goals`, `key_results`, `projects`, `people`, `orgs`, `documents`, `inbox` or `tasks` (the tracked tasks only, below) (never `concepts`: retired in 0.9.1, `sync plan` refuses it) (`references` on a brain not yet upgraded is read as `documents`). `review`, `decisions` and `questions` are retired in 0.16.0: only the 0.16.0 Notion migration sends them, once, with `--review-transition` or `--questions-transition` ([review-transition.md](review-transition.md)); a plain plan ignores their rows. Send only the databases of modules that are on (brain-sync step 2). Meetings are never a snapshot database.
+- `database`: the `brain.json` key: `domains`, `areas`, `goals`, `key_results`, `projects`, `people`, `orgs`, `documents`, `inbox` or `tasks` (the tracked tasks, the tasks kept as documents and the tasks with no Area only, below) (never `concepts`: retired in 0.9.1, `sync plan` refuses it) (`references` on a brain not yet upgraded is read as `documents`). `review`, `decisions` and `questions` are retired in 0.16.0: only the 0.16.0 Notion migration sends them, once, with `--review-transition` or `--questions-transition` ([review-transition.md](review-transition.md)); a plain plan ignores their rows. Send only the databases of modules that are on (brain-sync step 2). Meetings are never a snapshot database.
 - **The rows the plan acts on,** each in exactly this shape (send the properties shown, with these names; a row of a space not yet migrated uses the old name given in brackets):
 
   ```json
@@ -94,6 +94,14 @@ A read that fails for another reason (a timeout, an expired login) passes no row
 
 **Tasks to keep as documents** *(Tasks, Documents; decision 0100)*: with `notion.tasks.properties.document_asked` mapped (not `""`), query the Tasks data source for the rows whose Document asked box is ticked, and pass each with its title, Document asked, Project and Area under their mapped names (references/formats.md). A task that is also tracked is passed once, with the properties of both. Its body is read only when `sync plan` lists it in `task_documents`, by brain-ingest references/task-document.md. Nothing else of a task is read here.
 
+## Tasks with no Area (a catch-up only)
+
+*(Tasks; decisions 0113 §9, 0114)* At a catch-up, with `notion.tasks.properties.area` mapped and `project` mapped or (Factories on) `factory` mapped, query the Tasks data source for the rows where Area is empty, **and** Project or Factory is not empty, **and** the status is not finished: not an option of the Status property's complete group (a select: not `Done`) and not `notion.tasks.wont_do_status` (read the options from the data source; with no status mapped, no task is finished). Follow `next_cursor`, and save each reply as any other: `brain sync snapshot` keeps of each task its title, Status, Area, Project and Factory. Page bodies are never read for this. `brain sync` outside a catch-up doesn't run this query.
+
+`sync plan` then gives:
+- `task_areas`: `{ "page_id", "title", "area", "from": "project" | "factory", "property", "payload": { "type": "relation", "value": [ … ], "mode": "if_empty" } }`: the Area its Projects share, or with no Project its Factories'. The catch-up's publish writes each while the Area is still empty (brain-catch-up references/publish.md, "Step 4.1.2b"). Nothing of it is applied by `sync apply` or recorded, and nobody is asked.
+- `task_areas_unset`: `DIFFERENT_AREAS` (named under Check, by title) or `NOT_IN_BRAIN` (not named; a later catch-up reads it again).
+
 ## Reading the Report rows (SKILL.md step 2)
 
 *(Reports)* Of Documents, the **Report rows** (Origin Report, a `vw-` Brain ID) whose **Refresh asked** box is ticked or whose **What to fix** is not empty, with Brain ID, Refresh asked and What to fix (decisions 0045, 0048, 0071); nothing else on them is compared. A space not yet migrated (migration 0010) has **Refresh** instead: send whichever the space has. `sync plan` turns them into `refresh_requests` and `report_fixes`. They are the brain-query skill's work ("Report mode", "Refresh" and "What to fix on a report"): run it for each after step 6, or leave them for the next catch-up and say so.
@@ -106,7 +114,7 @@ A read that fails for another reason (a timeout, an expired login) passes no row
 
 `brain sync snapshot --input <folder or file> [--input …] --output <tmp>/snapshot.json`; a folder stands for every `.json` file in it. Each file is one of:
 - **A query reply**, saved as the MCP returned it: `{ "object": "list", "results": [ <pages> ], "has_more": …, "next_cursor": … }`, one page of results. The row's database comes from each page's `parent.database_id`.
-- **`rows.json`:** `{ "rows": [ <rows in the snapshot format above> ] }`, nothing else at the top. A row whose page also came from a query reply joins it only when it is a tracked task (onto that task's Document-asked row) or carries `wording` (onto its Documents row); the same property must have the same value in both.
+- **`rows.json`:** `{ "rows": [ <rows in the snapshot format above> ] }`, nothing else at the top. A row whose page also came from a query reply joins it only when it is a tracked task (onto that task's Document-asked row) or carries `wording` (onto its Documents row); the same property must have the same value in both. A task whose status changed between the Tasks query and its page read is `INPUT_INVALID`: read both again, then run `sync snapshot` again.
 
 Anything else is `INPUT_INVALID`. The reply's `data` is `{ "output", "rows", "examples_left_out", "databases" }`.
 
@@ -130,4 +138,5 @@ The `data` object of the `sync plan` reply. Not the whole reply. The one edit yo
 - One record per page actually written. `synced_at` is required.
 - `published`: the render item's `published`. For a Document or report body you just wrote, add `"@notion_body": "sha256:<hex>"`: the hash of the Markdown you read back from the page right after writing it (SKILL.md, "Accepted wording", step 6); if the read-back failed, `"@notion_body": null`, which removes the old baseline.
 - `tasks` (meetings and sources): the new task page ids.
+- A Factory's record has its `fac-` id, `notion`, `synced_at` and `published`, and no other key.
 - A meeting's `published` holds `"Brain Status": "Done"` since 0.16.2 (decision 0109: Meetings use the Inbox's names New, Ready and Done; Skipped stays). A record written before holds `Ingested`: `sync render` reads it as `Done` (and Reviewed as Ready, Not Reviewed as New), so the renamed option sends no write. Never edit an old record by hand.

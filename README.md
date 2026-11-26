@@ -27,7 +27,7 @@ They are in [`brain/`](brain/), one folder each.
 | [brain-weekly-review](brain/brain-weekly-review/SKILL.md) | "weekly review" | Writes one short weekly report with the decisions that need you |
 | [ultimate-assistant](brain/ultimate-assistant/SKILL.md) | "review my work" | Reviews your Areas, Projects and Tasks and recommends changes |
 | [brain-repos](brain/brain-repos/SKILL.md) | "link this repo" | Links another Git repository to the brain, and shows, changes or removes a link |
-| [brain-workflow](brain/brain-workflow/SKILL.md) | "track this work" | Tracks the work in a folder, on its own or connected to a Notion Project |
+| [brain-workflow](brain/brain-workflow/SKILL.md) | "track this work" | Tracks the work in a folder, on its own or connected to Notion as a Factory |
 | [brain-workflow-adopt](brain/brain-workflow-adopt/SKILL.md) | "adopt this project" | Takes an existing project's plans and tasks into a connected workflow |
 | [brain-notion-change](brain/brain-notion-change/SKILL.md) | "change my Notion space" | Changes the structure of your Notion space the safe way |
 | [brain-howto](brain/brain-howto/SKILL.md) | "how do I…" | Explains how your brain works, from the user guide |
