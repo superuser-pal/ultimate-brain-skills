@@ -77,7 +77,7 @@ A legacy link (`NO_KIT`: linked before kits) keeps working as it is. When the us
 
 ## Unlink
 
-Ask once, with Factories on: "Stop reading acme-api? Its row in Factories is archived; its tasks and what the brain learned stay." With it off: "Stop reading acme-api? Its Repo tasks list is removed from Notion; what the brain learned stays." On yes:
+Ask once, also when the user said "unlink …", and wait for the yes. With Factories on: "Stop reading acme-api? Its row in Factories is archived; its tasks and what the brain learned stay." With it off: "Stop reading acme-api? Its Repo tasks list is removed from Notion; what the brain learned stays." On yes:
 1. `brain repo unlink <name>`; commit `brain.json` and the log in the brain: `repo: unlink <name>`.
 2. Factories on: publish its row (`factory` in the reply; references/linking.md), which ticks Archived. Its tasks and its last overview stay as they are, and nothing refreshes them again. Linked again later, it is the same Factory.
    With it off: remove the `Repo tasks · <name>` toggle heading and its children from the Project or Area page, with the same yes.

@@ -23,7 +23,7 @@ Everything in SKILL.md section 4 holds in a Factory, with these differences. The
      "task": { "page": "<task page id>", "title": "Speed up login", "status": "To Do", "brain_id": null } }
    ```
 
-   `brain workflow item put <wf> --input <file>`, with no `id` and no `--rev`. `task` is the task as you just read it from Notion, and `title` is its title, unchanged. `TASK_TAKEN`: tell the user who holds it (`holder`; with `item: null`, it was taken from another clone of the brain), and ask for another. Then reconcile again (no `--start`) and run its `ops`: they send the Brain ID and Doing. A task you discussed and didn't agree on stays plain: write nothing.
+   `brain workflow item put <wf> --input <file>`, with no `id` and no `--rev`. `task` is the task as you just read it from Notion, and `title` is its title, unchanged. `TASK_TAKEN`: tell the user who holds it (`holder`; with `item: null`, it was taken from another clone of the brain), and ask for another. Then reconcile again (no `--start`) and run its `ops`: they send the Brain ID and Doing. The overview waits for the close (step 12). A task you discussed and didn't agree on stays plain: write nothing.
 7. **A task with an item already** (`item` in `open_tasks`): claim it, show its saved scope and points, and go on from them, or agree a changed how, recorded with `item put` and `"approve": true`.
 
 **A request with no task**
@@ -33,7 +33,7 @@ Everything in SKILL.md section 4 holds in a Factory, with these differences. The
 9. **Work that had no task:** offer a task for it, with the title it would have, so the Factory shows it. On a yes, one `item put` (no `id`) with `"approve": true`, and with `"status": "done"` and `"accepted": { "statement": "<their words>" }` when the user accepts it as done, else its own status; its Notion task comes from the next reconcile's `create_task`. On a no, pass it to the overview (`done`, or `building_now`).
 10. **Follow-up work you found:** offer it in one question, each with its title. On a yes, `brain sync tasks --direct --input <file>` with `{ "items": [ { "title": "…", "factory": "<fac id>" } ] }`, leaving out any title an open task of the Factory already has, then create each returned page through the MCP in its `database_id` with its `properties` (leave out `pending_relations`). A plain To Do task: nothing is recorded, no `sync record`. With Tasks' Factory property unmapped (`INPUT_INVALID`), say so and list the titles in the report.
 11. **Statuses** of the tasks this session took: through their items and operations only. Done only when the user accepts it, or its PR is merged and every point is met. Never past the user's value: Done set in Notion wins with no question, and is recorded as their acceptance.
-12. Release the claims of items you stop working on, reconcile again, run the `ops`, then write **the overview** (overview.md), and report (SKILL.md section 6), naming the Needs you and what isn't in Notion yet.
+12. Release the claims of items you stop working on, reconcile again, run the `ops`, then write **the overview** (overview.md), once per session and only here, after the offers and the statuses, and report (SKILL.md section 6), naming the Needs you and what isn't in Notion yet.
 
 **Notion unreachable:** say so, and work from the user's request, or from a taken task's saved record when the user names it. Write records only: no task listed or taken, none created, no overview. The next run reconciles.
 
@@ -71,7 +71,7 @@ A "no" records it with `brain modules off factories` (commit it: `modules: facto
 
 **Refusals:** `DESTINATION_TAKEN` (this Factory has an open workflow: continue there), `INPUT_INVALID` at `/folder_path` (not the Factory's folder), `MODULE_OFF` and `BRAIN_CONFIG_INVALID` (what it needs, above).
 
-**In Codex,** the sandbox may refuse writes outside the working folder, and the brain is outside it: the user approves the command, or adds the brain's folder to Codex's writable roots. A refused write is reported as not saved, never as done.
+**In Codex,** the sandbox may refuse writes outside the working folder, and the brain is outside it: the user approves the command, or runs Codex with full access (a writable root keeps its `.git` read-only, so the brain's commits still fail). A refused write is reported as not saved, never as done.
 
 ## Move an existing workflow to its Factory
 
