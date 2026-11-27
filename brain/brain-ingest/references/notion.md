@@ -36,9 +36,10 @@ What remains has two parts:
 2. if the user's notes are not empty: a blank line, `## My notes`, a blank line, then the notes;
 3. drop wrapper tags (`<meeting-notes>`, `<summary>`, `<details>`) and the indentation they add;
 4. remove Notion AI footnote links (` [^/p/…]`, with the space before them); they cite the transcript and can be half the text;
-5. trim trailing spaces on every line; LF line endings.
+5. trim trailing spaces on every line; LF line endings;
+6. write each date mention as the brain-sync skill's references/accepted-wording.md, "Dates in a page's text", says, also for a page read before.
 
-**Thin summary:** if the AI summary is very short for the meeting (a few lines for a long meeting, or no decisions and no action items although the meeting clearly had some), offer to include the transcript, in the pre-check question. If the user agrees and your Notion tool can read it (the page markdown says how), add a third part after the user's notes: a blank line, `## Transcript`, a blank line, then the transcript, built the same way (rules 3–5). If the tool can't read it, say so and ingest the summary.
+**Thin summary:** if the AI summary is very short for the meeting (a few lines for a long meeting, or no decisions and no action items although the meeting clearly had some), offer to include the transcript, in the pre-check question. If the user agrees and your Notion tool can read it (the page markdown says how), add a third part after the user's notes: a blank line, `## Transcript`, a blank line, then the transcript, built the same way (rules 3–6). If the tool can't read it, say so and ingest the summary.
 
 When the user's notes and the minutes disagree on a fact, ask in the pre-check (SKILL.md step 3). The answer is an owner ruling ([extraction.md](extraction.md), decision 0031). Without an answer, mark the claim `^[ambiguous]`.
 

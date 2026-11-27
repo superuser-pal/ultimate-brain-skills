@@ -11,7 +11,7 @@ What a task gathers (the research done for it, the answer to the question it tra
 
 ## Keeping it
 
-1. **Read the page** through the MCP: its Name, its Project and Area relations, and its body as Markdown. An empty body has nothing to keep: say so ("nothing to keep on *Check go-live with hosting*"), and clear a ticked box.
+1. **Read the page** through the MCP: its Name, its Project and Area relations, and its body as Markdown (its date mentions as the brain-sync skill's references/accepted-wording.md, "Dates in a page's text", says). An empty body has nothing to keep: say so ("nothing to keep on *Check go-live with hosting*"), and clear a ticked box.
 2. **The source** ([cli-inputs.md](cli-inputs.md) §1b, "A task page"): key `notion:<task page id>`, `kind: task`, title the task's Name, body the page body **word for word** (the properties are not part of it), `area` and `projects` the task's Area and Project mapped to the brain's notes by their `notion` (a page the brain doesn't know is left out; a `task_documents` item already gives them). No `notion`, no `digest`, no `only_keep`: the page is the task's, in Tasks, and has no Inbox row.
 3. **The Document,** in the same `note new` batch: `origin: whole`, `sources` exactly the task source, its body the source's body byte for byte, and:
    - `area` and `projects` the source's;
@@ -24,7 +24,7 @@ What a task gathers (the research done for it, the answer to the question it tra
 ## Kept again
 
 `note new` dedupes a task source by its key:
-- **The page has not changed:** nothing is written (`DUPLICATE_SOURCE`, and the Document `ALREADY_KEPT`). Say it is already kept, and ask the From the brain question again, with only the candidates its section doesn't hold yet. A ticked box is cleared.
+- **The page has not changed** (in either form of its dates, the same section's "A page read before"): nothing is written (`DUPLICATE_SOURCE`, and the Document `ALREADY_KEPT`). Say it is already kept, and ask the From the brain question again, with only the candidates its section doesn't hold yet. A ticked box is cleared.
 - **The page changed:** write a new version of the source, `replaces` = its latest version (the item's `source`, or the source keyed `notion:<page id>` followed forward along `replaces`, sources.md "Re-reads"), and propose an `update_body` on the Document: `content` = the new page text, then the Document's From the brain section as it is now (read with `brain query --read <ref-id>`), every line copied exactly. It replaces what the brain holds, so it is asked: in the session at once, showing the changed lines (`brain source diff <new src-id>`); after a run without the user, as a waiting question. The Document never changes without the user's yes.
 
 ## From the brain
